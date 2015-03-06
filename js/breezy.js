@@ -1,0 +1,1 @@
+var breezy = angular.module("Breezy",[])
