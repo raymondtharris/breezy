@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	//"log"
+	"net/http"
+)
 
 type breezyImage struct{
 	name, filename string
@@ -17,6 +21,13 @@ type breezyVideo struct{
 	fileSize float32
 }
 
+func (m breezyImage) String() string{
+	return fmt.Sprintf("%v", m.name)
+}
+
+
 func main(){
-	
+	http.Handle("/string", String("I'm all good."))
+	http.Handle("/struct", &Struct{"Hello", ":", "Gophers!"})
+	http.ListenAndServe("localhost:4000", nil)
 }
