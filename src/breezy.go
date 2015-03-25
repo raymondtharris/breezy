@@ -58,14 +58,14 @@ func webHandler(w http.ResponseWriter, r *http.Request){
 	
 	p,_ := loadPage("index")
 	
-	t, _ := template.ParseFiles("../index.html")
+	t, _ := template.ParseFiles("../src/index.html")
 	t.Execute(w, p)
 }
 
-func webLoginHandler(w http.ResponseWriter, r *http.Request){
+func breezyLoginHandler(w http.ResponseWriter, r *http.Request){
 	p,_ := loadPage("login")
 	
-	t, _ := template.ParseFiles("../login.html")
+	t, _ := template.ParseFiles("/views/login.html")
 	t.Execute(w, p)
 }
 
@@ -73,10 +73,10 @@ func webLoginHandler(w http.ResponseWriter, r *http.Request){
 
 
 func main(){
-	//http.HandleFunc("/admin", webLoginHandler)
-	http.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir("../lib/"))))
-	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../js/"))))
-	http.Handle("/views/", http.StripPrefix("/views/", http.FileServer(http.Dir("../views/"))))
+	http.HandleFunc("/admin", breezyLoginHandler)
+	http.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir("../src/lib/"))))
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../src/js/"))))
+	http.Handle("/views/", http.StripPrefix("/views/", http.FileServer(http.Dir("../src/views/"))))
 	http.HandleFunc("/", webHandler)
 	http.ListenAndServe("localhost:4000", nil)
 }
