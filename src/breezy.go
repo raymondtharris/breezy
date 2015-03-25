@@ -5,6 +5,7 @@ import (
 	//"time"
 	"net/http"
 	"html/template"
+	"io/ioutil"
 )
 
 const brImage, brAudio , brVideo = 0, 1, 2
@@ -41,11 +42,11 @@ type breezyActivity struct{
 
 type Page struct{
 	Title string
-	Body []btye
+	Body []byte
 	
 }
 
-func loadPage(pageName String) (*Page, error){
+func loadPage(pageName string) (*Page, error){
 	pageBody, err := ioutil.ReadFile(pageName+".html")
 	if err != nil {
 	        return nil, err
@@ -54,13 +55,28 @@ func loadPage(pageName String) (*Page, error){
 }
 
 func webHandler(w http.ResponseWriter, r *http.Request){
-	t, _ := template.ParseFiles("index.html")
-	t.Execute(w, nil)
+	
+	p,_ := loadPage("index")
+	
+	t, _ := template.ParseFiles("../index.html")
+	t.Execute(w, p)
+}
+
+func webLoginHandler(w http.ResponseWriter, r *http.Request){
+	p,_ := loadPage("login")
+	
+	t, _ := template.ParseFiles("../login.html")
+	t.Execute(w, p)
 }
 
 
+
+
 func main(){
-	//http.Handle("/string", String("I'm all good."))
+	//http.HandleFunc("/admin", webLoginHandler)
+	http.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir("../lib/"))))
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../js/"))))
+	http.Handle("/views/", http.StripPrefix("/views/", http.FileServer(http.Dir("../views/"))))
 	http.HandleFunc("/", webHandler)
 	http.ListenAndServe("localhost:4000", nil)
 }
