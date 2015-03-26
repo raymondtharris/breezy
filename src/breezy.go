@@ -55,28 +55,33 @@ func loadPage(pageName string) (*Page, error){
 }
 
 func webHandler(w http.ResponseWriter, r *http.Request){
-	
 	p,_ := loadPage("index")
-	
 	t, _ := template.ParseFiles("../src/index.html")
 	t.Execute(w, p)
 }
 
 func breezyLoginHandler(w http.ResponseWriter, r *http.Request){
 	p,_ := loadPage("login")
-	
-	t, _ := template.ParseFiles("/views/login.html")
+	t, _ := template.ParseFiles("../src/views/login.html")
+	t.Execute(w, p)
+}
+func breezyDashboardHandler(w http.ResponseWriter, r *http.Request){
+	p,_ := loadPage("dashboard")
+	t, _ := template.ParseFiles("../src/views/dashboard.html")
 	t.Execute(w, p)
 }
 
 
 
 
+
 func main(){
-	http.HandleFunc("/admin", breezyLoginHandler)
+	//http.HandleFunc("/admin", breezyLoginHandler)
 	http.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir("../src/lib/"))))
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../src/js/"))))
 	http.Handle("/views/", http.StripPrefix("/views/", http.FileServer(http.Dir("../src/views/"))))
+	http.HandleFunc("/admin", breezyLoginHandler)
+	http.HandleFunc("/dashboard", breezyDashboardHandler)
 	http.HandleFunc("/", webHandler)
 	http.ListenAndServe("localhost:4000", nil)
 }
