@@ -1,0 +1,75 @@
+html{
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+}
+input{
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+	
+}
+.brLogContainer{
+	background:#eee;
+	padding:10pt 10pt;
+	width:700pt;
+	display:inline-block;
+}
+body{
+	margin:0;
+	padding:0;
+}
+.brDashboardMenuContainer{
+	width:200pt;
+	height:100%;
+	background:#dcdcdc;
+	margin-right:30pt;
+	float:left;
+}
+.brDashboardRecentActivityContainer{
+	
+}
+
+
+
+
+
+
+
+
+/* Login */
+.brLogin{
+	background:#C7ECFF;
+}
+.brH1{
+	font-size:50pt;
+	text-align:center;
+	padding-bottom:30pt;
+}
+.brzyLoginContainer{
+	width:300pt;
+	height:200pt;
+	margin:auto;
+	display:block;
+}
+
+.brLoginInput{
+	width:230pt;
+	height:30pt;
+	display:block;
+	margin:auto;
+	border: 2pt solid #ccc;
+	border-radius:3pt;
+	outline:none;
+	margin:6pt auto;
+	font-size:16pt;
+	text-indent:4pt;
+}
+
+
+.brLoginSubmit{
+	width:100pt;
+	height:30pt;
+	display:block;
+	margin:10pt auto;
+	background:#fff;
+	border:2pt solid #ccc;
+	border-radius:3pt;
+	font-size:16pt;
+}

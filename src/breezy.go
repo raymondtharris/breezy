@@ -61,6 +61,13 @@ func webHandler(w http.ResponseWriter, r *http.Request){
 }
 
 func breezyLoginHandler(w http.ResponseWriter, r *http.Request){
+	var temp = ""
+	
+	temp = r.FormValue("username")
+	if len(temp) > 0 {
+		print(temp)
+	}
+	
 	p,_ := loadPage("login")
 	t, _ := template.ParseFiles("../src/views/login.html")
 	t.Execute(w, p)
@@ -79,6 +86,7 @@ func main(){
 	//http.HandleFunc("/admin", breezyLoginHandler)
 	http.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir("../src/lib/"))))
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../src/js/"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("../src/css/"))))
 	http.Handle("/views/", http.StripPrefix("/views/", http.FileServer(http.Dir("../src/views/"))))
 	http.HandleFunc("/admin", breezyLoginHandler)
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
