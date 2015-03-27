@@ -12,9 +12,9 @@
 	<div class="brLoginContainer">
 		<div class="brH1">Breezy</div>
 		<form>
-			<input class="brLoginInput" placeholder="Username" type="text" name="username"/>
-			<input class="brLoginInput" placeholder="Password" type="password"/>
-			<input class="brLoginSubmit" type="Submit"/>
+			<input class="brLoginInput" ng-model="loginCredentials.username" placeholder="Username" type="text" name="username"/>
+			<input class="brLoginInput" ng-model="loginCredentials.password" placeholder="Password" type="password"/>
+			<input class="brLoginSubmit" type="Submit" ng-click="submitLoginInfo()"/>
 		</form>
 	</div>
 <div>

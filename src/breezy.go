@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	//"time"
+	"encoding/json"
 	"net/http"
 	"html/template"
 	"io/ioutil"
@@ -72,6 +72,21 @@ func breezyLoginHandler(w http.ResponseWriter, r *http.Request){
 	t, _ := template.ParseFiles("../src/views/login.html")
 	t.Execute(w, p)
 }
+type test struct{
+	what string
+}
+
+func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request){
+	decoder := json.NewDecoder(r.Body)
+	var test1 test 
+	err:= decoder.Decode(&test1)
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(test1.what)
+	
+}
+
 func breezyDashboardHandler(w http.ResponseWriter, r *http.Request){
 	p,_ := loadPage("dashboard")
 	t, _ := template.ParseFiles("../src/views/dashboard.html")
@@ -80,15 +95,21 @@ func breezyDashboardHandler(w http.ResponseWriter, r *http.Request){
 
 
 
-
-
-func main(){
-	//http.HandleFunc("/admin", breezyLoginHandler)
+func HandleDirs(){
 	http.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir("../src/lib/"))))
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../src/js/"))))
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("../src/css/"))))
 	http.Handle("/views/", http.StripPrefix("/views/", http.FileServer(http.Dir("../src/views/"))))
+}
+
+
+
+func main(){
+	//http.HandleFunc("/admin", breezyLoginHandler)
+	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
+	http.HandleFunc("/checkcredentials", breezyLoginCredentrials)
+	
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
 	http.HandleFunc("/", webHandler)
 	http.ListenAndServe("localhost:4000", nil)

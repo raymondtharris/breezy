@@ -5,6 +5,7 @@ input{
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
 	
 }
+
 .brLogContainer{
 	background:#eee;
 	padding:10pt 10pt;
@@ -15,10 +16,15 @@ body{
 	margin:0;
 	padding:0;
 }
+li{
+	list-style:none;
+}
+/* Dashboard */
+
 .brDashboardMenuContainer{
 	width:200pt;
 	height:100%;
-	background:#dcdcdc;
+	background:#C7ECFF;
 	margin-right:30pt;
 	float:left;
 }
