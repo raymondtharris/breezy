@@ -87,6 +87,12 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request){
 	
 }
 
+func breezyEditHandler(w http.ResponseWriter, r *http.Request){
+	p,_ := loadPage("editor")
+	t,_ := template.ParseFiles("../src/views/edit.html")
+	t.Execute(w,p)
+}
+
 func breezyDashboardHandler(w http.ResponseWriter, r *http.Request){
 	p,_ := loadPage("dashboard")
 	t, _ := template.ParseFiles("../src/views/dashboard.html")
@@ -110,6 +116,8 @@ func main(){
 	http.HandleFunc("/admin", breezyLoginHandler)
 	http.HandleFunc("/checkcredentials", breezyLoginCredentrials)
 	
+	
+	http.HandleFunc("/edit", breezyEditHandler)
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
 	http.HandleFunc("/", webHandler)
 	http.ListenAndServe("localhost:4000", nil)

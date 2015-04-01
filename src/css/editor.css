@@ -1,0 +1,16 @@
+.brEditorContent{
+	width:800pt;
+	height:1100pt;
+	margin:10pt auto;
+	display:block;
+	border: 1pt solid #222;
+	outline:none;
+}
+.brEditorAddFilesContainer{
+	width:200pt;
+	height:320pt;
+	background:#C7ECFF;
+	display:block;
+	margin-right:0pt;
+	
+}
