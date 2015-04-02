@@ -9,11 +9,23 @@
 	<link rel="stylesheet" type="text/css" href="/css/editor.css"/>
 </head>
 <body data-ng-app="Breezy" ng-controller="BreezyEditorController" >
+	<div class="brDashboardMenuContainer">
+		<div>Breezy</div>
+		<ul>
+			<li>View Blog</li>
+			<li>New Post</li>
+			<li>Settings</li>
+		</ul>
+	</div>
+
 <div>
-<div>
-	<div>
-		<input ng-click="togglePreview(false)" type="button" value="Markdown" />
-		<input ng-click="togglePreview(true)" type="button" value="Preview"/>
+	
+	
+	
+<div class="brEditorContainer">
+	<div class="brEditorModesContainer">
+		<input class="brEditorModeButton" ng-click="togglePreview(false)" type="button" value="Markdown" />
+		<input class="brEditorModeButton" ng-click="togglePreview(true)" type="button" value="Preview"/>
 	</div>
 	<div ng-if="!preview"  contenteditable class="brEditorContent">
 		# Title

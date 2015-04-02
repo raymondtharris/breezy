@@ -1,12 +1,38 @@
+
+body{
+	background:#f2f2f2;
+
+}
+
+.brEditorContainer{
+	width:780pt;
+	height:1050pt;
+	padding:0pt;
+	margin:10pt auto;
+}
+.brEditorModesContainer{
+	margin-left:574pt;
+}
+.brEditorModeButton{
+	width:100pt;
+	height:20pt;
+	border:1pt solid #ccc;
+	margin:-2.5pt -2pt;
+	padding:0;
+	background:#fff;
+	outline:none;
+	cursor:pointer;
+}
 .brEditorContent{
 	width:740pt;
 	height:1050pt;
 	padding:10pt;
-	margin:10pt auto;
+	margin:2pt auto 10pt auto;
 	display:block;
 	border: 1pt solid #ccc;
 	outline:none;
 	font-size:16pt;
+	background:#fff;
 }
 .brEditorAddFilesContainer{
 	width:200pt;
@@ -16,7 +42,7 @@
 	margin-right:0pt;
 	position:fixed;
 	right:8pt;
-	top:20pt;
+	top:28pt;
 	text-align:center;
 	padding:4pt 0pt;
 	border:1pt solid #ccc;
