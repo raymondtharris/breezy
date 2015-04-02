@@ -8,14 +8,29 @@
 	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
 	<link rel="stylesheet" type="text/css" href="/css/editor.css"/>
 </head>
-<body data-ng-app="Breezy" >
-<div contenteditable class="brEditorContent">
-	d
+<body data-ng-app="Breezy" ng-controller="BreezyEditorController" >
+<div>
+<div>
+	<div>
+		<input ng-click="togglePreview(false)" type="button" value="Markdown" />
+		<input ng-click="togglePreview(true)" type="button" value="Preview"/>
+	</div>
+	<div ng-if="!preview"  contenteditable class="brEditorContent">
+		# Title
+	</div>
+	<div ng-if="preview"  class="brEditorContent">
+		Title
+	</div>
 </div>
 <div class="brEditorAddFilesContainer">
 	<div>Media</div>
-	
-	DropFiles
+	<div class="brEditorMediaContainer">
+		
+	</div>
+	<div class="brEditorDropZone">
+		Drop Files
+	</div>
+</div>
 </div>
 </body>
 </html>

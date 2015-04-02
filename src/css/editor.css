@@ -1,10 +1,12 @@
 .brEditorContent{
-	width:800pt;
-	height:1100pt;
+	width:740pt;
+	height:1050pt;
+	padding:10pt;
 	margin:10pt auto;
 	display:block;
-	border: 1pt solid #222;
+	border: 1pt solid #ccc;
 	outline:none;
+	font-size:16pt;
 }
 .brEditorAddFilesContainer{
 	width:200pt;
@@ -12,5 +14,30 @@
 	background:#C7ECFF;
 	display:block;
 	margin-right:0pt;
+	position:fixed;
+	right:8pt;
+	top:20pt;
+	text-align:center;
+	padding:4pt 0pt;
+	border:1pt solid #ccc;
+}
+
+.brEditorMediaContainer{
+	width:190pt;
+	background:#fff;
+	max-height:300pt;
+	min-height:244pt;
+	margin:6pt auto;
+	border:1pt solid #ccc;
 	
+}
+
+.brEditorDropZone{
+	width:190pt;
+	height:30pt;
+	border:2pt dashed #ccc;
+	border-radius:10pt;
+	text-align:center;
+	padding-top:10pt;
+	margin:auto;
 }

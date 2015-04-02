@@ -24,3 +24,15 @@ breezy.controller("BreezyLoginController", function($scope, $http){
 		})
 	}
 })
+
+breezy.controller("BreezyEditorController", function($scope, $http){
+	$scope.preview=false
+	$scope.contentDirty=true
+	$scope.togglePreview = function(newValue){
+		$scope.preview=newValue
+		if($scope.contentDirty){
+			console.log("send to server for translation to markup.")
+			
+		}
+	}
+})
