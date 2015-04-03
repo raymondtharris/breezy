@@ -46,6 +46,11 @@ type Page struct{
 	
 }
 
+type loginCredentials struct{
+	Username string
+	Password string
+}
+
 func loadPage(pageName string) (*Page, error){
 	pageBody, err := ioutil.ReadFile(pageName+".html")
 	if err != nil {
@@ -77,6 +82,19 @@ type test struct{
 }
 
 func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request){
+	//defer r.Body.Close()
+	body, err2 := ioutil.ReadAll(r.Body)
+	if err2 != nil{
+		panic(err2)
+	}
+	
+	var vls loginCredentials
+	err2 = json.Unmarshal([]byte(string(body[:])), &vls)
+	if err2 != nil{
+		panic(err2)
+	}
+	fmt.Println(string(body[:]) ,"\n", vls)
+	/*
 	decoder := json.NewDecoder(r.Body)
 	var test1 test 
 	err:= decoder.Decode(&test1)
@@ -84,7 +102,7 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request){
 		panic(err)
 	}
 	fmt.Println(test1.what)
-	
+	*/
 }
 
 func breezyEditHandler(w http.ResponseWriter, r *http.Request){

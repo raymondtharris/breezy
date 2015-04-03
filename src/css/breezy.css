@@ -26,7 +26,9 @@ li{
 	height:100%;
 	background:#C7ECFF;
 	margin-right:30pt;
-	float:left;
+	position:fixed;
+	top:0pt;
+	border-right: 1pt solid #ccc;
 }
 .brDashboardRecentActivityContainer{
 	
