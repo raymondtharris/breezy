@@ -46,9 +46,15 @@ type Page struct{
 	
 }
 
+
+
 type loginCredentials struct{
 	Username string
 	Password string
+}
+
+func (l loginCredentials) String() string{
+	return fmt.Sprintf("{username: %s, password: %s}", l.Username, l.Password)
 }
 
 func loadPage(pageName string) (*Page, error){
@@ -94,15 +100,7 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request){
 		panic(err2)
 	}
 	fmt.Println(string(body[:]) ,"\n", vls)
-	/*
-	decoder := json.NewDecoder(r.Body)
-	var test1 test 
-	err:= decoder.Decode(&test1)
-	if err != nil{
-		panic(err)
-	}
-	fmt.Println(test1.what)
-	*/
+	
 }
 
 func breezyEditHandler(w http.ResponseWriter, r *http.Request){
@@ -129,7 +127,6 @@ func HandleDirs(){
 
 
 func main(){
-	//http.HandleFunc("/admin", breezyLoginHandler)
 	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
 	http.HandleFunc("/checkcredentials", breezyLoginCredentrials)
