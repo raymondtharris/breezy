@@ -65,7 +65,7 @@ func loadPage(pageName string) (*Page, error){
 	return &Page{Title:pageName, Body: pageBody }, nil
 }
 
-func webHandler(w http.ResponseWriter, r *http.Request){
+func webBlogHandler(w http.ResponseWriter, r *http.Request){
 	p,_ := loadPage("index")
 	t, _ := template.ParseFiles("../src/index.html")
 	t.Execute(w, p)
@@ -101,6 +101,7 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request){
 	}
 	fmt.Println(string(body[:]) ,"\n", vls)
 	
+	w.Write([]byte("OK"))
 }
 
 func breezyEditHandler(w http.ResponseWriter, r *http.Request){
@@ -112,6 +113,12 @@ func breezyEditHandler(w http.ResponseWriter, r *http.Request){
 func breezyDashboardHandler(w http.ResponseWriter, r *http.Request){
 	p,_ := loadPage("dashboard")
 	t, _ := template.ParseFiles("../src/views/dashboard.html")
+	t.Execute(w, p)
+}
+
+func breezySettingsHandler(w http.ResponseWriter, r *http.Request){
+	p,_ := loadPage("settings")
+	t, _ := template.ParseFiles("../src/views/settings.html")
 	t.Execute(w, p)
 }
 
@@ -134,6 +141,7 @@ func main(){
 	
 	http.HandleFunc("/edit", breezyEditHandler)
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
-	http.HandleFunc("/", webHandler)
+	http.HandleFunc("/settings", breezySettingsHandler)
+	http.HandleFunc("/", webBlogHandler)
 	http.ListenAndServe("localhost:4000", nil)
 }

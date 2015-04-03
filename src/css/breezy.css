@@ -31,7 +31,9 @@ li{
 	border-right: 1pt solid #ccc;
 }
 .brDashboardRecentActivityContainer{
-	
+	margin-left:240pt;
+	padding-top:2pt;
+	margin-top:0pt;
 }
 
 

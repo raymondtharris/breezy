@@ -3,8 +3,8 @@
 	<title>Breezy</title>
 	<script type="text/javascript" src="/lib/angular.js"></script>
 	<script type="text/javascript" src="/lib/angular-route.js"></script>
-	
 	<script type="text/javascript" src="/js/breezy.js"></script>
+	
 	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
 	<link rel="stylesheet" type="text/css" href="/css/editor.css"/>
 </head>
@@ -27,17 +27,13 @@
 		<input class="brEditorModeButton" ng-click="togglePreview(false)" type="button" value="Markdown" />
 		<input class="brEditorModeButton" ng-click="togglePreview(true)" type="button" value="Preview"/>
 	</div>
-	<div ng-if="!preview"  contenteditable class="brEditorContent">
-		# Title
-	</div>
-	<div ng-if="preview"  class="brEditorContent">
-		Title
+	<div ng-if="!preview" contenteditable ng-model="markdownContent" class="brEditorContent"></div>
+	<div ng-if="preview" ng-model="tested3" class="brEditorContent">
 	</div>
 </div>
 <div class="brEditorAddFilesContainer">
 	<div>Media</div>
-	<div class="brEditorMediaContainer">
-		
+	<div class="brEditorMediaContainer" ng-model="userContent">
 	</div>
 	<div class="brEditorDropZone">
 		Drop Files
