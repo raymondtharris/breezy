@@ -45,7 +45,19 @@ type Page struct{
 	Body []byte
 	
 }
+func loadPage(pageName string) (*Page, error){
+	pageBody, err := ioutil.ReadFile(pageName+".html")
+	if err != nil {
+	        return nil, err
+	    }
+	return &Page{Title:pageName, Body: pageBody }, nil
+}
 
+
+type brBlogContent struct{
+	MarkdownContent string
+	MarkupContent string
+}
 
 
 type loginCredentials struct{
@@ -57,13 +69,6 @@ func (l loginCredentials) String() string{
 	return fmt.Sprintf("{username: %s, password: %s}", l.Username, l.Password)
 }
 
-func loadPage(pageName string) (*Page, error){
-	pageBody, err := ioutil.ReadFile(pageName+".html")
-	if err != nil {
-	        return nil, err
-	    }
-	return &Page{Title:pageName, Body: pageBody }, nil
-}
 
 func webBlogHandler(w http.ResponseWriter, r *http.Request){
 	http.ServeFile(w, r, "../src/index.html")
@@ -74,15 +79,15 @@ func breezyLoginHandler(w http.ResponseWriter, r *http.Request){
 }
 
 func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request){
-	body, err2 := ioutil.ReadAll(r.Body)
-	if err2 != nil{
-		panic(err2)
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil{
+		panic(err)
 	}
 	
 	var vls loginCredentials
-	err2 = json.Unmarshal([]byte(string(body[:])), &vls)
-	if err2 != nil{
-		panic(err2)
+	err = json.Unmarshal([]byte(string(body[:])), &vls)
+	if err != nil{
+		panic(err)
 	}
 	fmt.Println(string(body[:]) ,"\n", vls)
 	
@@ -91,6 +96,28 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request){
 
 func breezyEditHandler(w http.ResponseWriter, r *http.Request){
 	http.ServeFile(w, r, "../src/views/edit.html")
+}
+
+func breezyMarkdownHandler(w http.ResponseWriter, r*http.Request){
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil{
+		panic(err)
+	}
+	var currentBlogContent brBlogContent
+	err = json.Unmarshal([]byte(string(body[:])), &currentBlogContent)
+	if err != nil{
+		panic(err)
+	}
+	//fmt.Println(string(body[:]) ,"\n", currentBlogContent)
+	markdownConverter(currentBlogContent)
+	
+	// Send blog data back
+	jsRes, err2 := json.Marshal(currentBlogContent)
+	if err2 != nil{
+		panic(err2)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsRes)
 }
 
 func breezyDashboardHandler(w http.ResponseWriter, r *http.Request){
@@ -110,7 +137,10 @@ func HandleDirs(){
 	http.Handle("/views/", http.StripPrefix("/views/", http.FileServer(http.Dir("../src/views/"))))
 }
 
-
+func markdownConverter(br brBlogContent){
+	br.MarkupContent = br.MarkdownContent
+	//fmt.Println(br)
+}
 
 func main(){
 	HandleDirs()
@@ -119,6 +149,8 @@ func main(){
 	
 	
 	http.HandleFunc("/edit", breezyEditHandler)
+	http.HandleFunc("/mdowntomup",breezyMarkdownHandler)
+	
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
 	http.HandleFunc("/settings", breezySettingsHandler)
 	http.HandleFunc("/", webBlogHandler)
