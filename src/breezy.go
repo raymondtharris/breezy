@@ -72,16 +72,7 @@ func webBlogHandler(w http.ResponseWriter, r *http.Request){
 }
 
 func breezyLoginHandler(w http.ResponseWriter, r *http.Request){
-	var temp = ""
-	
-	temp = r.FormValue("username")
-	if len(temp) > 0 {
-		print(temp)
-	}
-	
-	p,_ := loadPage("login")
-	t, _ := template.ParseFiles("../src/views/login.html")
-	t.Execute(w, p)
+	http.ServeFile(w, r, "../src/views/login.html")
 }
 type test struct{
 	what string
@@ -105,21 +96,15 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request){
 }
 
 func breezyEditHandler(w http.ResponseWriter, r *http.Request){
-	p,_ := loadPage("editor")
-	t,_ := template.ParseFiles("../src/views/edit.html")
-	t.Execute(w,p)
+	http.ServeFile(w, r, "../src/views/edit.html")
 }
 
 func breezyDashboardHandler(w http.ResponseWriter, r *http.Request){
-	p,_ := loadPage("dashboard")
-	t, _ := template.ParseFiles("../src/views/dashboard.html")
-	t.Execute(w, p)
+	http.ServeFile(w, r, "../src/views/dashboard.html")
 }
 
 func breezySettingsHandler(w http.ResponseWriter, r *http.Request){
-	p,_ := loadPage("settings")
-	t, _ := template.ParseFiles("../src/views/settings.html")
-	t.Execute(w, p)
+	http.ServeFile(w, r, "../src/views/settings.html")
 }
 
 
