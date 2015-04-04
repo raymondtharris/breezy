@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"net/http"
-	"html/template"
+	//"html/template"
 	"io/ioutil"
 )
 
@@ -66,20 +66,14 @@ func loadPage(pageName string) (*Page, error){
 }
 
 func webBlogHandler(w http.ResponseWriter, r *http.Request){
-	p,_ := loadPage("index")
-	t, _ := template.ParseFiles("../src/index.html")
-	t.Execute(w, p)
+	http.ServeFile(w, r, "../src/index.html")
 }
 
 func breezyLoginHandler(w http.ResponseWriter, r *http.Request){
 	http.ServeFile(w, r, "../src/views/login.html")
 }
-type test struct{
-	what string
-}
 
 func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request){
-	//defer r.Body.Close()
 	body, err2 := ioutil.ReadAll(r.Body)
 	if err2 != nil{
 		panic(err2)

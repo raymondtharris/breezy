@@ -2,35 +2,30 @@
 <head>
 	<title>Breezy</title>
 	<script type="text/javascript" src="/lib/angular.js"></script>
-	<script type="text/javascript" src="/lib/angular-route.js"></script>
+	<script type="text/javascript" src="/lib/angular-sanitize.js"></script>
 	<script type="text/javascript" src="/js/breezy.js"></script>
 	
 	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
 	<link rel="stylesheet" type="text/css" href="/css/editor.css"/>
 </head>
-<body data-ng-app="Breezy" ng-controller="BreezyEditorController" >
-	<div class="brDashboardMenuContainer">
+<body data-ng-app="breezyApp"  >
+	<div ng-controller="BreezyEditorController">
+		<div class="brDashboardMenuContainer">
 		<div>Breezy</div>
 		<ul>
 			<li>View Blog</li>
 			<li>New Post</li>
 			<li>Settings</li>
 		</ul>
+		</div>
+	<div class="brEditorContainer">
+		<div class="brEditorModesContainer">
+			<input class="brEditorModeButton" ng-click="togglePreview(false)" type="button" value="Markdown" />
+			<input class="brEditorModeButton" ng-click="togglePreview(true)" type="button" value="Preview"/>
+		</div>
+		<div  contenteditable ng-model="markdownContent" strip-br="true" class="brEditorContent"></div>
+		<div  class="brEditorContent" >{{markupContent}}</div>
 	</div>
-
-<div>
-	
-	
-	
-<div class="brEditorContainer">
-	<div class="brEditorModesContainer">
-		<input class="brEditorModeButton" ng-click="togglePreview(false)" type="button" value="Markdown" />
-		<input class="brEditorModeButton" ng-click="togglePreview(true)" type="button" value="Preview"/>
-	</div>
-	<div ng-if="!preview" contenteditable ng-model="markdownContent" class="brEditorContent"></div>
-	<div ng-if="preview" ng-model="tested3" class="brEditorContent">
-	</div>
-</div>
 <div class="brEditorAddFilesContainer">
 	<div>Media</div>
 	<div class="brEditorMediaContainer" ng-model="userContent">
