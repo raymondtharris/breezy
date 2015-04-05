@@ -157,11 +157,11 @@ func markdownConvertLine(currentLine string) string{
 	arr := strings.Split(currentLine, " ")
 	switch arr[0]{
 		case "#":
-			currentLine = "<h1>"+currentLine+"</h1>"
+			currentLine = strings.Replace(currentLine, "#", "<h1>", 1)+"</h1>"
 		case "##":
-			currentLine = "<h2>"+currentLine+"</h2>"
+			currentLine = strings.Replace(currentLine, "##", "<h2>", 1)+"</h2>"
 		case "###":
-			currentLine = "<h3>"+currentLine+"</h3>"
+			currentLine = strings.Replace(currentLine, "###", "<h3>", 1)+"</h3>"
 		default:
 			currentLine = "<p>"+currentLine+"</p>"
 	}
