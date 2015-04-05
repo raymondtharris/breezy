@@ -6,6 +6,7 @@ import (
 	"net/http"
 	//"html/template"
 	"io/ioutil"
+	"strings"
 )
 
 const brImage, brAudio , brVideo = 0, 1, 2
@@ -109,8 +110,8 @@ func breezyMarkdownHandler(w http.ResponseWriter, r*http.Request){
 		panic(err)
 	}
 	//fmt.Println(string(body[:]) ,"\n", currentBlogContent)
-	markdownConverter(currentBlogContent)
-	
+	currentBlogContent = markdownConverter(currentBlogContent)
+	//fmt.Println(currentBlogContent)
 	// Send blog data back
 	jsRes, err2 := json.Marshal(currentBlogContent)
 	if err2 != nil{
@@ -137,10 +138,36 @@ func HandleDirs(){
 	http.Handle("/views/", http.StripPrefix("/views/", http.FileServer(http.Dir("../src/views/"))))
 }
 
-func markdownConverter(br brBlogContent){
-	br.MarkupContent = br.MarkdownContent
-	//fmt.Println(br)
+func markdownConverter(br brBlogContent) brBlogContent{
+	br.MarkupContent = ""
+	//strings.Replace(br.MarkupContent, "<br>", "\n", -1)
+	arr := strings.Split(br.MarkdownContent, "\n")
+	for i := 0; i< len(arr); i++{
+		if(len(arr[i])) >0{
+			//fmt.Println(arr[i])
+			br.MarkupContent = br.MarkupContent + markdownConvertLine(arr[i])
+		}
+	}
+	
+	//fmt.Println(br.MarkupContent)
+	return br
 }
+
+func markdownConvertLine(currentLine string) string{
+	arr := strings.Split(currentLine, " ")
+	switch arr[0]{
+		case "#":
+			currentLine = "<h1>"+currentLine+"</h1>"
+		case "##":
+			currentLine = "<h2>"+currentLine+"</h2>"
+		case "###":
+			currentLine = "<h3>"+currentLine+"</h3>"
+		default:
+			currentLine = "<p>"+currentLine+"</p>"
+	}
+	return currentLine
+}
+
 
 func main(){
 	HandleDirs()

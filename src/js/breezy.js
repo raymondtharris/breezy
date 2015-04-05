@@ -29,43 +29,13 @@ breezy.directive('contenteditable', ['$sce', function($sce) {
         if ( attrs.stripBr && html == '<br>' ) {
           html = '';
         }
+		
         ngModel.$setViewValue(html);
       }
     }
   };
 }]);
 
-/*directive("contenteditable", function() {
-    return {
-        restrict: "A",
-        require: "ngModel",
-        link: function(scope, element, attrs, ngModel) {
-
-            function read() {
-                ngModel.$setViewValue(element.html());
-            }
-            ngModel.$render = function() {
-                element.html(ngModel.$viewValue || "");
-            };
-            element.bind("blur keyup change", function() {
-                scope.$apply(read);
-            });
-
-
-            element.css('outline','none');
-            element.bind("keydown keypress", function (event) {
-              console.log("aoidfja")
-                if(event.which === 13) {
-                    element[0].blur();
-                    event.preventDefault();
-                  
-                }
-            });
-
-        }
-    };
-});
-*/
 
 breezy.controller("BreezyController", function($scope){
 	
@@ -95,11 +65,15 @@ breezy.controller("BreezyEditorController", function($scope, $http){
 		
 		if($scope.contentDirty){
 			console.log("send to server for translation to markup.")
-			var contentToConvert = {"markdownContent":$scope.markdownContent, "markupContent":""}
-			//console.log(contentToConvert)
+			 //String($scope.markdownContent).replace("<br>", "\n");
+			//console.log(temp)
+			var temp = String($scope.markdownContent).replace(/<[^>]+>/gm, '\n');
+			console.log(temp)
+			var contentToConvert = {"markdownContent": temp, "markupContent":""}
+			console.log(contentToConvert)
 			$http.post("/mdowntomup", contentToConvert).success(function(data){
-				//console.log(data)
-				$scope.markupContent =  data.markupContent
+				console.log(data)
+				$scope.markupContent =  data.MarkupContent
 				$scope.contentDirty=false	
 			});
 			
