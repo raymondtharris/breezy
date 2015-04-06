@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"net/http"
-	//"html/template"
+	"regexp"
 	"io/ioutil"
 	"strings"
 )
@@ -174,14 +174,13 @@ func markdownConvertLine(currentLine string) string{
 				if strings.Index(currentLine, "![") > 0 {
 					//url inside string
 					var urlString = markdownHandleURL(currentLine)
-				}
-				else{
+					fmt.Println(urlString)
+				} else {
 					//url is first element
 					var urlString = markdownHandleURL(currentLine)
 					currentLine = urlString
 				}
-			}
-			else{
+			} else{
 			currentLine = "<p>"+currentLine+"</p>"
 			}
 	}
@@ -189,8 +188,8 @@ func markdownConvertLine(currentLine string) string{
 }
 
 func markdownHandleURL(currentLine string) string{
-	parenRegex := regexp.MustCompile("(?<=\().*(?=\))")
-	altTextRegex := regexp.MustCompile("(?<=\[).*(?=\])")
+	parenRegex := regexp.MustCompile("\\((.*?)\\)")
+	altTextRegex := regexp.MustCompile("\\[(.*?)\\]")
 	
 	parens := parenRegex.FindAllString(currentLine, -1)
 	altText := altTextRegex.FindAllString(currentLine, -1)
@@ -202,20 +201,40 @@ func markdownHandleURL(currentLine string) string{
 	// determine if link or media
 	postDotResult := strings.Split(urlString, ".")
 	
-	switch postDotResult[1]{
-		case strings.Contains(postDotResult[1], "png"):
-			returnString := "<div><img src='"+urlString+"' alt='"+altText+"' title="+urlTitle+"/></div>"
-		case strings.Contains(postDotResult[1], "jpg"):
-			returnString := "<div><img src='"+urlString+"' alt='"+altText+"' title="+urlTitle+"/></div>"
-		case strings.Contains(postDotResult[1], "jpeg"):
-			returnString := "<div><img src='"+urlString+"' alt='"+altText+"' title="+urlTitle+"/></div>"
-		case strings.Contains(postDotResult[1], "gif"):
-			returnString := "<div><img src='"+urlString+"' alt='"+altText+"' title="+urlTitle+"/></div>"
-		default:
-			returnString :="<a href='"+urlString+"' alt='"+altText+"'>"+urlTitle+"</a>"	
+	var returnString =""
+	if strings.Contains(postDotResult[1], "png"){
+		returnString = "<div><img src='"+urlString+"' alt='"+altText[0]+"' title="+urlTitle+"/></div>"
+		returnString = removeLeftoversInLink(returnString)
+	} else if strings.Contains(postDotResult[1], "jpg"){
+		returnString = "<div><img src='"+urlString+"' alt='"+altText[0]+"' title="+urlTitle+"/></div>"
+		returnString = removeLeftoversInLink(returnString)
+	} else if strings.Contains(postDotResult[1], "jpeg"){
+		returnString = "<div><img src='"+urlString+"' alt='"+altText[0]+"' title="+urlTitle+"/></div>"
+		returnString = removeLeftoversInLink(returnString)
+	} else if strings.Contains(postDotResult[1], "gif"){
+		returnString = "<div><img src='"+urlString+"' alt='"+altText[0]+"' title="+urlTitle+"/></div>"
+		returnString = removeLeftoversInLink(returnString)
+	} else{
+		returnString = "<a href='"+urlString+"' alt='"+altText[0]+"'>"+urlTitle+"</a>"
+		returnString =  removeLeftoversInLink(returnString)	
 	}
 	
+	
 	return returnString
+}
+
+func removeLeftoversInLink(linkUrl string) string{
+	temp1 := strings.Split(linkUrl,"(")
+	linkUrl = temp1[0]+temp1[1]
+	temp1 = strings.Split(linkUrl,")")
+	linkUrl = temp1[0]+temp1[1]
+	temp1 = strings.Split(linkUrl,"[")
+	linkUrl = temp1[0]+temp1[1]
+	temp1 = strings.Split(linkUrl,"]")
+	linkUrl = temp1[0]+temp1[1]
+
+	fmt.Println(linkUrl)
+	return linkUrl
 }
 
 
