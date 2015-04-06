@@ -200,11 +200,22 @@ func markdownHandleURL(currentLine string) string{
 	urlTitle := splitParens[1]
 	
 	// determine if link or media
-	//link
-	//returnString :=
+	postDotResult := strings.Split(urlString, ".")
 	
-	returnString := "<div><img src='"+urlString+"' alt='"+altText+"' title="+urlTitle+"/></div>"
+	switch postDotResult[1]{
+		case strings.Contains(postDotResult[1], "png"):
+			returnString := "<div><img src='"+urlString+"' alt='"+altText+"' title="+urlTitle+"/></div>"
+		case strings.Contains(postDotResult[1], "jpg"):
+			returnString := "<div><img src='"+urlString+"' alt='"+altText+"' title="+urlTitle+"/></div>"
+		case strings.Contains(postDotResult[1], "jpeg"):
+			returnString := "<div><img src='"+urlString+"' alt='"+altText+"' title="+urlTitle+"/></div>"
+		case strings.Contains(postDotResult[1], "gif"):
+			returnString := "<div><img src='"+urlString+"' alt='"+altText+"' title="+urlTitle+"/></div>"
+		default:
+			returnString :="<a href='"+urlString+"' alt='"+altText+"'>"+urlTitle+"</a>"	
+	}
 	
+	return returnString
 }
 
 
