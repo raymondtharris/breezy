@@ -155,6 +155,7 @@ func markdownConverter(br brBlogContent) brBlogContent{
 
 func markdownConvertLine(currentLine string) string{
 	arr := strings.Split(currentLine, " ")
+	fmt.Println(arr[0])
 	switch arr[0]{
 		case "#":
 			currentLine = strings.Replace(currentLine, "#", "<h1>", 1)+"</h1>"
@@ -162,10 +163,48 @@ func markdownConvertLine(currentLine string) string{
 			currentLine = strings.Replace(currentLine, "##", "<h2>", 1)+"</h2>"
 		case "###":
 			currentLine = strings.Replace(currentLine, "###", "<h3>", 1)+"</h3>"
+		case "####":
+			currentLine = strings.Replace(currentLine, "####", "<h4>", 1)+"</h4>"
+		case "#####":
+			currentLine = strings.Replace(currentLine, "#####", "<h5>", 1)+"</h5>"
+		case "######":
+			currentLine = strings.Replace(currentLine, "######", "<h6>", 1)+"</h6>"
 		default:
+			if strings.Contains(currentLine, "!["){
+				if strings.Index(currentLine, "![") > 0 {
+					//url inside string
+					var urlString = markdownHandleURL(currentLine)
+				}
+				else{
+					//url is first element
+					var urlString = markdownHandleURL(currentLine)
+					currentLine = urlString
+				}
+			}
+			else{
 			currentLine = "<p>"+currentLine+"</p>"
+			}
 	}
 	return currentLine
+}
+
+func markdownHandleURL(currentLine string) string{
+	parenRegex := regexp.MustCompile("(?<=\().*(?=\))")
+	altTextRegex := regexp.MustCompile("(?<=\[).*(?=\])")
+	
+	parens := parenRegex.FindAllString(currentLine, -1)
+	altText := altTextRegex.FindAllString(currentLine, -1)
+	
+	splitParens := strings.Split(parens[0], " ")
+	urlString := splitParens[0]
+	urlTitle := splitParens[1]
+	
+	// determine if link or media
+	//link
+	//returnString :=
+	
+	returnString := "<div><img src='"+urlString+"' alt='"+altText+"' title="+urlTitle+"/></div>"
+	
 }
 
 
