@@ -215,6 +215,7 @@ func markdownHandleURL(currentLine string) string{
 		returnString = "<div><img src='"+urlString+"' alt='"+altText[0]+"' title="+urlTitle+"/></div>"
 		returnString = removeLeftoversInLink(returnString)
 	} else{
+		urlTitle = urlTitle[1:len(urlTitle)-2] +")" // Gotta take out the doublequotes but leave in the parent to be removed later
 		returnString = "<a href='"+urlString+"' alt='"+altText[0]+"'>"+urlTitle+"</a>"
 		returnString =  removeLeftoversInLink(returnString)	
 	}
@@ -233,7 +234,7 @@ func removeLeftoversInLink(linkUrl string) string{
 	temp1 = strings.Split(linkUrl,"]")
 	linkUrl = temp1[0]+temp1[1]
 
-	fmt.Println(linkUrl)
+	//fmt.Println(linkUrl)
 	return linkUrl
 }
 
