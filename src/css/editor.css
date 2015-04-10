@@ -84,4 +84,15 @@ body{
 	text-align:center;
 	padding-top:10pt;
 	margin:auto;
+
+}
+.brEditorAddLinkContainer{
+	width:200pt;
+	height:60pt;
+	border: 1pt solid #ccc;
+	background: #C7ECFF;
+	position:fixed;
+	top: 380pt;
+	right:8pt;
+	
 }
