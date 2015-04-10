@@ -22,6 +22,16 @@ body{
 	outline:none;
 	cursor:pointer;
 }
+.brEditorCommandButton{
+	width: 70pt;
+	height:20pt;
+	border:1pt solid #ccc;
+	margin:-2.5pt -2pt;
+	padding:0;
+	background:#fff;
+	outline:none;
+	cursor:pointer;
+}
 .brEditorContent{
 	width:740pt;
 	height:1050pt;
@@ -41,7 +51,7 @@ body{
 	margin-right:0pt;
 	position:fixed;
 	right:8pt;
-	top:28pt;
+	top:38pt;
 	text-align:center;
 	padding:4pt 0pt;
 	border:1pt solid #ccc;
@@ -56,6 +66,15 @@ body{
 	border:1pt solid #ccc;
 	
 }
+.brEditorCommandContainer{
+	width:160pt;
+	height:30pt;
+	position: fixed;
+	top: 10pt;
+	right:16pt;
+	padding: 0pt 0pt;
+	display: block;
+}	
 
 .brEditorDropZone{
 	width:190pt;

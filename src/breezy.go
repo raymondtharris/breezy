@@ -11,6 +11,7 @@ import (
 
 const brImage, brAudio, brVideo = 0, 1, 2
 const brPost = 0
+const brBlogName = "Temp"
 
 type breezyMedia struct {
 	name, filename string
@@ -229,6 +230,9 @@ func removeLeftoversInLink(linkUrl string) string {
 
 	//fmt.Println(linkUrl)
 	return linkUrl
+}
+
+func breezyPostListHandle(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
