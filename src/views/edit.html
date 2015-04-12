@@ -39,9 +39,11 @@
 	</div>
 </div>
 <div class="brEditorAddLinkContainer">
-	<input type="text" placeholder="Add Link"/>
-	<input type="submit" value="Add" />
-	<div>List of links</div>
+	<form>
+		<input class="brEditorAddLinkTextInput" type="text" ng-model="newLinkText" placeholder="Add Link"/>
+		<input class="brEditorAddLinkButton" type="submit" value="Add" ng-submit="" />
+		<div class="brEditorAddLinkList">List of links</div>
+	</form>
 </div>
 
 </div>

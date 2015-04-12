@@ -96,3 +96,26 @@ body{
 	right:8pt;
 	
 }
+.brEditorAddLinkTextInput{
+	width:160pt;
+	height:20pt;
+	border:1pt solid #ccc;
+	margin-left:2pt;
+	display:block;
+	margin-top:2pt;
+	float:left;
+}
+.brEditorAddLinkButton{
+	width:30pt;
+	height:20pt;
+	border:1pt solid #ccc;
+	background:#fff;
+	margin-left:5pt;
+	margin-top:2pt;
+}
+.brEditorAddLinkList{
+	width:190pt;
+	margin:auto;
+	margin-top:4pt;
+}
+
