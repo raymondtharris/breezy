@@ -231,6 +231,11 @@ func removeLeftoversInLink(linkUrl string) string {
 	//fmt.Println(linkUrl)
 	return linkUrl
 }
+func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
+	//make post variable
+	//add to database
+	//if save to db succesful send ok to client
+}
 
 func breezyPostListHandle(w http.ResponseWriter, r *http.Request) {
 }
@@ -242,6 +247,7 @@ func main() {
 
 	http.HandleFunc("/edit", breezyEditHandler)
 	http.HandleFunc("/mdowntomup", breezyMarkdownHandler)
+	http.HandleFunc("/savepost", breezySavePostHandler)
 
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
 	http.HandleFunc("/settings", breezySettingsHandler)

@@ -58,18 +58,16 @@ breezy.controller("BreezyLoginController", function($scope, $http){
 breezy.controller("BreezyEditorController", function($scope, $http){
 	$scope.preview=false
 	$scope.contentDirty=true
-	//$scope.markdownContent = "# Title fjansd"
+	$scope.postData={title:"", dateCreated:"", dateModified:""}
+	
 	$scope.togglePreview = function(newValue){
 		$scope.preview=newValue
 		console.log($scope.markdownContent)
 		
 		if($scope.contentDirty){
 			console.log("send to server for translation to markup.")
-			 //String($scope.markdownContent).replace("<br>", "\n");
-			//console.log(temp)
 			var temp = String($scope.markdownContent).replace(/<[^>]+>/gm, '\n');
-			console.log(temp)
-			var contentToConvert = {"markdownContent": temp, "markupContent":""}
+			var contentToConvert = {"markdownContent": temp, "markupContent":"", "postData": $scope.postData}
 			console.log(contentToConvert)
 			$http.post("/mdowntomup", contentToConvert).success(function(data){
 				console.log(data)
@@ -78,6 +76,15 @@ breezy.controller("BreezyEditorController", function($scope, $http){
 			});
 			
 		}
+	}
+	$scope.savePost = function(){
+		console.log($scope)
+		//if contentDirty send markdown to change
+		//on return send data to be saved in database 			
+		var postToSave = {}
+		$http.post("savepost",postToSave).success(function(){
+
+		});
 	}
 })
 
