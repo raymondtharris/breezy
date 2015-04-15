@@ -13,6 +13,8 @@ const brImage, brAudio, brVideo = 0, 1, 2
 const brPost = 0
 const brBlogName = "Temp"
 
+var editingPost brBlogContent
+
 type breezyMedia struct {
 	name, filename string
 	filesSize      float32
@@ -41,30 +43,28 @@ type breezyActivity struct {
 	//dateCreated, dateModified Time
 }
 
-type Page struct {
-	Title string
-	Body  []byte
+type brPostData struct {
+	// brPostData stores data about a post eccept for the post content
+	Title        string //Title of the post
+	DateCreated  string //Date the post was created and saved
+	DateModified string //Last Modification date of post that was saved
 }
 
-func loadPage(pageName string) (*Page, error) {
-	pageBody, err := ioutil.ReadFile(pageName + ".html")
-	if err != nil {
-		return nil, err
-	}
-	return &Page{Title: pageName, Body: pageBody}, nil
-}
-
-type brBlogContent struct {
-	MarkdownContent string
-	MarkupContent   string
+type brPostContent struct {
+	// brPostContent stores all post data plus the actual markdown and markup content
+	MarkdownContent string     //Markdown version of the post
+	MarkupContent   string     //Converted Markup of the Markdown for the post
+	PostData        brPostData //Store other post data extracted from editor
 }
 
 type loginCredentials struct {
-	Username string
-	Password string
+	// loginCredentials stores the data needed to login to server
+	Username string //username provided at login from user
+	Password string //hash of the users password from login
 }
 
 func (l loginCredentials) String() string {
+	//Formated string to print string of loginCredentials
 	return fmt.Sprintf("{username: %s, password: %s}", l.Username, l.Password)
 }
 
