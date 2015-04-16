@@ -13,7 +13,7 @@ const brImage, brAudio, brVideo = 0, 1, 2
 const brPost = 0
 const brBlogName = "Temp"
 
-var editingPost brBlogContent
+var editingPost brPostContent
 
 type breezyMedia struct {
 	name, filename string
@@ -101,7 +101,7 @@ func breezyMarkdownHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	var currentBlogContent brBlogContent
+	var currentBlogContent brPostContent
 	err = json.Unmarshal([]byte(string(body[:])), &currentBlogContent)
 	if err != nil {
 		panic(err)
@@ -133,14 +133,19 @@ func HandleDirs() {
 	http.Handle("/views/", http.StripPrefix("/views/", http.FileServer(http.Dir("../src/views/"))))
 }
 
-func markdownConverter(br brBlogContent) brBlogContent {
+func markdownConverter(br brPostContent) brPostContent {
 	br.MarkupContent = ""
 	//strings.Replace(br.MarkupContent, "<br>", "\n", -1)
 	arr := strings.Split(br.MarkdownContent, "\n")
 	for i := 0; i < len(arr); i++ {
 		if (len(arr[i])) > 0 {
 			//fmt.Println(arr[i])
-			br.MarkupContent = br.MarkupContent + markdownConvertLine(arr[i])
+			var brNewLine markdownConvertedLine
+			brNewLine = markdownConvertLine(arr[i])
+			br.MarkupContent = br.MarkupContent + brNewLine.convertedString
+			//Check line conversionType to see if it needs to be added to br.PostData
+
+			//br.MarkupContent = br.MarkupContent + markdownConvertLine(arr[i])
 		}
 	}
 
@@ -148,22 +153,35 @@ func markdownConverter(br brBlogContent) brBlogContent {
 	return br
 }
 
-func markdownConvertLine(currentLine string) string {
+type markdownConvertedLine struct {
+	convertedString string
+	conversionType  string
+}
+
+func markdownConvertLine(currentLine string) markdownConvertedLine { //Need to make function return struct including string and what type of conversion the line was
 	arr := strings.Split(currentLine, " ")
 	fmt.Println(arr[0])
+	var convertedLine markdownConvertedLine
+
 	switch arr[0] {
 	case "#":
 		currentLine = strings.Replace(currentLine, "#", "<h1>", 1) + "</h1>"
+		convertedLine.conversionType = "Title"
 	case "##":
 		currentLine = strings.Replace(currentLine, "##", "<h2>", 1) + "</h2>"
+		convertedLine.conversionType = "H2"
 	case "###":
 		currentLine = strings.Replace(currentLine, "###", "<h3>", 1) + "</h3>"
+		convertedLine.conversionType = "H3"
 	case "####":
 		currentLine = strings.Replace(currentLine, "####", "<h4>", 1) + "</h4>"
+		convertedLine.conversionType = "H4"
 	case "#####":
 		currentLine = strings.Replace(currentLine, "#####", "<h5>", 1) + "</h5>"
+		convertedLine.conversionType = "H5"
 	case "######":
 		currentLine = strings.Replace(currentLine, "######", "<h6>", 1) + "</h6>"
+		convertedLine.conversionType = "H6"
 	default:
 		if strings.Contains(currentLine, "![") {
 			if strings.Index(currentLine, "![") > 0 {
@@ -173,16 +191,20 @@ func markdownConvertLine(currentLine string) string {
 			} else {
 				//url is first element
 				var urlString = markdownHandleURL(currentLine)
-				currentLine = urlString
+				currentLine = urlString.convertedString
+				convertedLine.conversionType = urlString.conversionType
 			}
 		} else {
 			currentLine = "<p>" + currentLine + "</p>"
+			convertedLine.conversionType = "Text"
 		}
 	}
-	return currentLine
+
+	convertedLine.convertedString = currentLine
+	return convertedLine
 }
 
-func markdownHandleURL(currentLine string) string {
+func markdownHandleURL(currentLine string) convertedLine {
 	parenRegex := regexp.MustCompile("\\((.*?)\\)")
 	altTextRegex := regexp.MustCompile("\\[(.*?)\\]")
 
@@ -195,27 +217,34 @@ func markdownHandleURL(currentLine string) string {
 
 	// determine if link or media
 	postDotResult := strings.Split(urlString, ".")
-
+	var convertedURL convertedLine
 	var returnString = ""
 	if strings.Contains(postDotResult[1], "png") {
 		returnString = "<div><img src='" + urlString + "' alt='" + altText[0] + "' title=" + urlTitle + "/></div>"
 		returnString = removeLeftoversInLink(returnString)
+		convertedURL.conversionType = "Image"
 	} else if strings.Contains(postDotResult[1], "jpg") {
 		returnString = "<div><img src='" + urlString + "' alt='" + altText[0] + "' title=" + urlTitle + "/></div>"
 		returnString = removeLeftoversInLink(returnString)
+		convertedURL.conversionType = "Image"
 	} else if strings.Contains(postDotResult[1], "jpeg") {
 		returnString = "<div><img src='" + urlString + "' alt='" + altText[0] + "' title=" + urlTitle + "/></div>"
 		returnString = removeLeftoversInLink(returnString)
+		convertedURL.conversionType = "Image"
 	} else if strings.Contains(postDotResult[1], "gif") {
 		returnString = "<div><img src='" + urlString + "' alt='" + altText[0] + "' title=" + urlTitle + "/></div>"
 		returnString = removeLeftoversInLink(returnString)
+		convertedURL.conversionType = "Image"
 	} else {
 		urlTitle = urlTitle[1:len(urlTitle)-2] + ")" // Gotta take out the doublequotes but leave in the parent to be removed later
 		returnString = "<a href='" + urlString + "' alt='" + altText[0] + "'>" + urlTitle + "</a>"
 		returnString = removeLeftoversInLink(returnString)
+		convertedURL.conversionType = "Link"
 	}
 
-	return returnString
+	convertedURL.convertedString = returnString
+	return convertedURL
+
 }
 
 func removeLeftoversInLink(linkUrl string) string {
