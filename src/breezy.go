@@ -204,7 +204,7 @@ func markdownConvertLine(currentLine string) markdownConvertedLine { //Need to m
 	return convertedLine
 }
 
-func markdownHandleURL(currentLine string) convertedLine {
+func markdownHandleURL(currentLine string) markdownConvertedLine {
 	parenRegex := regexp.MustCompile("\\((.*?)\\)")
 	altTextRegex := regexp.MustCompile("\\[(.*?)\\]")
 
@@ -217,7 +217,7 @@ func markdownHandleURL(currentLine string) convertedLine {
 
 	// determine if link or media
 	postDotResult := strings.Split(urlString, ".")
-	var convertedURL convertedLine
+	var convertedURL markdownConvertedLine
 	var returnString = ""
 	if strings.Contains(postDotResult[1], "png") {
 		returnString = "<div><img src='" + urlString + "' alt='" + altText[0] + "' title=" + urlTitle + "/></div>"
