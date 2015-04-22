@@ -50,6 +50,11 @@ type brPostData struct {
 	DateModified string //Last Modification date of post that was saved
 }
 
+type brPostMediaData struct {
+	Links  [5]string
+	Images [5]string
+}
+
 type brPostContent struct {
 	// brPostContent stores all post data plus the actual markdown and markup content
 	MarkdownContent string     //Markdown version of the post
@@ -135,16 +140,22 @@ func HandleDirs() {
 
 func markdownConverter(br brPostContent) brPostContent {
 	br.MarkupContent = ""
-	//strings.Replace(br.MarkupContent, "<br>", "\n", -1)
+
 	arr := strings.Split(br.MarkdownContent, "\n")
+	var mediaDB brPostMediaData
 	for i := 0; i < len(arr); i++ {
 		if (len(arr[i])) > 0 {
-			//fmt.Println(arr[i])
 			var brNewLine markdownConvertedLine
 			brNewLine = markdownConvertLine(arr[i])
 			br.MarkupContent = br.MarkupContent + brNewLine.convertedString
 			//Check line conversionType to see if it needs to be added to br.PostData
 
+			switch brNewLine.conversionType {
+			case "Title":
+				br.PostData.Title = brNewLine.convertedString
+			default:
+
+			}
 			//br.MarkupContent = br.MarkupContent + markdownConvertLine(arr[i])
 		}
 	}
