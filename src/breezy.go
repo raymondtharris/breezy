@@ -57,9 +57,10 @@ type brPostMediaData struct {
 
 type brPostContent struct {
 	// brPostContent stores all post data plus the actual markdown and markup content
-	MarkdownContent string     //Markdown version of the post
-	MarkupContent   string     //Converted Markup of the Markdown for the post
-	PostData        brPostData //Store other post data extracted from editor
+	MarkdownContent string          //Markdown version of the post
+	MarkupContent   string          //Converted Markup of the Markdown for the post
+	PostData        brPostData      //Store other post data extracted from editor
+	MediaData       brPostMediaData //Stores Links and Other Media URLs of post
 }
 
 type loginCredentials struct {
@@ -153,6 +154,10 @@ func markdownConverter(br brPostContent) brPostContent {
 			switch brNewLine.conversionType {
 			case "Title":
 				br.PostData.Title = brNewLine.convertedString
+			case "Link":
+				br.MediaData.Links = append(br.MediaData.Links, brNewLine.convertedString)
+			case "Image":
+				br.MediaData.Images = append(br.MediaData.Images, brNewLine.convertedString)
 			default:
 
 			}
