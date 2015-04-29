@@ -51,8 +51,11 @@ type brPostData struct {
 }
 
 type brPostMediaData struct {
-	Links  [10]string
-	Images [10]string
+	// brPostMediaData stores urls found within a post for fast referencing
+	Links  [10]string //an array of links found in a post
+	Images [10]string //an array of image urls found within a post
+	Audio  [4]string  //an array of audio file urls found within a post
+	Video  [4]string  //an array of video file urls found within a post
 }
 
 func (mediaData brPostMediaData) String() string {
@@ -80,14 +83,17 @@ func (l loginCredentials) String() string {
 }
 
 func webBlogHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to present the Blog HTML file
 	http.ServeFile(w, r, "../src/index.html")
 }
 
 func breezyLoginHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to present the Breezy admin login HTML file
 	http.ServeFile(w, r, "../src/views/login.html")
 }
 
 func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
+	//Handler function to take in user loginCredentials and verify info against database to determine if login is succesful
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -104,10 +110,12 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 }
 
 func breezyEditHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to present the Breezy Editor HTML file
 	http.ServeFile(w, r, "../src/views/edit.html")
 }
 
 func breezyMarkdownHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to initiate the markdown to markup conversion of what is in the Breezy Editor
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -130,14 +138,17 @@ func breezyMarkdownHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func breezyDashboardHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to present the Dashboard HTML file
 	http.ServeFile(w, r, "../src/views/dashboard.html")
 }
 
 func breezySettingsHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to present the settings HTML file
 	http.ServeFile(w, r, "../src/views/settings.html")
 }
 
 func HandleDirs() {
+	//HandlerDirs sets up the handling of the other directories need to make Breezy work
 	http.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir("../src/lib/"))))
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../src/js/"))))
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("../src/css/"))))
@@ -145,6 +156,7 @@ func HandleDirs() {
 }
 
 func markdownConverter(br brPostContent) brPostContent {
+	//markdownConverter function runs through brPostContent MarkdownContent line by line to convert the data to usable HTML markup
 	br.MarkupContent = ""
 
 	arr := strings.Split(br.MarkdownContent, "\n")
@@ -176,8 +188,9 @@ func markdownConverter(br brPostContent) brPostContent {
 }
 
 type markdownConvertedLine struct {
-	convertedString string
-	conversionType  string
+	//markdownConvertedLine stores the data for eachline and what type of conversion was made
+	convertedString string //String variable storing the line that was converted
+	conversionType  string //String variable storing the type of conversion that was done on the line
 }
 
 func markdownConvertLine(currentLine string) markdownConvertedLine { //Need to make function return struct including string and what type of conversion the line was
