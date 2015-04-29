@@ -51,8 +51,13 @@ type brPostData struct {
 }
 
 type brPostMediaData struct {
-	Links  [5]string
-	Images [5]string
+	Links  [10]string
+	Images [10]string
+}
+
+func (mediaData brPostMediaData) String() string {
+	//formated string to print data within brPostMediaData
+	return fmt.Sprintf("Links:%v\nImages:%v\n", mediaData.Links, mediaData.Images)
 }
 
 type brPostContent struct {
@@ -162,6 +167,7 @@ func markdownConverter(br brPostContent) brPostContent {
 
 			}
 			//br.MarkupContent = br.MarkupContent + markdownConvertLine(arr[i])
+			fmt.Println(br.MediaData)
 		}
 	}
 
