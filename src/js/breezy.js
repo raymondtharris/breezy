@@ -45,7 +45,10 @@ breezy.controller("BreezyLoginController", function($scope, $http){
 	$scope.loginCredentials = {"username":"", "password":""}
 	
 	$scope.submitLoginInfo = function(){
+		//submitLoginInfo function sends loginCredentials to see if there is a match
+		//and if it works will transfer user to dashboard. 
 		console.log($scope.loginCredentials)
+			//Send loginCredentials to server to be checked against database
 		$http.post("/checkcredentials", $scope.loginCredentials).success(function(data){
 			console.log(data)
 			
@@ -87,5 +90,134 @@ breezy.controller("BreezyEditorController", function($scope, $http){
 		});
 	}
 })
+
+breezy.directive('droppable', function(){
+	return{
+		restrict:'A',
+		scope:{
+			progress:'='
+		},
+		controller: function($scope, $element, $files){
+			$scope.progress = $files.currentProgress;
+			
+			$element.on('dragover', function(evt){
+				evt.dataTransfer.dropEffect ="all";
+				if(evt.preventDefault) evt.preventDefault();
+			});
+			$element.on('dragenter', function(evt){
+				
+			});
+			$element.on('dragleave', function(evt){
+				
+			});
+			$element.on('drop', function(evt){
+				if(evt.preventDefault) evt.preventDefault();
+				if(evt.dataTransfer.files.length >0){
+					var filesList = evt.dataTransfer.files;
+					$files.upload(filesList);
+					
+				}
+				else{
+					$element.append(evt.target.getData("text/html"));
+				}
+			});
+			$scope.$on('started', function(){
+				//console.log('upload started');
+			});
+			$scope.$on('uploadProgress', function(evt, progress){
+				//console.log(progress);
+			});
+			$scope.$on('uploadComplete', function(evt, file){
+				$scope.$emit('sortFile', file);	
+			});	
+			$scope.$on('uploadCompleted', function(){
+				$scope.$emit('addElements');
+			});
+		}
+	}
+});
+
+breezy.directive('draggable', function(){
+	return{
+		restrict:'A',
+		scope:{
+			sourceElement:'='
+		},
+		controller: function($scope, $element){
+			$scope.sourceElement = $element[0];
+			$scope.sourceElement.draggable = true;
+			
+			$element.on('dragstart', function(evt){
+				evt.dataTransfer.effectAllowed ="all";
+				evt.dataTransfer.setData('text/html', this.innerHTML);
+			});
+			$element.on('dragend', function(evt){
+				
+			});
+		}
+	}
+});
+
+breezy.service('$files', function($rootScope,$http){
+	var currentProgress;
+	var uploadSize;
+	var currentFileSize;
+	this.upload = function(fileList){
+		currentProgress= 0;
+		uploadSize=0;
+		for(var i = 0; i < fileList.length; i++){
+			uploadSize +=fileList[i].size;
+		}
+		//console.log(uploadSize);
+		for(var i = 0; i < fileList.length; i++){
+			var xmlHttpReq = new XMLHttpRequest();
+			currentFileSize = fileList[i].size;
+			xmlHttpReq.open("POST", "/sendfile");
+			
+			xmlHttpReq.setRequestHeader('X_FILE_NAME', fileList[i].name);
+			xmlHttpReq.setRequestHeader('X_FILE_SIZE', fileList[i].size);
+			xmlHttpReq.setRequestHeader('X-Requested-With', true);
+			xmlHttpReq.setRequestHeader('Content-Type', fileList[i].type);
+			
+			xmlHttpReq.upload.addEventListener("progress", this.uploadProgress, false);
+			xmlHttpReq.upload.addEventListener("loadstart", this.uploadStart, false);
+			//xmlHttpReq.upload.addEventListener("loadend", this.uploadEnd(xmlHttpReq.upload, fileList[i]), false);
+			xmlHttpReq.addEventListener("load", this.uploadComplete(xmlHttpReq, fileList[i]), false);
+			//xmlHttpReq.addEventListener("error", this.uploadFailed, false);
+			//xhr.addEventListener("abort", uploadCanceled, false)
+			xmlHttpReq.send(fileList[i]);
+			if(i == fileList.length-1){
+				this.allFiles(fileList);
+			}
+		}
+	}
+	var getUploadSize = function(){
+		return uploadSize;
+	}
+	this.uploadStart = function(){
+		$rootScope.$broadcast('started');
+	}
+	this.uploadProgress = function(evt){
+		
+		currentProgress += Math.round(evt.loaded * 100 / uploadSize);
+		
+		$rootScope.$broadcast('uploadProgress', currentProgress);
+	}
+	this.uploadComplete = function(req, file){
+		//console.log(req);
+		$rootScope.$broadcast('uploadComplete',file);
+	}
+	this.uploadFailed = function(){
+		
+	}
+	this.uploadEnd = function(req, file){
+		console.log('fi');
+		//$rootScope.$broadcast('uploadComplete', file);	 
+	 }
+	this.allFiles = function(fileList){
+		$rootScope.$broadcast('uploadCompleted',fileList);
+	}
+	
+});
 
 
