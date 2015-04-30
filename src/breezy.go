@@ -193,12 +193,16 @@ type markdownConvertedLine struct {
 	conversionType  string //String variable storing the type of conversion that was done on the line
 }
 
-func markdownConvertLine(currentLine string) markdownConvertedLine { //Need to make function return struct including string and what type of conversion the line was
+func markdownConvertLine(currentLine string) markdownConvertedLine {
+	//markdownConvertLine function takes in a string of the currently presented line and then determines the actions needed
+	//to be done convert it from markdown to markup and finally returns the conerted string and the type of conversion that was
+	//done on the line
 	arr := strings.Split(currentLine, " ")
-	fmt.Println(arr[0])
+	fmt.Println(arr[0]) //printout of the first object in the array
 	var convertedLine markdownConvertedLine
 
-	switch arr[0] {
+	switch arr[0] { // switch to determine what needs to be done to line based on first element in array
+	//Convert for Headers H1-H6
 	case "#":
 		currentLine = strings.Replace(currentLine, "#", "<h1>", 1) + "</h1>"
 		convertedLine.conversionType = "Title"
@@ -219,6 +223,7 @@ func markdownConvertLine(currentLine string) markdownConvertedLine { //Need to m
 		convertedLine.conversionType = "H6"
 	default:
 		if strings.Contains(currentLine, "![") {
+			//Check for link or media URL present
 			if strings.Index(currentLine, "![") > 0 {
 				//url inside string
 				var urlString = markdownHandleURL(currentLine)
@@ -230,6 +235,7 @@ func markdownConvertLine(currentLine string) markdownConvertedLine { //Need to m
 				convertedLine.conversionType = urlString.conversionType
 			}
 		} else {
+			//Create a paragraph
 			currentLine = "<p>" + currentLine + "</p>"
 			convertedLine.conversionType = "Text"
 		}
@@ -240,8 +246,10 @@ func markdownConvertLine(currentLine string) markdownConvertedLine { //Need to m
 }
 
 func markdownHandleURL(currentLine string) markdownConvertedLine {
-	parenRegex := regexp.MustCompile("\\((.*?)\\)")
-	altTextRegex := regexp.MustCompile("\\[(.*?)\\]")
+	//markdownHandleURL function pulls data out of the currentLine string and construct the appropriate
+	//type of markup neeeded to display the URL
+	parenRegex := regexp.MustCompile("\\((.*?)\\)")   //regexp to isolate the string within the parens
+	altTextRegex := regexp.MustCompile("\\[(.*?)\\]") //regexp to isolate the string within the doublequotes
 
 	parens := parenRegex.FindAllString(currentLine, -1)
 	altText := altTextRegex.FindAllString(currentLine, -1)
@@ -254,6 +262,7 @@ func markdownHandleURL(currentLine string) markdownConvertedLine {
 	postDotResult := strings.Split(urlString, ".")
 	var convertedURL markdownConvertedLine
 	var returnString = ""
+	// conditional if statements to determine if Image, Video, Audio, or Link
 	if strings.Contains(postDotResult[1], "png") {
 		returnString = "<div><img src='" + urlString + "' alt='" + altText[0] + "' title=" + urlTitle + "/></div>"
 		returnString = removeLeftoversInLink(returnString)
@@ -283,6 +292,7 @@ func markdownHandleURL(currentLine string) markdownConvertedLine {
 }
 
 func removeLeftoversInLink(linkUrl string) string {
+	//removeLeftoversInLink function finishes making appropriate url Markup string by taking out parens and square brakets
 	temp1 := strings.Split(linkUrl, "(")
 	linkUrl = temp1[0] + temp1[1]
 	temp1 = strings.Split(linkUrl, ")")
@@ -302,6 +312,7 @@ func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func breezyPostListHandle(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "../src/views/posts.html")
 }
 
 func main() {
