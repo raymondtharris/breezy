@@ -309,10 +309,25 @@ func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
 	//make post variable
 	//add to database
 	//if save to db succesful send ok to client
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var currentBlogContent brPostContent
+	err = json.Unmarshal([]byte(string(body[:])), &currentBlogContent)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(currentBlogContent)
 }
 
 func breezyPostListHandle(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../src/views/posts.html")
+}
+
+func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
+	//breezyFileUploadHandler function recieves file data from client and stores it in the appropriate location
+
 }
 
 func main() {
@@ -323,6 +338,8 @@ func main() {
 	http.HandleFunc("/edit", breezyEditHandler)
 	http.HandleFunc("/mdowntomup", breezyMarkdownHandler)
 	http.HandleFunc("/savepost", breezySavePostHandler)
+
+	http.HandleFunc("/uploadfile", breezyFileUploadHandler)
 
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
 	http.HandleFunc("/settings", breezySettingsHandler)

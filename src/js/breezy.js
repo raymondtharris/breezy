@@ -92,6 +92,7 @@ breezy.controller("BreezyEditorController", function($scope, $http){
 })
 
 breezy.directive('droppable', function(){
+	//droppable directive enables an element to have the droppable behavior
 	return{
 		restrict:'A',
 		scope:{
@@ -101,16 +102,18 @@ breezy.directive('droppable', function(){
 			$scope.progress = $files.currentProgress;
 			
 			$element.on('dragover', function(evt){
+				//DragOver State
 				evt.dataTransfer.dropEffect ="all";
 				if(evt.preventDefault) evt.preventDefault();
 			});
 			$element.on('dragenter', function(evt){
-				
+				//DragEnter State	
 			});
 			$element.on('dragleave', function(evt){
-				
+				//DragLeave State	
 			});
 			$element.on('drop', function(evt){
+				//Drop State
 				if(evt.preventDefault) evt.preventDefault();
 				if(evt.dataTransfer.files.length >0){
 					var filesList = evt.dataTransfer.files;
@@ -138,6 +141,7 @@ breezy.directive('droppable', function(){
 });
 
 breezy.directive('draggable', function(){
+	//draggle directive enables an element to have a draggable behavior 
 	return{
 		restrict:'A',
 		scope:{
@@ -172,7 +176,7 @@ breezy.service('$files', function($rootScope,$http){
 		for(var i = 0; i < fileList.length; i++){
 			var xmlHttpReq = new XMLHttpRequest();
 			currentFileSize = fileList[i].size;
-			xmlHttpReq.open("POST", "/sendfile");
+			xmlHttpReq.open("POST", "/uploadfile");
 			
 			xmlHttpReq.setRequestHeader('X_FILE_NAME', fileList[i].name);
 			xmlHttpReq.setRequestHeader('X_FILE_SIZE', fileList[i].size);
