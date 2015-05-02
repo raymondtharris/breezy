@@ -11,9 +11,11 @@
 	<div class="brLoginContainer">
 		<div class="brH1">Breezy Setup</div>
 		<form>
-			<input class="brLoginInput" ng-model="loginCredentials.username" placeholder="Username" type="text" name="username"/>
-			<input class="brLoginInput" ng-model="loginCredentials.password" placeholder="Password" type="password"/>
-			<input class="brLoginSubmit" type="Submit" ng-click="submitLoginInfo()"/>
+			<input class="brLoginInput" ng-model="setupConfig.username" placeholder="Email" type="email" name="username"/>
+			<input class="brLoginInput" ng-model="setupConfig.password" placeholder="Password" type="password"/>
+			<input class="brLoginInput" ng-model="setupConfig.name" placeholder="Name" type="text"/>
+			<input class="brLoginInput" ng-model="setupConfig.blogname" placeholder="Blog Name" type="text"/>
+			<input class="brLoginSubmit" type="Submit" ng-click="submitSetupConfig()"/>
 		</form>
 	</div>
 <div>

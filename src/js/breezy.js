@@ -42,7 +42,13 @@ breezy.controller("BreezyController", function($scope){
 })
 
 breezy.controller("BreezySetupController",function($scope, $http){
+	$scope.setupConfig={"username":"","password":"","name":"","blogname":""}
 	$scope.submitSetupConfig = function(){
+		//send password to be setup to sent to server
+		$http.post("/setup_config", $scope.setupConfig).success(function(data){
+			console.log(data)
+				//send user to dashboard
+		})
 	}
 })
 
