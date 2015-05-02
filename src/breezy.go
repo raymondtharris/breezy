@@ -147,6 +147,29 @@ func breezySettingsHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../src/views/settings.html")
 }
 
+type breezySetupConfig struct {
+	Username string
+	Password string
+	Name     string
+	Blogname string
+}
+
+func (br breezySetupConfig) String() string {
+	return fmt.Printf("Username: %v\n Name: %v\n Blog Name: %v\n")
+}
+
+func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
+	//breezySetupConfigHandler function takes configuration data from user and sets up
+	//blog on backend
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var userConfig breezySetupConfig
+	err = json.Unmarshal([]byte(string(body[:])), &userConfig)
+
+}
+
 func HandleDirs() {
 	//HandlerDirs sets up the handling of the other directories need to make Breezy work
 	http.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir("../src/lib/"))))
@@ -343,6 +366,7 @@ func main() {
 
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
 	http.HandleFunc("/settings", breezySettingsHandler)
+	http.HandleFunc("/setup_config", breezySetupConfigHandler)
 	http.HandleFunc("/", webBlogHandler)
 	http.ListenAndServe("localhost:4000", nil)
 }
