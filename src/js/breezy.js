@@ -41,6 +41,11 @@ breezy.controller("BreezyController", function($scope){
 	
 })
 
+breezy.controller("BreezySetupController",function($scope, $http){
+	$scope.submitSetupConfig = function(){
+	}
+})
+
 breezy.controller("BreezyLoginController", function($scope, $http){
 	$scope.loginCredentials = {"username":"", "password":""}
 	
