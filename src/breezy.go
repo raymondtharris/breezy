@@ -168,6 +168,22 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	var userConfig breezySetupConfig
 	err = json.Unmarshal([]byte(string(body[:])), &userConfig)
 
+	//Create log file
+	if _, err2 := os.Stat("../src/app/user/setup_log.json"); err2 != nil {
+		fmt.Println("Creating Log File.")
+		logFile, err := os.Create("../src/app/user/setup_log.json")
+		//write stuff to log like creation date
+	}
+
+}
+
+func writeToLog(dataToWrite string, logNum int) {
+	//writeToLog function writes data to log.json file
+	if logNum == 0 {
+		//write to setup_log
+	} else {
+		//write to weekly log
+	}
 }
 
 func HandleDirs() {
