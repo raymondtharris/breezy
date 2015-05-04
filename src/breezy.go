@@ -195,6 +195,25 @@ func writeToLog(dataToWrite string, logNum int) {
 		temp, err := f.WriteString(dataToWrite)
 	} else {
 		//write to weekly log
+		currentTime := time.Now()
+		//check for year directory
+		_, err := os.Stat("../src/app/user/logs/" + currentTime.Year() + "/")
+		if err != nil {
+			os.Mkdir("../src/app/user/logs/"+currentTime.Year()+"/", 0777)
+		}
+		//check for month directory
+		_, err := os.Stat("../src/app/user/logs/" + currentTime.Year() + "/" + currentTime.Month() + "/")
+		if err != nil {
+			ps.Mkdir("../src/app/user/logs/"+currentTime.Year()+"/"+currentTime.Month()+"/", 0777)
+		}
+		//check for log file
+		_, err2 := os.Stat("../src/app/user/logs/" + currentTime.Year() + "/" + currentTime.Month() + "/" + currentTime.Day() + "_log.json")
+		if err2 != nil {
+			os.Create("../src/app/user/logs/" + currentTime.Year() + "/" + currentTime.Month() + "/" + currentTime.Day() + "_log.json")
+		}
+		f, err := os.OpenFile("../src/app/user/logs/"+currentTime.Year()+"/"+currentTime.Month()+"/"+currentTime.Day()+"_log.json", os.O_APPEND|os.O_WRONLY, 0666)
+		defer f.Close()
+		temp, err := f.WriteString(dataToWrite)
 	}
 }
 
