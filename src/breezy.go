@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"regexp"
 	"strings"
+	"time"
 )
 
 const brImage, brAudio, brVideo = 0, 1, 2
@@ -173,6 +175,13 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Creating Log File.")
 		logFile, err := os.Create("../src/app/user/setup_log.json")
 		//write stuff to log like creation date
+		currentTime := time.Now()
+		fmt.Println(currentTime)
+		writeToLog(currentTime, 0)
+		var jsonString string
+		jsonString = "{username:" + userConfig.Username + ", name:" + userConfig.Name + ", blogname:" + userConfig.Blogname + "}"
+		jsonToWrite := json.Marshal(jsonString)
+		writeToLog(jsonToWrite, 0)
 	}
 
 }
@@ -181,6 +190,9 @@ func writeToLog(dataToWrite string, logNum int) {
 	//writeToLog function writes data to log.json file
 	if logNum == 0 {
 		//write to setup_log
+		f, err := os.OpenFile("../src/app/user/setup_log.json", os.O_APPEND|os.O_WRONLY, 0666)
+		defer f.Close()
+		temp, err := f.WriteString(dataToWrite)
 	} else {
 		//write to weekly log
 	}
