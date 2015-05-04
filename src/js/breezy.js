@@ -102,6 +102,12 @@ breezy.controller("BreezyEditorController", function($scope, $http){
 	}
 })
 
+breezy.controller('BreezySettingsController', function($scope, $http) {
+	$scope.enabledBackups = true;
+
+
+});
+
 breezy.directive('droppable', function(){
 	//droppable directive enables an element to have the droppable behavior
 	return{

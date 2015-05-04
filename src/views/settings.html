@@ -17,12 +17,16 @@
 	</div>
 	<div class="brDashboardRecentActivityContainer"> <h3>Settings</h3>
 		<div class="brDashboardBackupContainer">
+			<div>Blog Info</div>
+			<input type="TEXT"/><label>Blog Name</label>
+
 			<input type="CHECKBOX" ng-model="enabledBackups"/><label>Enable Backups</label>
 			<select>
 				<option>Daily</option>
 				<option>Weekly</option>
 				<option>Monthly</option>
 			</select>
+			<input type="BUTTON"  value="Backup Now"/>
 			<input type="BUTTON" value="Download Logs"/>
 			<input type="BUTTON" value="Download Posts"/>
 			<input type="BUTTON" value="Download All Data"/>
