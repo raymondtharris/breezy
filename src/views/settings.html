@@ -16,7 +16,17 @@
 		</ul>
 	</div>
 	<div class="brDashboardRecentActivityContainer"> <h3>Settings</h3>
-		
+		<div class="brDashboardBackupContainer">
+			<input type="CHECKBOX" ng-model="enabledBackups"/><label>Enable Backups</label>
+			<select>
+				<option>Daily</option>
+				<option>Weekly</option>
+				<option>Monthly</option>
+			</select>
+			<input type="BUTTON" value="Download Logs"/>
+			<input type="BUTTON" value="Download Posts"/>
+			<input type="BUTTON" value="Download All Data"/>
+		</div>	
 	</div>
 </body>
 </html>

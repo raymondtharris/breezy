@@ -3,10 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	//"gopkg.in/mgo.v2"
+	//"gopkg.in/mgo.v2/bson"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -157,7 +160,7 @@ type breezySetupConfig struct {
 }
 
 func (br breezySetupConfig) String() string {
-	return fmt.Printf("Username: %v\n Name: %v\n Blog Name: %v\n")
+	return fmt.Sprintf("Username: %v\n Name: %v\n Blog Name: %v\n", br.Username, br.Name, br.Blogname)
 }
 
 func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
@@ -170,50 +173,70 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	var userConfig breezySetupConfig
 	err = json.Unmarshal([]byte(string(body[:])), &userConfig)
 
+	//Create config file
+	f, err := os.Stat("../src/app/user/config.json")
+	_ = f
+
+	if err != nil {
+		// write configuration
+	}
+
 	//Create log file
 	if _, err2 := os.Stat("../src/app/user/setup_log.json"); err2 != nil {
 		fmt.Println("Creating Log File.")
 		logFile, err := os.Create("../src/app/user/setup_log.json")
+		_ = err
+		_ = logFile
 		//write stuff to log like creation date
 		currentTime := time.Now()
 		fmt.Println(currentTime)
-		writeToLog(currentTime, 0)
+		writeToLog(currentTime.String(), 0)
 		var jsonString string
 		jsonString = "{username:" + userConfig.Username + ", name:" + userConfig.Name + ", blogname:" + userConfig.Blogname + "}"
-		jsonToWrite := json.Marshal(jsonString)
-		writeToLog(jsonToWrite, 0)
+		jsonToWrite, err := json.Marshal(jsonString)
+		writeToLog(string(jsonToWrite[:]), 0)
 	}
 
 }
 
+func writeConfiguration(userConfig breezySetupConfig) {
+	fmt.Println("Writing User Configurationi\n")
+}
+
 func writeToLog(dataToWrite string, logNum int) {
 	//writeToLog function writes data to log.json file
+	fmt.Println("Writing Log File")
 	if logNum == 0 {
 		//write to setup_log
 		f, err := os.OpenFile("../src/app/user/setup_log.json", os.O_APPEND|os.O_WRONLY, 0666)
+		_ = err
+		_ = f
 		defer f.Close()
 		temp, err := f.WriteString(dataToWrite)
+		_ = temp
 	} else {
 		//write to weekly log
 		currentTime := time.Now()
 		//check for year directory
-		_, err := os.Stat("../src/app/user/logs/" + currentTime.Year() + "/")
+		_, err := os.Stat("../src/app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/")
 		if err != nil {
-			os.Mkdir("../src/app/user/logs/"+currentTime.Year()+"/", 0777)
+			os.Mkdir("../src/app/user/logs/"+strconv.Itoa(currentTime.Year())+"/", 0777)
 		}
 		//check for month directory
-		_, err := os.Stat("../src/app/user/logs/" + currentTime.Year() + "/" + currentTime.Month() + "/")
+		m, err := os.Stat("../src/app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/")
+		_ = m
 		if err != nil {
-			ps.Mkdir("../src/app/user/logs/"+currentTime.Year()+"/"+currentTime.Month()+"/", 0777)
+			os.Mkdir("../src/app/user/logs/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/", 0777)
 		}
 		//check for log file
-		_, err2 := os.Stat("../src/app/user/logs/" + currentTime.Year() + "/" + currentTime.Month() + "/" + currentTime.Day() + "_log.json")
+		_, err2 := os.Stat("../src/app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "_log.json")
 		if err2 != nil {
-			os.Create("../src/app/user/logs/" + currentTime.Year() + "/" + currentTime.Month() + "/" + currentTime.Day() + "_log.json")
+			os.Create("../src/app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "_log.json")
 		}
-		f, err := os.OpenFile("../src/app/user/logs/"+currentTime.Year()+"/"+currentTime.Month()+"/"+currentTime.Day()+"_log.json", os.O_APPEND|os.O_WRONLY, 0666)
+		f, err := os.OpenFile("../src/app/user/logs/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/"+strconv.Itoa(currentTime.Day())+"_log.json", os.O_APPEND|os.O_WRONLY, 0666)
 		defer f.Close()
-		temp, err := f.WriteString(dataToWrite)
+		t, err := f.WriteString(dataToWrite)
+		_ = t
 	}
 }
 
@@ -230,7 +253,7 @@ func markdownConverter(br brPostContent) brPostContent {
 	br.MarkupContent = ""
 
 	arr := strings.Split(br.MarkdownContent, "\n")
-	var mediaDB brPostMediaData
+
 	for i := 0; i < len(arr); i++ {
 		if (len(arr[i])) > 0 {
 			var brNewLine markdownConvertedLine
@@ -242,9 +265,9 @@ func markdownConverter(br brPostContent) brPostContent {
 			case "Title":
 				br.PostData.Title = brNewLine.convertedString
 			case "Link":
-				br.MediaData.Links = append(br.MediaData.Links, brNewLine.convertedString)
+				//br.MediaData.Links = append(br.MediaData.Links, brNewLine.convertedString)
 			case "Image":
-				br.MediaData.Images = append(br.MediaData.Images, brNewLine.convertedString)
+				//br.MediaData.Images = append(br.MediaData.Images, brNewLine.convertedString)
 			default:
 
 			}
@@ -401,6 +424,7 @@ func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	//dbSession, err :=mgo.Dial("45.55.192.173")
 	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
 	http.HandleFunc("/checkcredentials", breezyLoginCredentrials)
