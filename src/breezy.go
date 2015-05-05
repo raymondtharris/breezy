@@ -240,6 +240,70 @@ func writeToLog(dataToWrite string, logNum int) {
 	}
 }
 
+func breezyBackupHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Creating Backup.")
+	//Write to Log
+
+	//Get all PostData
+	//Write PostData to a Backup File
+	//Add Media to backup that is not currently available there
+}
+
+type backupScheduleType struct {
+	ScheduleType string
+}
+
+func breezyBackupScheduleHandler(w http.ResponseWriter, r *http.Request) {
+	body, err = ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var backupType backupScheduleType
+	err = json.Unmarshal([]byte(string(body[:])), &backupType)
+	switch backupType.ScheduleType {
+	case "Daily":
+		fmt.Println("Backup Everyday")
+	case "Weekly":
+		fmt.Println("Backup Weekly")
+	case "Monthly":
+		fmt.Println("Backup Monthly")
+	default:
+
+	}
+}
+
+func BackupBlog(scheduleOption string) {
+	dir, err := os.Stat("../src/app/user/backup/")
+	if err != nil {
+		//backup directory does not exist
+		os.Mkdir("../src/app/user/backup/", 0777)
+	}
+	currentTime := time.Now()
+	y, err := os.Stat("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/")
+	if err != nil {
+		os.Mkdir("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/")
+	}
+	m, err := os.Stat("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/")
+	if err != nil {
+		os.Mkdir("../src/app/user/backup/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/", 0777)
+	}
+	if scheduleOption == "Monthly" {
+		//write to month log
+	} else {
+		if scheduleOption == "Weekly" {
+			//look for the weeks directory remaining within the month
+		} else {
+			d, err := os.Stat("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "/")
+			if err != nil {
+				os.Mkdir("../src/app/user/backup/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/"+strconv.Itoa(currentTime.Day())+"/", 0777)
+			}
+			// Write Daily Backup
+
+		}
+	}
+
+}
+
 func HandleDirs() {
 	//HandlerDirs sets up the handling of the other directories need to make Breezy work
 	http.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir("../src/lib/"))))
@@ -437,6 +501,10 @@ func main() {
 
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
 	http.HandleFunc("/settings", breezySettingsHandler)
+
+	http.HandleFunc("/backup", breezyBackupHandler)
+	http.HandleFunc("/scheduledbackup", breezyBackupScheduleHandler)
+
 	http.HandleFunc("/setup_config", breezySetupConfigHandler)
 	http.HandleFunc("/", webBlogHandler)
 	http.ListenAndServe("localhost:4000", nil)

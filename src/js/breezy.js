@@ -105,6 +105,12 @@ breezy.controller("BreezyEditorController", function($scope, $http){
 breezy.controller('BreezySettingsController', function($scope, $http) {
 	$scope.enabledBackups = true;
 
+	$scope.backup = function(){
+		$http.get("/backup").success(function(data){
+			
+		});
+	}
+
 
 });
 
