@@ -11,3 +11,7 @@ The Editor in Breezy is built to handle Markdown syntax in a minimalist way. The
 
 #### Backup and Export
 Breezy allows you to manually backup your posts or setup up a scheduled backup system. Users can also easily export their data from the database to store or do whatever they wish.
+
+#### Media Library
+Breezy also presents a library to store images, video, and audio files to present to users on the blog or other websites.
+

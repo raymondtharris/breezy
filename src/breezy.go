@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	//"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2"
 	//"gopkg.in/mgo.v2/bson"
 	"io/ioutil"
 	"net/http"
@@ -254,7 +254,8 @@ type backupScheduleType struct {
 }
 
 func breezyBackupScheduleHandler(w http.ResponseWriter, r *http.Request) {
-	body, err = ioutil.ReadAll(r.Body)
+	body, err := ioutil.ReadAll(r.Body)
+
 	if err != nil {
 		panic(err)
 	}
@@ -278,12 +279,15 @@ func BackupBlog(scheduleOption string) {
 		//backup directory does not exist
 		os.Mkdir("../src/app/user/backup/", 0777)
 	}
+	_ = dir
 	currentTime := time.Now()
 	y, err := os.Stat("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/")
+	_ = y
 	if err != nil {
-		os.Mkdir("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/")
+		os.Mkdir("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/",0777)
 	}
 	m, err := os.Stat("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/")
+	_ = m 
 	if err != nil {
 		os.Mkdir("../src/app/user/backup/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/", 0777)
 	}
@@ -294,6 +298,7 @@ func BackupBlog(scheduleOption string) {
 			//look for the weeks directory remaining within the month
 		} else {
 			d, err := os.Stat("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "/")
+			_ = d 
 			if err != nil {
 				os.Mkdir("../src/app/user/backup/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/"+strconv.Itoa(currentTime.Day())+"/", 0777)
 			}
@@ -488,7 +493,11 @@ func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	//dbSession, err :=mgo.Dial("45.55.192.173")
+	dbSession, err :=mgo.Dial("45.55.192.173")
+	if err != nil {
+		panic(err)
+	}
+	defer dbSession.Close()
 	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
 	http.HandleFunc("/checkcredentials", breezyLoginCredentrials)
