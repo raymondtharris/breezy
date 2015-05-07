@@ -121,13 +121,12 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(body[:]), "\n", vls)
+	//fmt.Println(string(body[:]), "\n", vls)
 
 	co := mdbSession.DB("test").C("Users")
-	res := breezyUser{}
-	err = co.Find(bson.M{}).One(&res)
-	fmt.Println(res)
-	fmt.Println("oadoifjads")
+	var res breezyUser
+	err = co.Find(bson.M{"username": vls.Username, "password": vls.Password }).One(&res)
+	fmt.Println("User:", res)
 
 	w.Write([]byte("OK"))
 }

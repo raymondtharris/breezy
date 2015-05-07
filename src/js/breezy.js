@@ -55,10 +55,9 @@ breezy.controller("BreezySetupController",function($scope, $http){
 breezy.controller("BreezyLoginController", function($scope, $http){
 	$scope.loginCredentials = {"username":"", "password":""}
 	
-	$scope.submitLoginInfo = function(evt){
+	$scope.submitLoginInfo = function(){
 		//submitLoginInfo function sends loginCredentials to see if there is a match
 		//and if it works will transfer user to dashboard. 
-		evt.preventDefault();
 		console.log($scope.loginCredentials)
 			//Send loginCredentials to server to be checked against database
 		$http.post("/checkcredentials", $scope.loginCredentials).success(function(data){
