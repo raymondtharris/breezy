@@ -17,10 +17,15 @@ import (
 const brImage, brAudio, brVideo = 0, 1, 2
 const brPost = 0
 const DB_URL = "45.55.192.173"
+const SALT_STRING = "53kR375AL7"
 
 type mgoSession struct{
 	DB_Session *mgo.Session
 	DB_Err error
+}
+
+func breezySalt(w http.ResponseWriter, r *http.Request){
+	w.Write([]byte(SALT_STRING))
 }
 
 func SessionSetup () (*mgo.Session, error){
@@ -555,6 +560,7 @@ func main() {
 	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
 	http.HandleFunc("/checkcredentials", breezyLoginCredentrials)
+	http.HandleFunc("/salted", breezySalt)
 
 	http.HandleFunc("/edit", breezyEditHandler)
 	http.HandleFunc("/mdowntomup", breezyMarkdownHandler)
