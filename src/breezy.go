@@ -190,7 +190,7 @@ type breezyUser struct {
 }
 
 func (br breezySetupConfig) String() string {
-	return fmt.Sprintf("Username: %v\n Name: %v\n Blog Name: %v\n", br.Username, br.Name, br.Blogname)
+	return fmt.Sprintf("Username: %v\nName: %v\nBlog Name: %v\n", br.Username, br.Name, br.Blogname)
 }
 
 func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
@@ -207,8 +207,13 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	var user  = breezyUser{userConfig.Username, userConfig.Password, userConfig.Name}
 	var dberr error
 	co := mdbSession.DB("test").C("Users")
+	fmt.Println(user)
 	dberr = co.Insert(&user)
 	_ = dberr
+	var temp []breezyUser
+	dberr = co.Find(nil).All(&temp)
+	fmt.Println("User:", temp)
+
 
 	//Create config file
 	f, err := os.Stat("../src/app/user/config.json")
