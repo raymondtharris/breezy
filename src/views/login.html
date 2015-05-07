@@ -2,7 +2,7 @@
 <head>
 	<title>Breezy</title>
 	<script type="text/javascript" src="/lib/angular.js"></script>
-	
+	<script type="text/javascript" src="/lib/angular-sanitize.js"></script>
 	<script type="text/javascript" src="/js/breezy.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
 </head>
@@ -13,7 +13,7 @@
 		<form>
 			<input class="brLoginInput" ng-model="loginCredentials.username" placeholder="Username" type="text" name="username"/>
 			<input class="brLoginInput" ng-model="loginCredentials.password" placeholder="Password" type="password"/>
-			<input class="brLoginSubmit" type="Submit" ng-click="submitLoginInfo()"/>
+			<input class="brLoginSubmit" type="Submit" ng-submit="submitLoginInfo()"/>
 		</form>
 	</div>
 <div>

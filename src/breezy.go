@@ -127,6 +127,7 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 	res := breezyUser{}
 	err = co.Find(bson.M{}).One(&res)
 	fmt.Println(res)
+	fmt.Println("oadoifjads")
 
 	w.Write([]byte("OK"))
 }
@@ -226,7 +227,8 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 		//write stuff to log like creation date
 		currentTime := time.Now()
 		fmt.Println(currentTime)
-		writeToLog(currentTime.String(), 0)
+		writeToLog(currentTime.String()+ "\n", 0)
+		fmt.Println(userConfig)
 		var jsonString string
 		jsonString = "{username:" + userConfig.Username + ", name:" + userConfig.Name + ", blogname:" + userConfig.Blogname + "}"
 		jsonToWrite, err := json.Marshal(jsonString)
