@@ -58,11 +58,14 @@ breezy.controller("BreezyLoginController", function($scope, $http){
 	$scope.submitLoginInfo = function(){
 		//submitLoginInfo function sends loginCredentials to see if there is a match
 		//and if it works will transfer user to dashboard. 
-		console.log($scope.loginCredentials)
+		//console.log($scope.loginCredentials)
 			//Send loginCredentials to server to be checked against database
 		$http.post("/checkcredentials", $scope.loginCredentials).success(function(data){
-			console.log(data)
-			
+			if(data == "true"){
+				console.log("Send to dashboard")
+			}else{
+				console.log("Send Error to user about loginCredentials")
+			}			
 			// if all good go to dashboard
 		})
 	}

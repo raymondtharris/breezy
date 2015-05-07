@@ -126,9 +126,12 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 	co := mdbSession.DB("test").C("Users")
 	var res breezyUser
 	err = co.Find(bson.M{"username": vls.Username, "password": vls.Password }).One(&res)
-	fmt.Println("User:", res)
-
-	w.Write([]byte("OK"))
+	//fmt.Println("User:", res)
+	if err == nil{
+	w.Write([]byte("true"))
+	} else{
+		w.Write([]byte("false"))
+	}
 }
 
 func breezyEditHandler(w http.ResponseWriter, r *http.Request) {
