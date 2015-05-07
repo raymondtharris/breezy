@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"gopkg.in/mgo.v2"
-	//"gopkg.in/mgo.v2/bson"
+	"gopkg.in/mgo.v2/bson"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -16,7 +16,19 @@ import (
 
 const brImage, brAudio, brVideo = 0, 1, 2
 const brPost = 0
-const brBlogName = "Temp"
+const DB_URL = "45.55.192.173"
+
+type mgoSession struct{
+	DB_Session *mgo.Session
+	DB_Err error
+}
+
+func SessionSetup () (*mgo.Session, error){
+	return mgo.Dial(DB_URL)
+}
+
+var mdbSession *mgo.Session
+//var dbSession mgoSession
 
 var editingPost brPostContent
 
@@ -111,6 +123,11 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(string(body[:]), "\n", vls)
 
+	co := mdbSession.DB("test").C("Users")
+	res := breezyUser{}
+	err = co.Find(bson.M{}).One(&res)
+	fmt.Println(res)
+
 	w.Write([]byte("OK"))
 }
 
@@ -159,6 +176,18 @@ type breezySetupConfig struct {
 	Blogname string
 }
 
+type breezySetupConfigDB struct {
+	Username string
+	Name string
+	Blogname string 
+}
+
+type breezyUser struct {
+	Username string
+	Password string
+	Name string
+}
+
 func (br breezySetupConfig) String() string {
 	return fmt.Sprintf("Username: %v\n Name: %v\n Blog Name: %v\n", br.Username, br.Name, br.Blogname)
 }
@@ -172,6 +201,13 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	var userConfig breezySetupConfig
 	err = json.Unmarshal([]byte(string(body[:])), &userConfig)
+
+	//Create User 
+	var user  = breezyUser{userConfig.Username, userConfig.Password, userConfig.Name}
+	var dberr error
+	co := mdbSession.DB("test").C("Users")
+	dberr = co.Insert(&user)
+	_ = dberr
 
 	//Create config file
 	f, err := os.Stat("../src/app/user/config.json")
@@ -487,17 +523,26 @@ func breezyPostListHandle(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../src/views/posts.html")
 }
 
+func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "../src/views/setup.html")
+}
+
 func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	//breezyFileUploadHandler function recieves file data from client and stores it in the appropriate location
 
 }
 
 func main() {
-	dbSession, err :=mgo.Dial("45.55.192.173")
-	if err != nil {
-		panic(err)
+	var sErr error
+	mdbSession, sErr = mgo.Dial("45.55.192.173")
+	if sErr != nil {
+		panic(sErr)
 	}
-	defer dbSession.Close()
+	defer mdbSession.Close()
+
+	
+
+
 	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
 	http.HandleFunc("/checkcredentials", breezyLoginCredentrials)
@@ -514,6 +559,7 @@ func main() {
 	http.HandleFunc("/backup", breezyBackupHandler)
 	http.HandleFunc("/scheduledbackup", breezyBackupScheduleHandler)
 
+	http.HandleFunc("/setup", breezySetupHandler)
 	http.HandleFunc("/setup_config", breezySetupConfigHandler)
 	http.HandleFunc("/", webBlogHandler)
 	http.ListenAndServe("localhost:4000", nil)
