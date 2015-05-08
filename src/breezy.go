@@ -131,8 +131,8 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 	co := mdbSession.DB("test").C("Users")
 	var res breezyUser
 	err = co.Find(bson.M{"username": vls.Username, "password": vls.Password }).One(&res)
-	//fmt.Println("User:", res)
-	if err == nil{
+	fmt.Println("User:", res)
+	if res.Username == vls.Username && res.Password == vls.Password { 
 	w.Write([]byte("true"))
 	} else{
 		w.Write([]byte("false"))
