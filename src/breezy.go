@@ -12,25 +12,19 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"golang.org/x/crypto/bcrypt"	
 )
 
 const brImage, brAudio, brVideo = 0, 1, 2
 const brPost = 0
 const DB_URL = "45.55.192.173"
-const SALT_STRING = "53kR375AL7"
+
 
 type mgoSession struct{
 	DB_Session *mgo.Session
 	DB_Err error
 }
 
-func breezySalt(w http.ResponseWriter, r *http.Request){
-	w.Write([]byte(SALT_STRING))
-}
-
-func SessionSetup () (*mgo.Session, error){
-	return mgo.Dial(DB_URL)
-}
 
 var mdbSession *mgo.Session
 //var dbSession mgoSession
@@ -121,22 +115,37 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	var vls loginCredentials
-	err = json.Unmarshal([]byte(string(body[:])), &vls)
+	var userCred loginCredentials
+	err = json.Unmarshal([]byte(string(body[:])), &userCred)
 	if err != nil {
 		panic(err)
 	}
 	//fmt.Println(string(body[:]), "\n", vls)
-
+	fmt.Println(userCred.Password)
+	hashedPassword,errP := bcrypt.GenerateFromPassword([]byte(userCred.Password),10)
+	fmt.Println(string(hashedPassword))
+	_ = errP
 	co := mdbSession.DB("test").C("Users")
-	var res breezyUser
-	err = co.Find(bson.M{"username": vls.Username, "password": vls.Password }).One(&res)
-	fmt.Println("User:", res)
-	if res.Username == vls.Username && res.Password == vls.Password { 
+	var res []breezyUser
+	err = co.Find(bson.M{"username": userCred.Username }).All(&res)
+	fmt.Println("Users Found:", res)
+	passMatch := false
+	for i:=0; i< len(res); i++ {
+		errCheck := bcrypt.CompareHashAndPassword([]byte(res[i].Password), []byte(userCred.Password))
+		if errCheck == nil {
+			passMatch  = true
+			fmt.Println("found")
+		}
+	}
+	//if res.Username == userCred.Username && res.Password == string(hashedPassword){ 
+	if passMatch{
 	w.Write([]byte("true"))
 	} else{
 		w.Write([]byte("false"))
 	}
+	//} else{
+	//	w.Write([]byte("false"))
+	//}
 }
 
 func breezyEditHandler(w http.ResponseWriter, r *http.Request) {
@@ -209,9 +218,12 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	var userConfig breezySetupConfig
 	err = json.Unmarshal([]byte(string(body[:])), &userConfig)
-
+	fmt.Println(userConfig.Password)
+	hashedPassword, errP := bcrypt.GenerateFromPassword([]byte(userConfig.Password), 10)
+	_ = errP
+	fmt.Println(string(hashedPassword))
 	//Create User 
-	var user  = breezyUser{userConfig.Username, userConfig.Password, userConfig.Name}
+	var user  = breezyUser{userConfig.Username, string(hashedPassword[:]), userConfig.Name}
 	var dberr error
 	co := mdbSession.DB("test").C("Users")
 	fmt.Println(user)
@@ -560,7 +572,6 @@ func main() {
 	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
 	http.HandleFunc("/checkcredentials", breezyLoginCredentrials)
-	http.HandleFunc("/salted", breezySalt)
 
 	http.HandleFunc("/edit", breezyEditHandler)
 	http.HandleFunc("/mdowntomup", breezyMarkdownHandler)
