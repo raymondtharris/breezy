@@ -201,13 +201,13 @@ type breezySetupConfigDB struct {
 
 type breezyUser struct {
 	//breezyUser stores Userdata to be used on the databse
-	ID bson.ObjectId 'bson:"_id,omitempty"'
+	ID bson.ObjectId `bson:"_id,omitempty"`
 	Username string
 	Password string
 	Name string
 }
 type breezyBlog struct {
-	ID bson.ObjectId 'bson: "_id,omitempty"'
+	ID bson.ObjectId `bson: "_id,omitempty"`
 	Name string
 	Creator string
 
@@ -241,9 +241,11 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	dberr = co.Find(nil).All(&temp)
 	fmt.Println("User:", temp)
 
+	//Creating and saving Blog data to Database
 	conBlog := mdbSession.DB("test").C("Blog")
-
-
+	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name}
+	_ = conBlog
+	_ = blogInfo	
 	//Create config file
 	f, err := os.Stat("../src/app/user/config.json")
 	_ = f
@@ -560,7 +562,16 @@ func breezyPostListHandle(w http.ResponseWriter, r *http.Request) {
 }
 
 func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../src/views/setup.html")
+	d, err := os.Stat("../src/app/user/setup_log.json")
+	_ = d
+	if err == nil{
+		http.Redirect(w,r,"/admin", http.StatusFound)
+	}else{
+		http.ServeFile(w, r, "../src/views/setup.html")
+	}
+}
+func breezyBlogInfoHandler(w http.ResponseWriter, r *http.Request){
+
 }
 
 func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
