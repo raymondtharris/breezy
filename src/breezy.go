@@ -205,12 +205,15 @@ type breezyUser struct {
 	Username string
 	Password string
 	Name string
+	Access string
+	Created time.Time
 }
 type breezyBlog struct {
 	ID bson.ObjectId `bson: "_id,omitempty"`
 	Name string
 	Creator string
-
+	Users []string
+	Created time.Time
 }
 
 func (br breezySetupConfig) String() string {
@@ -231,7 +234,7 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	_ = errP
 	fmt.Println(string(hashedPassword))
 	//Create User 
-	var user  = breezyUser{bson.NewObjectId(), userConfig.Username, string(hashedPassword[:]), userConfig.Name}
+	var user  = breezyUser{bson.NewObjectId(), userConfig.Username, string(hashedPassword[:]), userConfig.Name, "Admin", time.Now()}
 	var dberr error
 	co := mdbSession.DB("test").C("Users")
 	fmt.Println(user)
@@ -243,7 +246,7 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 
 	//Creating and saving Blog data to Database
 	conBlog := mdbSession.DB("test").C("Blog")
-	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name}
+	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name,[userConfig.Username], time.Now()}
 	_ = conBlog
 	_ = blogInfo	
 	//Create config file
