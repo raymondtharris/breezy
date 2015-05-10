@@ -200,9 +200,17 @@ type breezySetupConfigDB struct {
 }
 
 type breezyUser struct {
+	//breezyUser stores Userdata to be used on the databse
+	ID bson.ObjectId 'bson:"_id,omitempty"'
 	Username string
 	Password string
 	Name string
+}
+type breezyBlog struct {
+	ID bson.ObjectId 'bson: "_id,omitempty"'
+	Name string
+	Creator string
+
 }
 
 func (br breezySetupConfig) String() string {
@@ -223,7 +231,7 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	_ = errP
 	fmt.Println(string(hashedPassword))
 	//Create User 
-	var user  = breezyUser{userConfig.Username, string(hashedPassword[:]), userConfig.Name}
+	var user  = breezyUser{bson.NewObjectId(), userConfig.Username, string(hashedPassword[:]), userConfig.Name}
 	var dberr error
 	co := mdbSession.DB("test").C("Users")
 	fmt.Println(user)
@@ -232,6 +240,8 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	var temp []breezyUser
 	dberr = co.Find(nil).All(&temp)
 	fmt.Println("User:", temp)
+
+	conBlog := mdbSession.DB("test").C("Blog")
 
 
 	//Create config file
@@ -581,6 +591,7 @@ func main() {
 
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
 	http.HandleFunc("/settings", breezySettingsHandler)
+	http.HandleFunc("/blog_info", breezyBlogInfoHandler)
 
 	http.HandleFunc("/backup", breezyBackupHandler)
 	http.HandleFunc("/scheduledbackup", breezyBackupScheduleHandler)
