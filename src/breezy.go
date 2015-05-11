@@ -17,7 +17,7 @@ import (
 
 const brImage, brAudio, brVideo = 0, 1, 2
 const brPost = 0
-const DB_URL = "45.55.192.173"
+const DB_URL = "45.55.192.173" //URL that points to MongoDB
 
 
 type mgoSession struct{
@@ -68,10 +68,10 @@ type brPostData struct {
 
 type brPostMediaData struct {
 	// brPostMediaData stores urls found within a post for fast referencing
-	Links  [10]string //an array of links found in a post
-	Images [10]string //an array of image urls found within a post
-	Audio  [4]string  //an array of audio file urls found within a post
-	Video  [4]string  //an array of video file urls found within a post
+	Links  []string //an array of links found in a post
+	Images []string //an array of image urls found within a post
+	Audio  []string  //an array of audio file urls found within a post
+	Video  []string  //an array of video file urls found within a post
 }
 
 func (mediaData brPostMediaData) String() string {
@@ -201,20 +201,21 @@ type breezySetupConfigDB struct {
 
 type breezyUser struct {
 	//breezyUser stores Userdata to be used on the databse
-	ID bson.ObjectId `bson:"_id,omitempty"`
-	Username string
-	Password string
-	Name string
-	Access string
-	Created time.Time
+	ID bson.ObjectId `bson:"_id,omitempty"` //ID variable for MongoDB
+	Username string //Username of user stored on DB
+	Password string //Hashed password of the user stored on DB
+	Name string //Name of the user stored on DB
+	Access string //Level of access of the user stored on DB
+	Created time.Time //The timestamp of when the user was created stored on DB
 }
 type breezyBlog struct {
-	ID bson.ObjectId `bson: "_id,omitempty"`
-	Name string
-	Creator string
-	Users []string
-	Created time.Time
-	Posts int
+	//breezyBlog stores the relevant blog data to the database
+	ID bson.ObjectId `bson: "_id,omitempty"` //ID variable for MongoDB
+	Name string //Name of the blog store on DB
+	Creator string //Name of the creator of the blog stored on DB
+	Users []string //An Array of usernames that have access to the admin section of the blog stored on DB
+	Created time.Time //The timestamp of when the blog was created stored on DB
+	Posts int //The number of posts stored on the DB
 }
 
 func (br breezySetupConfig) String() string {
@@ -548,6 +549,19 @@ func removeLeftoversInLink(linkUrl string) string {
 	//fmt.Println(linkUrl)
 	return linkUrl
 }
+type breezyMarkdownMarkup struct{
+	Markdown string
+	Markup string
+}
+type breezyPost struct {
+	ID bson.ObjectId `bson:"_id,omitempty"` //ID variable for MongoDB
+	Title string
+	Created time.Time
+	Updated time.Time
+	Creator string
+	Content breezyMarkdownMarkup
+	
+}
 func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
 	//make post variable
 	//add to database
@@ -591,6 +605,7 @@ func main() {
 	mdbSession, sErr = mgo.Dial("45.55.192.173")
 	if sErr != nil {
 		panic(sErr)
+		//fmt.Println("Cannot connect to DB")
 	}
 	defer mdbSession.Close()
 
