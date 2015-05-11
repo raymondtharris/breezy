@@ -214,6 +214,7 @@ type breezyBlog struct {
 	Creator string
 	Users []string
 	Created time.Time
+	Posts int
 }
 
 func (br breezySetupConfig) String() string {
@@ -246,15 +247,18 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 
 	//Creating and saving Blog data to Database
 	conBlog := mdbSession.DB("test").C("Blog")
-	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name,[userConfig.Username], time.Now()}
-	_ = conBlog
-	_ = blogInfo	
+	userList := []string{userConfig.Username}
+	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name, userList, time.Now(), 0 }
+	errB := conBlog.Insert(&blogInfo)
+	_ = errB	
 	//Create config file
-	f, err := os.Stat("../src/app/user/config.json")
+	f, err := os.Stat("../src/app/config.json")
 	_ = f
 
 	if err != nil {
 		// write configuration
+		os.Create("../src/app/config.josn")
+		writeConfiguration(userConfig)
 	}
 
 	//Create log file

@@ -1,2 +1,6 @@
 
 *.swp
+
+src/app/user/setup_log.json
+
+*.json

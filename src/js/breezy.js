@@ -52,45 +52,25 @@ breezy.controller("BreezySetupController",function($scope, $http){
 	}
 })
 
-breezy.controller("BreezyLoginController", function($scope, $http){
+breezy.controller("BreezyLoginController", function($scope, $http, $window){
 	$scope.loginCredentials = {"username":"", "password":""}
 	var loginSent = {"username":"", "password":""}	
 	$scope.submitLoginInfo = function(){
 		//submitLoginInfo function sends loginCredentials to see if there is a match
 		//and if it works will transfer user to dashboard. 
-		//console.log($scope.loginCredentials)
-		/*var salt = ""
-		$http.get("/salted").success(function(data){
-			salt = data
-			var shaObj = new jsSHA(salt, "TEXT")
-			console.log(shaObj)
-			var saltedSalt = shaObj.getHash("SHA-1", "HEX")
-			console.log(saltedSalt)
-			var shaObj2 = new jsSHA($scope.loginCredentials.password + saltedSalt, "TEXT")
-			var saltedPass = shaObj2.getHash("SHA-512", "HEX")
-			console.log(saltedPass)
-			loginSent.username = $scope.loginCredentials.username
-			loginSent.password = saltedPass
-				//Send loginCredentials to server to be checked against database
-			$http.post("/checkcredentials", loginSent).success(function(data){
-			if(data == "true"){
-				console.log("Send to dashboard")
-			}else{
-				console.log("Send Error to user about loginCredentials")
-			}			
-			// if all good go to dashboard
-			})
 
-		})
-*/
 		$http.post("/checkcredentials", $scope.loginCredentials).success(function(data){
 			if(data == "true"){
-				console.log("Send to dashboard")
+				//Correct loginCredentials go to dashboard
+				$window.location.href="/dashboard"
 			}else{
 				console.log("Send Error to user about loginCredentials")
 			}			
 			// if all good go to dashboard
 		})
+		
+	}
+	$scope.incorrectCredentials = function(){
 		
 	}
 })
