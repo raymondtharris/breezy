@@ -15,6 +15,9 @@ import (
 	"golang.org/x/crypto/bcrypt"	
 )
 
+//prefix br is from Client side
+//prefix breezy is for data that goes to the database
+
 const brImage, brAudio, brVideo = 0, 1, 2
 const brPost = 0
 const DB_URL = "45.55.192.173" //URL that points to MongoDB
@@ -550,17 +553,26 @@ func removeLeftoversInLink(linkUrl string) string {
 	return linkUrl
 }
 type breezyMarkdownMarkup struct{
-	Markdown string
-	Markup string
+	//Markdown and Markup storage to be used for the DB
+	Markdown string // Markdown to be saved to the DB
+	Markup string // Converted markup to be saved to the DB
+}
+type breezyMediaCollection struct{
+	//breezyMediaCollection stores all the media object in the DB
+	Links []string //An Array of links for in post to be stored on DB
+	Images []string //An Array of Images in post to be stored on DB
+	Audio []string //An Array of Audio urls to be stored in the DB
+	Video []string//An Array of Video urls to be stored in the DB
 }
 type breezyPost struct {
+	//breezyPost stores data needed for a post on the DB
 	ID bson.ObjectId `bson:"_id,omitempty"` //ID variable for MongoDB
-	Title string
-	Created time.Time
-	Updated time.Time
-	Creator string
-	Content breezyMarkdownMarkup
-	
+	Title string //Title of post to be stored on DB
+	Created time.Time //Created timestamp of the post stored on DB
+	Updated time.Time //Upated timestamp of the post to be stored on DB
+	Creator string //Creator of post stored on the DB
+	Content breezyMarkdownMarkup //Markdown and Markup of post to be stored on DB
+	Media breezyMediaCollection //Collection of links for posts to be stored on the DB
 }
 func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
 	//make post variable
@@ -602,7 +614,7 @@ func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var sErr error
-	mdbSession, sErr = mgo.Dial("45.55.192.173")
+	mdbSession, sErr = mgo.Dial(DB_URL)
 	if sErr != nil {
 		panic(sErr)
 		//fmt.Println("Cannot connect to DB")
