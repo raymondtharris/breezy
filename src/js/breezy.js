@@ -127,7 +127,7 @@ breezy.controller("BreezyEditorController", function($scope, $http){
 		//if contentDirty send markdown to change
 		//on return send data to be saved in database 			
 		var postToSave = {}
-		$http.post("savepost",postToSave).success(function(){
+		$http.post("/savepost",postToSave).success(function(){
 
 		});
 	}
@@ -143,9 +143,24 @@ breezy.controller('BreezySettingsController', function($scope, $http) {
 		});
 	}
 	$scope.submitNewUser = function(){
-
+		console.log($scope.newUser)
+		$http.post("/newuser", $scope.newUser).success(function(data){
+			console.log(data)
+		})
 	}
 
+});
+
+breezy.directive('breezyActivity', function(){
+	return{
+		restrict:'E',
+		controller: function($scope, $element){
+
+		},
+		template: function(){
+			return "<div>Activity</div>"
+		}
+	}
 });
 
 breezy.directive('droppable', function(){

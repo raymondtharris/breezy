@@ -150,6 +150,37 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 	//}
 }
 
+type brNewUser struct {
+	Username string
+	Password string
+	Name     string
+}
+
+func breezyNewUserHandler(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var newUser brNewUser
+	err = json.Unmarshal([]byte(string(body[:])), &newUser)
+	if err != nil {
+		panic(err)
+	}
+	cusers := mdbSession.DB("test").C("Users")
+	var res []breezyUser
+	err = cusers.Find(bson.M{"username": newUser.Username}).All(&res)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Users: ", res)
+	if len(res) == 0 {
+		fmt.Println("Create new user.")
+		w.Write([]byte("New user created."))
+	} else {
+		w.Write([]byte("User with name already exists."))
+	}
+}
+
 func breezyEditHandler(w http.ResponseWriter, r *http.Request) {
 	//Handler function to present the Breezy Editor HTML file
 	http.ServeFile(w, r, "../src/views/edit.html")
@@ -626,6 +657,7 @@ func main() {
 	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
 	http.HandleFunc("/checkcredentials", breezyLoginCredentrials)
+	http.HandleFunc("/newuser", breezyNewUserHandler)
 
 	http.HandleFunc("/edit", breezyEditHandler)
 	http.HandleFunc("/mdowntomup", breezyMarkdownHandler)
