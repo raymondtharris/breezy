@@ -2,17 +2,16 @@
 <head>
 	<title>Breezy</title>
 	<script type="text/javascript" src="/lib/angular.js"></script>
-	<script type="text/javascript" src="/lib/angular-route.js"></script>
 	<script type="text/javascript" src="/js/breezy.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
 </head>
-<body data-ng-app="Breezy">
+<body data-ng-app="breezyApp" ng-controller="BreezySettingsController">
 	<div class="brDashboardMenuContainer">
 		<div>Breezy</div>
 		<ul>
-			<li>View Blog</li>
-			<li>New Post</li>
-			<li>Settings</li>
+			<li ng-click="openBlog()">View Blog</li>
+			<li ng-click="gotoPage('new post')">New Post</li>
+			<li ng-click="gotoPage('settings')">Settings</li>
 		</ul>
 	</div>
 	<div class="brDashboardRecentActivityContainer"> <h3>Settings</h3>
@@ -31,6 +30,15 @@
 			<input type="BUTTON" value="Download Posts"/>
 			<input type="BUTTON" value="Download All Data"/>
 		</div>	
+		<div class="brNewUserContainer">
+			<div>Add User</div>
+			<form ng-submit="submitNewUser()">
+				<input type="email" placeholder="Username" ng-model="newUser.username"/>
+				<input type="password" placeholder="Password" ng-model="newUser.password"/>
+				<input type="text" placeholder="Name" ng-model="newUser.name"/>
+				<input type="submit" value="Add User"/>
+			</form>
+		</div>
 	</div>
 </body>
 </html>

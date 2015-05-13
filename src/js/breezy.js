@@ -41,13 +41,35 @@ breezy.controller("BreezyController", function($scope){
 	
 })
 
-breezy.controller("BreezySetupController",function($scope, $http){
+breezy.controller("BreezyDashboardController", function($scope, $http, $window){
+	$scope.openBlog = function(){
+		//Open the users blog in a separate page/tab
+	}
+	$scope.gotoPage = function(option){
+		//Sends user to the page suggested by the option
+		console.log(option)
+		switch (option){
+			case "settings":
+				$window.location.href="/settings"
+				break;
+			case "new post":
+				$window.location.href="/edit"
+				break;
+			default:
+				console.log("No locaiton to go to.")
+				break;
+		}
+	}
+})
+
+breezy.controller("BreezySetupController",function($scope, $http, $window){
 	$scope.setupConfig={"username":"","password":"","name":"","blogname":""}
 	$scope.submitSetupConfig = function(){
 		//send password to be setup to sent to server
 		$http.post("/setup_config", $scope.setupConfig).success(function(data){
 			console.log(data)
 				//send user to dashboard
+				$window.location.href="/admin"
 		})
 	}
 })
@@ -113,13 +135,16 @@ breezy.controller("BreezyEditorController", function($scope, $http){
 
 breezy.controller('BreezySettingsController', function($scope, $http) {
 	$scope.enabledBackups = true;
+	$scope.newUser = {"username":"", "password":"", "name":""}
 
 	$scope.backup = function(){
 		$http.get("/backup").success(function(data){
 			
 		});
 	}
+	$scope.submitNewUser = function(){
 
+	}
 
 });
 

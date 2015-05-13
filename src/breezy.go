@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"io/ioutil"
@@ -12,7 +13,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"golang.org/x/crypto/bcrypt"	
 )
 
 //prefix br is from Client side
@@ -22,14 +22,13 @@ const brImage, brAudio, brVideo = 0, 1, 2
 const brPost = 0
 const DB_URL = "45.55.192.173" //URL that points to MongoDB
 
-
-type mgoSession struct{
+type mgoSession struct {
 	DB_Session *mgo.Session
-	DB_Err error
+	DB_Err     error
 }
 
-
 var mdbSession *mgo.Session
+
 //var dbSession mgoSession
 
 var editingPost brPostContent
@@ -73,8 +72,8 @@ type brPostMediaData struct {
 	// brPostMediaData stores urls found within a post for fast referencing
 	Links  []string //an array of links found in a post
 	Images []string //an array of image urls found within a post
-	Audio  []string  //an array of audio file urls found within a post
-	Video  []string  //an array of video file urls found within a post
+	Audio  []string //an array of audio file urls found within a post
+	Video  []string //an array of video file urls found within a post
 }
 
 func (mediaData brPostMediaData) String() string {
@@ -125,25 +124,25 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 	}
 	//fmt.Println(string(body[:]), "\n", vls)
 	fmt.Println(userCred.Password)
-	hashedPassword,errP := bcrypt.GenerateFromPassword([]byte(userCred.Password),10)
+	hashedPassword, errP := bcrypt.GenerateFromPassword([]byte(userCred.Password), 10)
 	fmt.Println(string(hashedPassword))
 	_ = errP
 	co := mdbSession.DB("test").C("Users")
 	var res []breezyUser
-	err = co.Find(bson.M{"username": userCred.Username }).All(&res)
+	err = co.Find(bson.M{"username": userCred.Username}).All(&res)
 	fmt.Println("Users Found:", res)
 	passMatch := false
-	for i:=0; i< len(res); i++ {
+	for i := 0; i < len(res); i++ {
 		errCheck := bcrypt.CompareHashAndPassword([]byte(res[i].Password), []byte(userCred.Password))
 		if errCheck == nil {
-			passMatch  = true
+			passMatch = true
 			fmt.Println("found")
 		}
 	}
-	//if res.Username == userCred.Username && res.Password == string(hashedPassword){ 
-	if passMatch{
-	w.Write([]byte("true"))
-	} else{
+	//if res.Username == userCred.Username && res.Password == string(hashedPassword){
+	if passMatch {
+		w.Write([]byte("true"))
+	} else {
 		w.Write([]byte("false"))
 	}
 	//} else{
@@ -198,27 +197,27 @@ type breezySetupConfig struct {
 
 type breezySetupConfigDB struct {
 	Username string
-	Name string
-	Blogname string 
+	Name     string
+	Blogname string
 }
 
 type breezyUser struct {
 	//breezyUser stores Userdata to be used on the databse
-	ID bson.ObjectId `bson:"_id,omitempty"` //ID variable for MongoDB
-	Username string //Username of user stored on DB
-	Password string //Hashed password of the user stored on DB
-	Name string //Name of the user stored on DB
-	Access string //Level of access of the user stored on DB
-	Created time.Time //The timestamp of when the user was created stored on DB
+	ID       bson.ObjectId `bson:"_id,omitempty"` //ID variable for MongoDB
+	Username string        //Username of user stored on DB
+	Password string        //Hashed password of the user stored on DB
+	Name     string        //Name of the user stored on DB
+	Access   string        //Level of access of the user stored on DB
+	Created  time.Time     //The timestamp of when the user was created stored on DB
 }
 type breezyBlog struct {
 	//breezyBlog stores the relevant blog data to the database
-	ID bson.ObjectId `bson: "_id,omitempty"` //ID variable for MongoDB
-	Name string //Name of the blog store on DB
-	Creator string //Name of the creator of the blog stored on DB
-	Users []string //An Array of usernames that have access to the admin section of the blog stored on DB
-	Created time.Time //The timestamp of when the blog was created stored on DB
-	Posts int //The number of posts stored on the DB
+	ID      bson.ObjectId `bson: "_id,omitempty"` //ID variable for MongoDB
+	Name    string        //Name of the blog store on DB
+	Creator string        //Name of the creator of the blog stored on DB
+	Users   []string      //An Array of usernames that have access to the admin section of the blog stored on DB
+	Created time.Time     //The timestamp of when the blog was created stored on DB
+	Posts   int           //The number of posts stored on the DB
 }
 
 func (br breezySetupConfig) String() string {
@@ -238,8 +237,8 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, errP := bcrypt.GenerateFromPassword([]byte(userConfig.Password), 10)
 	_ = errP
 	fmt.Println(string(hashedPassword))
-	//Create User 
-	var user  = breezyUser{bson.NewObjectId(), userConfig.Username, string(hashedPassword[:]), userConfig.Name, "Admin", time.Now()}
+	//Create User
+	var user = breezyUser{bson.NewObjectId(), userConfig.Username, string(hashedPassword[:]), userConfig.Name, "Admin", time.Now()}
 	var dberr error
 	co := mdbSession.DB("test").C("Users")
 	fmt.Println(user)
@@ -252,9 +251,9 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	//Creating and saving Blog data to Database
 	conBlog := mdbSession.DB("test").C("Blog")
 	userList := []string{userConfig.Username}
-	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name, userList, time.Now(), 0 }
+	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name, userList, time.Now(), 0}
 	errB := conBlog.Insert(&blogInfo)
-	_ = errB	
+	_ = errB
 	//Create config file
 	f, err := os.Stat("../src/app/config.json")
 	_ = f
@@ -274,7 +273,7 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 		//write stuff to log like creation date
 		currentTime := time.Now()
 		fmt.Println(currentTime)
-		writeToLog(currentTime.String()+ "\n", 0)
+		writeToLog(currentTime.String()+"\n", 0)
 		fmt.Println(userConfig)
 		var jsonString string
 		jsonString = "{username:" + userConfig.Username + ", name:" + userConfig.Name + ", blogname:" + userConfig.Blogname + "}"
@@ -285,7 +284,8 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func writeConfiguration(userConfig breezySetupConfig) {
-	fmt.Println("Writing User Configurationi\n")
+	fmt.Println("Writing User Configuration\n")
+	fmt.Println("Configuration write complete")
 }
 
 func writeToLog(dataToWrite string, logNum int) {
@@ -369,10 +369,10 @@ func BackupBlog(scheduleOption string) {
 	y, err := os.Stat("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/")
 	_ = y
 	if err != nil {
-		os.Mkdir("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/",0777)
+		os.Mkdir("../src/app/user/backup/"+strconv.Itoa(currentTime.Year())+"/", 0777)
 	}
 	m, err := os.Stat("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/")
-	_ = m 
+	_ = m
 	if err != nil {
 		os.Mkdir("../src/app/user/backup/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/", 0777)
 	}
@@ -383,7 +383,7 @@ func BackupBlog(scheduleOption string) {
 			//look for the weeks directory remaining within the month
 		} else {
 			d, err := os.Stat("../src/app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "/")
-			_ = d 
+			_ = d
 			if err != nil {
 				os.Mkdir("../src/app/user/backup/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/"+strconv.Itoa(currentTime.Day())+"/", 0777)
 			}
@@ -552,28 +552,30 @@ func removeLeftoversInLink(linkUrl string) string {
 	//fmt.Println(linkUrl)
 	return linkUrl
 }
-type breezyMarkdownMarkup struct{
+
+type breezyMarkdownMarkup struct {
 	//Markdown and Markup storage to be used for the DB
 	Markdown string // Markdown to be saved to the DB
-	Markup string // Converted markup to be saved to the DB
+	Markup   string // Converted markup to be saved to the DB
 }
-type breezyMediaCollection struct{
+type breezyMediaCollection struct {
 	//breezyMediaCollection stores all the media object in the DB
-	Links []string //An Array of links for in post to be stored on DB
+	Links  []string //An Array of links for in post to be stored on DB
 	Images []string //An Array of Images in post to be stored on DB
-	Audio []string //An Array of Audio urls to be stored in the DB
-	Video []string//An Array of Video urls to be stored in the DB
+	Audio  []string //An Array of Audio urls to be stored in the DB
+	Video  []string //An Array of Video urls to be stored in the DB
 }
 type breezyPost struct {
 	//breezyPost stores data needed for a post on the DB
-	ID bson.ObjectId `bson:"_id,omitempty"` //ID variable for MongoDB
-	Title string //Title of post to be stored on DB
-	Created time.Time //Created timestamp of the post stored on DB
-	Updated time.Time //Upated timestamp of the post to be stored on DB
-	Creator string //Creator of post stored on the DB
-	Content breezyMarkdownMarkup //Markdown and Markup of post to be stored on DB
-	Media breezyMediaCollection //Collection of links for posts to be stored on the DB
+	ID      bson.ObjectId         `bson:"_id,omitempty"` //ID variable for MongoDB
+	Title   string                //Title of post to be stored on DB
+	Created time.Time             //Created timestamp of the post stored on DB
+	Updated time.Time             //Upated timestamp of the post to be stored on DB
+	Creator string                //Creator of post stored on the DB
+	Content breezyMarkdownMarkup  //Markdown and Markup of post to be stored on DB
+	Media   breezyMediaCollection //Collection of links for posts to be stored on the DB
 }
+
 func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
 	//make post variable
 	//add to database
@@ -597,13 +599,13 @@ func breezyPostListHandle(w http.ResponseWriter, r *http.Request) {
 func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
 	d, err := os.Stat("../src/app/user/setup_log.json")
 	_ = d
-	if err == nil{
-		http.Redirect(w,r,"/admin", http.StatusFound)
-	}else{
+	if err == nil {
+		http.Redirect(w, r, "/admin", http.StatusFound)
+	} else {
 		http.ServeFile(w, r, "../src/views/setup.html")
 	}
 }
-func breezyBlogInfoHandler(w http.ResponseWriter, r *http.Request){
+func breezyBlogInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
@@ -620,9 +622,6 @@ func main() {
 		//fmt.Println("Cannot connect to DB")
 	}
 	defer mdbSession.Close()
-
-	
-
 
 	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
