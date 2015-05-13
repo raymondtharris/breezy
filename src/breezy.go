@@ -175,6 +175,11 @@ func breezyNewUserHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Users: ", res)
 	if len(res) == 0 {
 		fmt.Println("Create new user.")
+		hashedPassword, errP := bcrypt.GenerateFromPassword(newUser.Password, 10)
+		_ = errP
+		newUserToSave := breezyUser{bson.NewObjectId(), newUser.Username, hashedPassword, newUser.Name, "Editor", time.Now()}
+		dbError := cusers.Insert(&newUserToSave)
+		_ = errP
 		w.Write([]byte("New user created."))
 	} else {
 		w.Write([]byte("User with name already exists."))
