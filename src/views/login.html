@@ -15,6 +15,11 @@
 			<input class="brLoginInput" ng-model="loginCredentials.password" placeholder="Password" type="password"/>
 			<input class="brLoginSubmit" type="Submit" ng-click="submitLoginInfo()"/>
 		</form>
+		<div class="brErrorContainer" ng-if="incorrect">
+		<span class="brErrorTitle">Invalid Credentials</span>
+		<span class="brErrorText">Either the Username or Password entered were incorrect.</span>
+		<span class="brErrorText">Please try again.</span>
+		</div>
 	</div>
 <div>
 	

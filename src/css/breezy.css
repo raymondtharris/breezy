@@ -44,6 +44,28 @@ li{
 
 
 /* Login */
+.brErrorContainer{
+	width: 230pt;
+	height: 100pt;
+	border:2pt solid #cc0000;
+	border-radius:3pt;
+	background: #fff;
+	margin: auto;
+	color:#c00;
+}
+.brErrorTitle{
+	text-align: center;
+	display:block;
+	padding: 5pt 0pt;
+	font-size: 18pt;
+}
+.brErrorText{
+	text-align: center;
+	display:block;
+	padding: 2pt 0pt;
+	font-size: 12pt;
+
+}
 .brLogin{
 	background:#C7ECFF;
 }
