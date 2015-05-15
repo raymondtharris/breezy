@@ -38,6 +38,10 @@
 				<input type="text" placeholder="Name" ng-model="newUser.name"/>
 				<input type="submit" value="Add User"/>
 			</form>
+			<div class="brPopUp" ng-if="submitedNewUser">
+				<div ng-if="userExists">User already exists.</div>
+				<div ng-if="!userExists">New User created.</div>
+			</div>
 		</div>
 	</div>
 </body>

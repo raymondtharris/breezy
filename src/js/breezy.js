@@ -136,7 +136,8 @@ breezy.controller("BreezyEditorController", function($scope, $http){
 breezy.controller('BreezySettingsController', function($scope, $http) {
 	$scope.enabledBackups = true;
 	$scope.newUser = {"username":"", "password":"", "name":""}
-
+	$scope.submitedNewUser = false;
+	$scope.userExists = false;
 	$scope.backup = function(){
 		$http.get("/backup").success(function(data){
 			
@@ -144,8 +145,15 @@ breezy.controller('BreezySettingsController', function($scope, $http) {
 	}
 	$scope.submitNewUser = function(){
 		console.log($scope.newUser)
+		$scope.submitedNewUser = false;
 		$http.post("/newuser", $scope.newUser).success(function(data){
+			$scope.submitedNewUser = true;
 			console.log(data)
+			if(data == "New user created."){
+				$scope.userExists = false;
+			} else{
+				$scope.userExists = true;
+			}
 		})
 	}
 
