@@ -175,11 +175,11 @@ func breezyNewUserHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Users: ", res)
 	if len(res) == 0 {
 		fmt.Println("Create new user.")
-		hashedPassword, errP := bcrypt.GenerateFromPassword(newUser.Password, 10)
+		hashedPassword, errP := bcrypt.GenerateFromPassword([]byte(newUser.Password), 10)
 		_ = errP
-		newUserToSave := breezyUser{bson.NewObjectId(), newUser.Username, hashedPassword, newUser.Name, "Editor", time.Now()}
+		newUserToSave := breezyUser{bson.NewObjectId(), newUser.Username, string(hashedPassword[:]), newUser.Name, "Editor", time.Now()}
 		dbError := cusers.Insert(&newUserToSave)
-		_ = errP
+		_ = dbError
 		w.Write([]byte("New user created."))
 	} else {
 		w.Write([]byte("User with name already exists."))
@@ -611,6 +611,12 @@ type breezyPost struct {
 	Content breezyMarkdownMarkup  //Markdown and Markup of post to be stored on DB
 	Media   breezyMediaCollection //Collection of links for posts to be stored on the DB
 }
+type brPostToSave struct {
+	Title        string
+	Content      breezyMarkdownMarkup
+	Media        breezyMediaCollection
+	ContentDirty bool
+}
 
 func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
 	//make post variable
@@ -620,16 +626,31 @@ func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	var currentBlogContent brPostContent
+	var currentBlogContent brPostToSave
 	err = json.Unmarshal([]byte(string(body[:])), &currentBlogContent)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(currentBlogContent)
+	coPosts := mdbSession.DB("test").C("Posts")
+	currentTime := time.Now()
+	newPost := breezyPost{bson.NewObjectId(), currentBlogContent.Title, currentTime, currentTime, "Tim", currentBlogContent.Content, currentBlogContent.Media}
+	dbErr := coPosts.Insert(&newPost)
+	_ = dbErr
+	w.Write([]byte("Post Saved"))
+
 }
 
-func breezyPostListHandle(w http.ResponseWriter, r *http.Request) {
+func breezyPostListHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../src/views/posts.html")
+}
+
+func breezyAllPostsHandler(w http.ResponseWriter, r *http.Request) {
+	coPosts := mdbSession.DB("test").C("Posts")
+	var res []breezyPost
+	dbErr := coPosts.Find(nil).All(&res)
+	_ = dbErr
+	fmt.Println("Posts:", res)
 }
 
 func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
@@ -671,6 +692,9 @@ func main() {
 	http.HandleFunc("/uploadfile", breezyFileUploadHandler)
 
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
+	http.HandleFunc("/postlist", breezyPostListHandler)
+	http.HandleFunc("/get_all_posts", breezyAllPostsHandler)
+
 	http.HandleFunc("/settings", breezySettingsHandler)
 	http.HandleFunc("/blog_info", breezyBlogInfoHandler)
 
