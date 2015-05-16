@@ -1,4 +1,4 @@
-var breezy = angular.module('breezyApp',[])
+var breezy = angular.module('breezyApp',['ngSanitize'])
 
 breezy.directive('contenteditable', ['$sce', function($sce) {
   return {

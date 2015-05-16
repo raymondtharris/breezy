@@ -2,13 +2,15 @@
 <head>
 	<title>Breezy</title>
 	<script type="text/javascript" src="/lib/angular.js"></script>
+	<script type="text/javascript" src="/lib/angular-sanitize.js"></script>
 	<script type="text/javascript" src="/js/breezy.js"></script>
+
 	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
 </head>
 <body data-ng-app="breezyApp" ng-controller="BreezyPostsController">
-	<div class="brDashboardRecentActivityContainer"> <h3>Posts</h3>
+	<div class="brDashboardRecentActivityContainer"> 
 		<div ng-repeat="post in postlist">
-			<div>{{post.Content.Markup}}</div>
+			<div ng-bind-html="post.Content.Markup"></div>
 		</div>	
 	</div>
 </body>
