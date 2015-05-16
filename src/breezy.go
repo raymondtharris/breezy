@@ -650,7 +650,7 @@ func breezyAllPostsHandler(w http.ResponseWriter, r *http.Request) {
 	var res []breezyPost
 	dbErr := coPosts.Find(nil).All(&res)
 	_ = dbErr
-	fmt.Println("Posts:", res)
+	//fmt.Println("Posts:", res)
 
 	jsRes, err2 := json.Marshal(res)
 	if err2 != nil {
@@ -671,6 +671,25 @@ func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
 }
 func breezyBlogInfoHandler(w http.ResponseWriter, r *http.Request) {
 
+}
+
+type blogDisplayInfo struct {
+	Title     string
+	UserCount int
+}
+
+func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
+	coBlog := mdbSession.DB("test").C("Blog")
+	var blog breezyBlog
+	dbErr := coBlog.Find(nil).One(&blog)
+	_ = dbErr
+	displayInfo := blogDisplayInfo{blog.Name, len(blog.Users)}
+	jsRes, err := json.Marshal(displayInfo)
+	if err != err {
+		panic(err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsRes)
 }
 
 func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -711,5 +730,6 @@ func main() {
 	http.HandleFunc("/setup", breezySetupHandler)
 	http.HandleFunc("/setup_config", breezySetupConfigHandler)
 	http.HandleFunc("/", webBlogHandler)
+	http.HandleFunc("/get_blog_display", breezyBlogDisplayInfoHandler)
 	http.ListenAndServe("localhost:4000", nil)
 }

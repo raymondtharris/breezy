@@ -37,7 +37,21 @@ breezy.directive('contenteditable', ['$sce', function($sce) {
 }]);
 
 
-breezy.controller("BreezyController", function($scope){
+breezy.controller("BreezyController", function($scope,$http){
+	//Controller for the blog portion of Breezy
+	$scope.Title = "Temp"
+	$scope.DisplayPostCreator = false
+	$scope.postlist =[]
+	$http.get("/get_blog_display").success(function(data){
+		$scope.Title = data.Title
+		if (data.UserCount > 1 ){
+			$scope.DisplayPostCreator = true
+		}
+	})
+	$http.get("/get_all_posts").success(function(data){
+		//console.log(data)
+		$scope.postlist = data
+	})
 	
 })
 

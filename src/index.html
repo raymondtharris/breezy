@@ -6,9 +6,12 @@
 	<script type="text/javascript" src="/js/breezy.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/blog.css"/>
+
 </head>
-<body data-ng-app="breezyApp" ng-controller="BreezyPostsController">
-	<div class="brDashboardRecentActivityContainer"> 
+<body data-ng-app="breezyApp" ng-controller="BreezyController">
+	<div class="brBlogContainer"> 
+		<span>{{Title}}</span>
 		<div ng-repeat="post in postlist">
 			<div ng-bind-html="post.Content.Markup"></div>
 		</div>	
