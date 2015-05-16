@@ -651,6 +651,13 @@ func breezyAllPostsHandler(w http.ResponseWriter, r *http.Request) {
 	dbErr := coPosts.Find(nil).All(&res)
 	_ = dbErr
 	fmt.Println("Posts:", res)
+
+	jsRes, err2 := json.Marshal(res)
+	if err2 != nil {
+		panic(err2)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsRes)
 }
 
 func breezySetupHandler(w http.ResponseWriter, r *http.Request) {

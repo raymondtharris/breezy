@@ -100,8 +100,10 @@ breezy.controller("BreezyLoginController", function($scope, $http, $window){
 })
 
 breezy.controller("BreezyPostsController", function($scope, $http){
-	$http.get("/get_all_posts").success(function(){
-
+	$scope.postlist =[]
+	$http.get("/get_all_posts").success(function(data){
+		console.log(data)
+		$scope.postlist = data
 	})
 })
 

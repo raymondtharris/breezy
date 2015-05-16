@@ -6,16 +6,10 @@
 	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
 </head>
 <body data-ng-app="breezyApp" ng-controller="BreezyPostsController">
-	<div class="brDashboardMenuContainer">
-		<div>Breezy</div>
-		<ul>
-			<li>View Blog</li>
-			<li>New Post</li>
-			<li>Settings</li>
-		</ul>
-	</div>
 	<div class="brDashboardRecentActivityContainer"> <h3>Posts</h3>
-		<div ng-repeat="post in postlist"><span>{{post.Title}}</span><input type="BUTTON" value="Delete"/></div>	
+		<div ng-repeat="post in postlist"><span>{{post.Title}}</span>
+			<div>{{post.Content.markup}}</div>
+		</div>	
 	</div>
 </body>
 </html>
