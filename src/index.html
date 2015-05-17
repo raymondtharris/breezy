@@ -14,6 +14,7 @@
 		<span>{{Title}}</span>
 		<div ng-repeat="post in postlist">
 			<div ng-bind-html="post.Content.Markup"></div>
+			<div><span ng-if="DisplayPostCreator">{{post.Creator}} - </span><span >{{formatDate(post.Created)}}</span></div>
 		</div>	
 	</div>
 </body>

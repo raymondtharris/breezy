@@ -52,10 +52,16 @@ breezy.controller("BreezyController", function($scope,$http){
 		//console.log(data)
 		$scope.postlist = data
 	})
+	$scope.formatDate = function(dateString){
+		var dateHalf = dateString.split("T")
+		var dateParts = dateHalf[0].split("-")
+		//console.log(dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0])
+		return dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0]
+	}
 	
 })
 
-breezy.controller("BreezyDashboardController", function($scope, $http, $window){
+breezy.controller("BreezyNavigationController", function($scope, $http, $window){
 	$scope.openBlog = function(){
 		//Open the users blog in a separate page/tab
 	}
@@ -66,6 +72,9 @@ breezy.controller("BreezyDashboardController", function($scope, $http, $window){
 			case "settings":
 				$window.location.href="/settings"
 				break;
+				case "posts":
+				$window.location.href="/postlist"
+				break;
 			case "new post":
 				$window.location.href="/edit"
 				break;
@@ -74,6 +83,10 @@ breezy.controller("BreezyDashboardController", function($scope, $http, $window){
 				break;
 		}
 	}
+})
+
+breezy.controller("BreezyDashboardController", function($scope, $http, $window){
+	
 })
 
 breezy.controller("BreezySetupController",function($scope, $http, $window){
@@ -119,6 +132,12 @@ breezy.controller("BreezyPostsController", function($scope, $http){
 		console.log(data)
 		$scope.postlist = data
 	})
+	$scope.deletePost = function(){
+		console.log(this.post.ID)
+		$http.get("/deletepost/"+this.post.ID).success(function(data){
+			
+		})
+	}
 })
 
 

@@ -10,12 +10,14 @@
 </head>
 <body data-ng-app="breezyApp"  >
 	<div ng-controller="BreezyEditorController">
-		<div class="brDashboardMenuContainer">
+		<div class="brDashboardMenuContainer" ng-controller="BreezyNavigationController">
 		<div>Breezy</div>
 		<ul>
-			<li>View Blog</li>
-			<li>New Post</li>
-			<li>Settings</li>
+			<li ng-click="openBlog()">View Blog</li>
+			<li ng-click="gotoPage('new post')">New Post</li>
+			<li ng-click="gotoPage('posts')">Posts</li>
+			<li ng-click="gotoPage('media')">Media</li>
+			<li ng-click="gotoPage('settings')">Settings</li>
 		</ul>
 		</div>
 	<div class="brEditorContainer">

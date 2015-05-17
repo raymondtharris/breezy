@@ -645,6 +645,17 @@ func breezyPostListHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../src/views/posts.html")
 }
 
+func breezyPostDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.RequestURI)
+	temp := strings.Split(r.RequestURI, "/")
+	fmt.Println(temp[2])
+	coPost := mdbSession.DB("test").C("Posts")
+	err := coPost.Remove(bson.M{"_id": bson.ObjectIdHex(temp[2])})
+	_ = err
+	//fmt.Println(res)
+	//coPost.RemoveId(id)
+}
+
 func breezyAllPostsHandler(w http.ResponseWriter, r *http.Request) {
 	coPosts := mdbSession.DB("test").C("Posts")
 	var res []breezyPost
@@ -719,6 +730,7 @@ func main() {
 
 	http.HandleFunc("/dashboard", breezyDashboardHandler)
 	http.HandleFunc("/postlist", breezyPostListHandler)
+	http.HandleFunc("/deletepost/", breezyPostDeleteHandler)
 	http.HandleFunc("/get_all_posts", breezyAllPostsHandler)
 
 	http.HandleFunc("/settings", breezySettingsHandler)
