@@ -455,7 +455,7 @@ func markdownConverter(br brPostContent) brPostContent {
 			case "Title":
 				br.PostData.Title = brNewLine.convertedString
 			case "Link":
-				//br.MediaData.Links = append(br.MediaData.Links, brNewLine.convertedString)
+				br.MediaData.Links = append(br.MediaData.Links, brNewLine.convertedString)
 			case "Image":
 				//br.MediaData.Images = append(br.MediaData.Images, brNewLine.convertedString)
 			default:
@@ -659,7 +659,7 @@ func breezyPostDeleteHandler(w http.ResponseWriter, r *http.Request) {
 func breezyAllPostsHandler(w http.ResponseWriter, r *http.Request) {
 	coPosts := mdbSession.DB("test").C("Posts")
 	var res []breezyPost
-	dbErr := coPosts.Find(nil).All(&res)
+	dbErr := coPosts.Find(nil).Sort("-created").All(&res)
 	_ = dbErr
 	//fmt.Println("Posts:", res)
 

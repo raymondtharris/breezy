@@ -135,13 +135,13 @@ breezy.controller("BreezyPostsController", function($scope, $http){
 	$scope.deletePost = function(){
 		console.log(this.post.ID)
 		$http.get("/deletepost/"+this.post.ID).success(function(data){
-			
+
 		})
 	}
 })
 
 
-breezy.controller("BreezyEditorController", function($scope, $http){
+breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $window){
 	$scope.preview=false
 	$scope.contentDirty=true
 	$scope.postData={title:"", dateCreated:"", dateModified:""}
@@ -173,7 +173,10 @@ breezy.controller("BreezyEditorController", function($scope, $http){
 		$scope.postData.title = String($scope.postData.title).replace(/<[^>]+>/gm, '');
 		var postToSave = {"title": $scope.postData.title,"content":{"markdown":temp, "markup":$scope.markupContent},"media": $scope.mediaData ,"contentDirty": $scope.contentDirty}
 		$http.post("/savepost",postToSave).success(function(){
-
+			console.log("Post Saved")
+			$timeout(function(){
+				$window.location.href="/dashboard"
+			}, 2000)
 		});
 	}
 })
