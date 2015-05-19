@@ -186,6 +186,16 @@ breezy.controller('BreezySettingsController', function($scope, $http) {
 	$scope.newUser = {"username":"", "password":"", "name":""}
 	$scope.submitedNewUser = false;
 	$scope.userExists = false;
+	$scope.blogname = "";
+	$http.get("/blog_info").success(function(data){
+		$scope.blogname = data.Name;	
+	})
+	$scope.updateBlogInfo = function(){
+		var dataToUpdate = {"name": $scope.blogname}
+		$http.post("/blog_info_update", dataToUpdate).success(function(data){
+
+		})	
+	}
 	$scope.backup = function(){
 		$http.get("/backup").success(function(data){
 			

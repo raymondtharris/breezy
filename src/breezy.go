@@ -683,7 +683,40 @@ func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "../src/views/setup.html")
 	}
 }
+
+type blogSettings struct {
+	Name string // Name of the blog
+}
+
 func breezyBlogInfoHandler(w http.ResponseWriter, r *http.Request) {
+	coBlog := mdbSession.DB("test").C("Blog")
+	var blog breezyBlog
+	dbErr := coBlog.Find(nil).One(&blog)
+	_ = dbErr
+	blogData := blogSettings{blog.Name}
+	jsRes, err := json.Marshal(blogData)
+	if err != nil {
+		panic(err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsRes)
+}
+
+func breezyBlogInfoUpdateHandler(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var blogUpdateData blogSettings
+	err = json.Unmarshal([]byte(string(body[:])), &blogUpdateData)
+	if err != nil {
+		panic(err)
+	}
+	coBlog := mdbSession.DB("test").C("Blog")
+	dbErr := coBlog.Update(nil, bson.M{"name": blogUpdateData.Name})
+	if dbErr != nil {
+		panic(dbErr)
+	}
 
 }
 
@@ -699,7 +732,7 @@ func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
 	_ = dbErr
 	displayInfo := blogDisplayInfo{blog.Name, len(blog.Users)}
 	jsRes, err := json.Marshal(displayInfo)
-	if err != err {
+	if err != nil {
 		panic(err)
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -738,6 +771,7 @@ func main() {
 
 	http.HandleFunc("/settings", breezySettingsHandler)
 	http.HandleFunc("/blog_info", breezyBlogInfoHandler)
+	http.HandleFunc("/blog_info_update", breezyBlogInfoUpdateHandler)
 
 	http.HandleFunc("/backup", breezyBackupHandler)
 	http.HandleFunc("/scheduledbackup", breezyBackupScheduleHandler)
