@@ -39,7 +39,7 @@ breezy.directive('contenteditable', ['$sce', function($sce) {
 
 breezy.controller("BreezyController", function($scope,$http){
 	//Controller for the blog portion of Breezy
-	$scope.Title = "Temp"
+	$scope.Title = ""
 	$scope.DisplayPostCreator = false
 	$scope.postlist =[]
 	$http.get("/get_blog_display").success(function(data){

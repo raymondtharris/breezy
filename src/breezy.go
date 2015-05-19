@@ -509,11 +509,11 @@ func markdownConvertLine(currentLine string) markdownConvertedLine {
 			//Check for link or media URL present
 			if strings.Index(currentLine, "![") > 0 {
 				//url inside string
-				var urlString = markdownHandleURL(currentLine)
+				var urlString = markdownHandleURL(currentLine, false)
 				fmt.Println(urlString)
 			} else {
 				//url is first element
-				var urlString = markdownHandleURL(currentLine)
+				var urlString = markdownHandleURL(currentLine, true)
 				currentLine = urlString.convertedString
 				convertedLine.conversionType = urlString.conversionType
 			}
@@ -528,7 +528,7 @@ func markdownConvertLine(currentLine string) markdownConvertedLine {
 	return convertedLine
 }
 
-func markdownHandleURL(currentLine string) markdownConvertedLine {
+func markdownHandleURL(currentLine string, isSingle bool) markdownConvertedLine {
 	//markdownHandleURL function pulls data out of the currentLine string and construct the appropriate
 	//type of markup neeeded to display the URL
 	parenRegex := regexp.MustCompile("\\((.*?)\\)")   //regexp to isolate the string within the parens
@@ -566,6 +566,9 @@ func markdownHandleURL(currentLine string) markdownConvertedLine {
 		urlTitle = urlTitle[1:len(urlTitle)-2] + ")" // Gotta take out the doublequotes but leave in the parent to be removed later
 		returnString = "<a href='" + urlString + "' alt='" + altText[0] + "'>" + urlTitle + "</a>"
 		returnString = removeLeftoversInLink(returnString)
+		if isSingle == true {
+			returnString = returnString + "<br/><br/>"
+		}
 		convertedURL.conversionType = "Link"
 	}
 

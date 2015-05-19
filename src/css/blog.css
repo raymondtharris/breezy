@@ -9,3 +9,15 @@ h1{
 	width: 900pt;
 	margin: auto;
 }
+.brBlogTitle{
+	font-size:38pt;
+	display: block;
+	margin: auto;
+	text-align: center;
+	padding:16pt 0pt;
+}
+.brLineBreak{
+	width:100%;
+	height:2pt;
+	background:#ccc;
+}
