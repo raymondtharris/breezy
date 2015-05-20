@@ -12,12 +12,23 @@ input{
 	width:700pt;
 	display:inline-block;
 }
+.brBreakLineThin{
+	width:800pt;
+	height:1pt;
+	background:#ccc;
+	margin: 6pt -10pt;
+}
+
 body{
 	margin:0;
 	padding:0;
 }
 li{
 	list-style:none;
+}
+label{
+	padding-left:6pt;
+	padding-right:4pt;
 }
 /* Dashboard */
 

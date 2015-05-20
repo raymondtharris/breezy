@@ -196,6 +196,9 @@ breezy.controller('BreezySettingsController', function($scope, $http) {
 
 		})	
 	}
+	$scope.updateScheduledBackup = function(){
+		console.log($scope)
+	}
 	$scope.backup = function(){
 		$http.get("/backup").success(function(data){
 			
