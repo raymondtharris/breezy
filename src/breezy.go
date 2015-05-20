@@ -741,7 +741,25 @@ func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	//breezyFileUploadHandler function recieves file data from client and stores it in the appropriate location
+	//	r.ParseForm()
+	//	fmt.Println(r.Form)
+	//	body, err := ioutil.ReadAll(r.Body)
+	//	_ = err
+	//	fmt.Println(body)
 
+	file, handler, err := r.FormFile("file")
+	if err != nil {
+		panic(err)
+	}
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(handler.Filename)
+	err = ioutil.WriteFile("../src/app/user/media/"+handler.Filename, data, 0777)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {

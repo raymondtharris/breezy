@@ -308,6 +308,7 @@ breezy.service('$files', function($rootScope,$http){
 	var uploadSize;
 	var currentFileSize;
 	this.upload = function(fileList){
+		console.log(fileList)
 		currentProgress= 0;
 		uploadSize=0;
 		for(var i = 0; i < fileList.length; i++){
@@ -317,20 +318,26 @@ breezy.service('$files', function($rootScope,$http){
 		for(var i = 0; i < fileList.length; i++){
 			var xmlHttpReq = new XMLHttpRequest();
 			currentFileSize = fileList[i].size;
+			var formdata = new FormData();
+			formdata.append("file", fileList[i]);
 			xmlHttpReq.open("POST", "/uploadfile");
-			
+			xmlHttpReq.send(formdata);
+			/*
 			xmlHttpReq.setRequestHeader('X_FILE_NAME', fileList[i].name);
 			xmlHttpReq.setRequestHeader('X_FILE_SIZE', fileList[i].size);
 			xmlHttpReq.setRequestHeader('X-Requested-With', true);
-			xmlHttpReq.setRequestHeader('Content-Type', fileList[i].type);
-			
-			xmlHttpReq.upload.addEventListener("progress", this.uploadProgress, false);
+			*/
+	//		xmlHttpReq.setRequestHeader('Content-Type', fileList[i].type);
+		//	xmlHttpReq.setRequestHeader('Content-Type', 'multipart/form-data');
+			console.log(fileList[i].type);		
+		/*	xmlHttpReq.upload.addEventListener("progress", this.uploadProgress, false);
 			xmlHttpReq.upload.addEventListener("loadstart", this.uploadStart, false);
 			//xmlHttpReq.upload.addEventListener("loadend", this.uploadEnd(xmlHttpReq.upload, fileList[i]), false);
 			xmlHttpReq.addEventListener("load", this.uploadComplete(xmlHttpReq, fileList[i]), false);
 			//xmlHttpReq.addEventListener("error", this.uploadFailed, false);
 			//xhr.addEventListener("abort", uploadCanceled, false)
-			xmlHttpReq.send(fileList[i]);
+		*/
+		//	xmlHttpReq.send(fileList[i]);
 			if(i == fileList.length-1){
 				this.allFiles(fileList);
 			}
@@ -340,13 +347,13 @@ breezy.service('$files', function($rootScope,$http){
 		return uploadSize;
 	}
 	this.uploadStart = function(){
-		$rootScope.$broadcast('started');
+	//	$rootScope.$broadcast('started');
 	}
 	this.uploadProgress = function(evt){
 		
 		currentProgress += Math.round(evt.loaded * 100 / uploadSize);
 		
-		$rootScope.$broadcast('uploadProgress', currentProgress);
+	//	$rootScope.$broadcast('uploadProgress', currentProgress);
 	}
 	this.uploadComplete = function(req, file){
 		//console.log(req);
