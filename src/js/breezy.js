@@ -320,6 +320,7 @@ breezy.service('$files', function($rootScope,$http){
 			currentFileSize = fileList[i].size;
 			var formdata = new FormData();
 			formdata.append("file", fileList[i]);
+			formdata.append("filetype", fileList[i].type);
 			xmlHttpReq.open("POST", "/uploadfile");
 			xmlHttpReq.send(formdata);
 			/*

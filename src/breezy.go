@@ -739,6 +739,14 @@ func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsRes)
 }
 
+type breezyMediaObject struct {
+	Filename     string
+	FileWithPath string
+	MediaType    string
+	FileType     string
+	Added        time.Time
+}
+
 func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	//breezyFileUploadHandler function recieves file data from client and stores it in the appropriate location
 	//	r.ParseForm()
@@ -755,11 +763,37 @@ func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(handler.Filename)
-	err = ioutil.WriteFile("../src/app/user/media/"+handler.Filename, data, 0777)
+	fmt.Println(handler.Header.Get("Content-Type"))
+	fileType := handler.Header.Get("Content-Type")
+	_ = fileType
+	currentTime := time.Now()
+	path := mediaDirectoryCheck(currentTime)
+	err = ioutil.WriteFile(path+handler.Filename, data, 0777)
 	if err != nil {
 		panic(err)
 	}
+}
+
+func mediaDirectoryCheck(currentTime time.Time) string {
+	// Check if directories needed to write media exists and if not makes them.
+	path := "../src/app/user/media/"
+	_, err := os.Stat(path + strconv.Itoa(currentTime.Year()) + "/")
+	if err != nil {
+		os.Mkdir(path+strconv.Itoa(currentTime.Year())+"/", 0777)
+	}
+	path = path + strconv.Itoa(currentTime.Year()) + "/"
+	_, err = os.Stat(path + currentTime.Month().String() + "/")
+	if err != nil {
+		os.Mkdir(path+currentTime.Month().String()+"/", 0777)
+	}
+	path = path + currentTime.Month().String() + "/"
+	_, err = os.Stat(path + strconv.Itoa(currentTime.Day()) + "/")
+	if err != nil {
+		os.Mkdir(path+strconv.Itoa(currentTime.Day())+"/", 0777)
+	}
+	path = path + strconv.Itoa(currentTime.Day()) + "/"
+	return path
+
 }
 
 func main() {
