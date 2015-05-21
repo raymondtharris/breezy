@@ -674,6 +674,24 @@ func breezyAllPostsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsRes)
 }
 
+func breezyMediaListHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "../src/views/media.html")
+}
+
+func breezyAllMediaHandler(w http.ResponseWriter, r *http.Request) {
+	coMedia := mdbSession.DB("test").C("Media")
+	var res []breezyMediaObject
+	dbErr := coMedia.Find(nil).Sort("-added").All(&res)
+	_ = dbErr
+
+	jsRes, err2 := json.Marshal(res)
+	if err2 != nil {
+		panic(err2)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsRes)
+}
+
 func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
 	d, err := os.Stat("../src/app/user/setup_log.json")
 	_ = d
@@ -740,6 +758,7 @@ func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type breezyMediaObject struct {
+	ID           bson.ObjectId `bson:"_id,omitempty"` //ID variable for MongoDB
 	Filename     string
 	FileWithPath string
 	MediaType    string
@@ -763,7 +782,6 @@ func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(handler.Header.Get("Content-Type"))
 	fileType := handler.Header.Get("Content-Type")
 	_ = fileType
 	currentTime := time.Now()
@@ -772,6 +790,12 @@ func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+	//Save file information to the database
+	coMedia := mdbSession.DB("test").C("Media")
+	objectTypes := strings.Split(fileType, "/")
+	newMediaObject := breezyMediaObject{bson.NewObjectId(), handler.Filename, path + handler.Filename, objectTypes[0], objectTypes[1], currentTime}
+	dbErr := coMedia.Insert(&newMediaObject)
+	_ = dbErr
 }
 
 func mediaDirectoryCheck(currentTime time.Time) string {
@@ -820,6 +844,9 @@ func main() {
 	http.HandleFunc("/postlist", breezyPostListHandler)
 	http.HandleFunc("/deletepost/", breezyPostDeleteHandler)
 	http.HandleFunc("/get_all_posts", breezyAllPostsHandler)
+
+	http.HandleFunc("/medialist", breezyMediaListHandler)
+	http.HandleFunc("/get_all_media", breezyAllMediaHandler)
 
 	http.HandleFunc("/settings", breezySettingsHandler)
 	http.HandleFunc("/blog_info", breezyBlogInfoHandler)

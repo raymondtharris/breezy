@@ -89,6 +89,13 @@ breezy.controller("BreezyDashboardController", function($scope, $http, $window){
 	
 })
 
+breezy.controller("BreezyMediaLibraryController", function($scope, $http, $window){
+	$scope.MediaList = [];
+	$http.get("/get_all_media").success(function(data){
+		$scope.MediaList = data;
+	})
+})
+
 breezy.controller("BreezySetupController",function($scope, $http, $window){
 	$scope.setupConfig={"username":"","password":"","name":"","blogname":""}
 	$scope.submitSetupConfig = function(){

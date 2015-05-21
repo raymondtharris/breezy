@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>Breezy</title>
+	<script type="text/javascript" src="/lib/angular.js"></script>
+	<script type="text/javascript" src="/lib/angular-sanitize.js"></script>	
+	<script type="text/javascript" src="/js/breezy.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
+</head>
+<body data-ng-app="breezyApp" ng-controller="BreezyMediaLibraryController">
+	<div class="brDashboardMenuContainer" ng-controller="BreezyNavigationController">
+		<div>Breezy</div>
+		<ul>
+			<li ng-click="openBlog()">View Blog</li>
+			<li ng-click="gotoPage('new post')">New Post</li>
+			<li ng-click="gotoPage('posts')">Posts</li>
+			<li ng-click="gotoPage('media')">Media</li>
+			<li ng-click="gotoPage('settings')">Settings</li>
+		</ul>
+	</div>
+	<div class="brDashboardRecentActivityContainer"> <h3>Recent Activity</h3>
+		<div ng-repeat="item in MediaList">{{item}}</div>
+	</div>
+</body>
+</html>
