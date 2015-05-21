@@ -18,7 +18,9 @@
 		</ul>
 	</div>
 	<div class="brDashboardRecentActivityContainer"> <h3>Recent Activity</h3>
-		<div ng-repeat="item in MediaList">{{item}}</div>
+		<div ng-repeat="item in MediaList">
+			<img ng-src="/app/user/media/2015/May/20/{{item.Filename}}"/>	
+		<div>
 	</div>
 </body>
 </html>

@@ -436,6 +436,7 @@ func HandleDirs() {
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../src/js/"))))
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("../src/css/"))))
 	http.Handle("/views/", http.StripPrefix("/views/", http.FileServer(http.Dir("../src/views/"))))
+	http.Handle("/app/", http.StripPrefix("/app/", http.FileServer(http.Dir("../src/app/"))))
 }
 
 func markdownConverter(br brPostContent) brPostContent {
@@ -679,6 +680,8 @@ func breezyMediaListHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func breezyAllMediaHandler(w http.ResponseWriter, r *http.Request) {
+	//breezyAllMediaHandler function gets all the media objects from the database and
+	// then sends it back to the client as json array.
 	coMedia := mdbSession.DB("test").C("Media")
 	var res []breezyMediaObject
 	dbErr := coMedia.Find(nil).Sort("-added").All(&res)
@@ -690,6 +693,17 @@ func breezyAllMediaHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsRes)
+}
+
+func breezyMediaDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	//breezyMediaDeleteHandler function looks at the request and finds the _id of a piece
+	// of media and uses that to remove it from the database.
+	fmt.Println(r.RequestURI)
+	temp := strings.Split(r.RequestURI, "/")
+	fmt.Println(temp[2])
+	coMedia := mdbSession.DB("test").C("Media")
+	err := coMedia.Remove(bson.M{"_id": bson.ObjectIdHex(temp[2])})
+	_ = err
 }
 
 func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
@@ -759,20 +773,15 @@ func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 type breezyMediaObject struct {
 	ID           bson.ObjectId `bson:"_id,omitempty"` //ID variable for MongoDB
-	Filename     string
-	FileWithPath string
-	MediaType    string
-	FileType     string
-	Added        time.Time
+	Filename     string        // Filename string of the the file
+	FileWithPath string        //Path and filename to the media object
+	MediaType    string        //The type of media of the media object
+	FileType     string        //The file extension of the media object
+	Added        time.Time     //The timestamp of when the media object was added
 }
 
 func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	//breezyFileUploadHandler function recieves file data from client and stores it in the appropriate location
-	//	r.ParseForm()
-	//	fmt.Println(r.Form)
-	//	body, err := ioutil.ReadAll(r.Body)
-	//	_ = err
-	//	fmt.Println(body)
 
 	file, handler, err := r.FormFile("file")
 	if err != nil {
@@ -793,6 +802,7 @@ func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	//Save file information to the database
 	coMedia := mdbSession.DB("test").C("Media")
 	objectTypes := strings.Split(fileType, "/")
+	// Might need to change the saved path of the directory to the file.
 	newMediaObject := breezyMediaObject{bson.NewObjectId(), handler.Filename, path + handler.Filename, objectTypes[0], objectTypes[1], currentTime}
 	dbErr := coMedia.Insert(&newMediaObject)
 	_ = dbErr

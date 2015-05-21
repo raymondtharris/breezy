@@ -72,7 +72,10 @@ breezy.controller("BreezyNavigationController", function($scope, $http, $window)
 			case "settings":
 				$window.location.href="/settings"
 				break;
-				case "posts":
+			case "media":
+				$window.location.href="/medialist"
+				break;
+			case "posts":
 				$window.location.href="/postlist"
 				break;
 			case "new post":
