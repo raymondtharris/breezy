@@ -702,6 +702,19 @@ func breezyMediaDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	temp := strings.Split(r.RequestURI, "/")
 	fmt.Println(temp[2])
 	coMedia := mdbSession.DB("test").C("Media")
+
+	// Find media file to remove on DB
+	var mediTotFind breezyMediaObject
+	dbErr := coMedia.Find(bson.M{"_id": bson.ObjectIdHex(temo[2])}).One(&mediTotFind)
+	if dbErr != nil {
+		panic(dbErr)
+	}
+	// Remove file on Server
+	fiErr := os.Remove(mediTotFind.FileWithPath)
+	if fiErr != nil {
+		panic(fiErr)
+	}
+	// Remove file record off the database
 	err := coMedia.Remove(bson.M{"_id": bson.ObjectIdHex(temp[2])})
 	_ = err
 }
