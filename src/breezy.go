@@ -705,12 +705,12 @@ func breezyMediaDeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Find media file to remove on DB
 	var mediTotFind breezyMediaObject
-	dbErr := coMedia.Find(bson.M{"_id": bson.ObjectIdHex(temo[2])}).One(&mediTotFind)
+	dbErr := coMedia.Find(bson.M{"_id": bson.ObjectIdHex(temp[2])}).One(&mediTotFind)
 	if dbErr != nil {
 		panic(dbErr)
 	}
 	// Remove file on Server
-	fiErr := os.Remove(mediTotFind.FileWithPath)
+	fiErr := os.Remove("../src" + mediTotFind.FileWithPath)
 	if fiErr != nil {
 		panic(fiErr)
 	}
@@ -816,7 +816,7 @@ func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	coMedia := mdbSession.DB("test").C("Media")
 	objectTypes := strings.Split(fileType, "/")
 	// Might need to change the saved path of the directory to the file.
-	newMediaObject := breezyMediaObject{bson.NewObjectId(), handler.Filename, path + handler.Filename, objectTypes[0], objectTypes[1], currentTime}
+	newMediaObject := breezyMediaObject{bson.NewObjectId(), handler.Filename, path[6:len(path)] + handler.Filename, objectTypes[0], objectTypes[1], currentTime}
 	dbErr := coMedia.Insert(&newMediaObject)
 	_ = dbErr
 }
@@ -869,6 +869,7 @@ func main() {
 	http.HandleFunc("/get_all_posts", breezyAllPostsHandler)
 
 	http.HandleFunc("/medialist", breezyMediaListHandler)
+	http.HandleFunc("/deletemedia/", breezyMediaDeleteHandler)
 	http.HandleFunc("/get_all_media", breezyAllMediaHandler)
 
 	http.HandleFunc("/settings", breezySettingsHandler)

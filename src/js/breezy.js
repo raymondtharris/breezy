@@ -97,6 +97,12 @@ breezy.controller("BreezyMediaLibraryController", function($scope, $http, $windo
 	$http.get("/get_all_media").success(function(data){
 		$scope.MediaList = data;
 	})
+	$scope.removeMedia = function(){
+		console.log(this.item.ID)
+		$http.get("/deletemedia/"+this.item.ID).success(function(data){
+			console.log("deleted")
+		});
+	}
 })
 
 breezy.controller("BreezySetupController",function($scope, $http, $window){
