@@ -98,10 +98,15 @@ breezy.controller("BreezyMediaLibraryController", function($scope, $http, $windo
 		$scope.MediaList = data;
 	})
 	$scope.removeMedia = function(){
-		console.log(this.item.ID)
+		//console.log(this.$index)
+		var indDelete = this.$index
 		$http.get("/deletemedia/"+this.item.ID).success(function(data){
-			console.log("deleted")
+			//console.log("deleted " + indDelete)
+			$scope.MediaList.splice(indDelete, 1)
 		});
+	}
+	$scope.getIndex = function(){
+		console.log(this.$index)
 	}
 })
 
@@ -150,8 +155,9 @@ breezy.controller("BreezyPostsController", function($scope, $http){
 	})
 	$scope.deletePost = function(){
 		console.log(this.post.ID)
+		var postDelete = this.$index;
 		$http.get("/deletepost/"+this.post.ID).success(function(data){
-
+			$scope.postlist.splice(postDelete, 1)
 		})
 	}
 })
