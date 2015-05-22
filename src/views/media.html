@@ -17,7 +17,7 @@
 			<li ng-click="gotoPage('settings')">Settings</li>
 		</ul>
 	</div>
-	<div class="brDashboardRecentActivityContainer"> <h3>Recent Activity</h3>
+	<div class="brDashboardRecentActivityContainer"> <h3>Media</h3>
 		<div ng-repeat="item in MediaList">
 			<img ng-src="{{item.FileWithPath}}"/>	
 			<input type="BUTTON" value="Delete" ng-click="removeMedia()">

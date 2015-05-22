@@ -168,6 +168,12 @@ breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $w
 	$scope.contentDirty=true
 	$scope.postData={title:"", dateCreated:"", dateModified:""}
 	$scope.mediaData={"Links":[], "Images":[], "Audio":[], "Video":[]}
+	$scope.recentlyAdded = [];
+	$scope.MediaList = [];
+	$scope.hasRecently = true;
+	$http.get("/get_all_media").success( function(data){
+		$scope.MediaList = data
+	})
 	$scope.togglePreview = function(newValue){
 		$scope.preview=newValue
 		console.log($scope.markdownContent)
