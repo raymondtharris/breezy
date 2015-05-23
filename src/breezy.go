@@ -290,6 +290,10 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name, userList, time.Now(), 0}
 	errB := conBlog.Insert(&blogInfo)
 	_ = errB
+
+	// Setup App directories
+	breezyAppDirectories()
+
 	//Create config file
 	f, err := os.Stat("../src/app/config.json")
 	_ = f
@@ -315,6 +319,31 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 		jsonString = "{username:" + userConfig.Username + ", name:" + userConfig.Name + ", blogname:" + userConfig.Blogname + "}"
 		jsonToWrite, err := json.Marshal(jsonString)
 		writeToLog(string(jsonToWrite[:]), 0)
+	}
+
+}
+
+func breezyAppDirectories() {
+	//Checks if App directories exists and if not creates them.
+	_, err := os.Stat("../src/app/")
+	if err != nil {
+		os.Mkdir("../src/app/", 0777)
+	}
+	_, err = os.Stat("../src/app/user")
+	if err != nil {
+		os.Mkdir("../src/app/user", 0777)
+	}
+	_, err = os.Stat("../src/app/user/backup")
+	if err != nil {
+		os.Mkdir("../src/app/user/backup", 0777)
+	}
+	_, err = os.Stat("../src/app/user/logs")
+	if err != nil {
+		os.Mkdir("../src/app/user/logs", 0777)
+	}
+	_, err = os.Stat("../src/app/user/media")
+	if err != nil {
+		os.Mkdir("../src/app/user/media", 0777)
 	}
 
 }
