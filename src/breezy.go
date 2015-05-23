@@ -724,6 +724,20 @@ func breezyAllMediaHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsRes)
 }
 
+func breezyNewestMediaHandler(w http.ResponseWriter, r *http.Request) {
+	// breezyNewestMediaHandler function gets the latest piece of media added to the database
+	coMedia := mdbSession.DB("test").C("Media")
+	var res breezyMediaObject
+	dbErr := coMedia.Find(nil).Sort("-added").One(&res)
+	_ = dbErr
+	jsRes, err2 := json.Marshal(res)
+	if err2 != nil {
+		panic(err2)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsRes)
+}
+
 func breezyMediaDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	//breezyMediaDeleteHandler function looks at the request and finds the _id of a piece
 	// of media and uses that to remove it from the database.
@@ -900,6 +914,7 @@ func main() {
 	http.HandleFunc("/medialist", breezyMediaListHandler)
 	http.HandleFunc("/deletemedia/", breezyMediaDeleteHandler)
 	http.HandleFunc("/get_all_media", breezyAllMediaHandler)
+	http.HandleFunc("/newest_media", breezyNewestMediaHandler)
 
 	http.HandleFunc("/settings", breezySettingsHandler)
 	http.HandleFunc("/blog_info", breezyBlogInfoHandler)

@@ -207,6 +207,11 @@ breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $w
 			}, 2000)
 		});
 	}
+	$scope.$on("uploadComplete", function(evt, file){
+		$http.get("/newest_media").success(function(data){
+			$scope.recentlyAdded.push(data)
+		})
+	});
 })
 
 breezy.controller('BreezySettingsController', function($scope, $http) {
@@ -350,6 +355,8 @@ breezy.service('$files', function($rootScope,$http){
 			formdata.append("file", fileList[i]);
 			formdata.append("filetype", fileList[i].type);
 			xmlHttpReq.open("POST", "/uploadfile");
+			xmlHttpReq.upload.addEventListener("progress", this.uploadProgress, false);
+			xmlHttpReq.addEventListener("load", this.uploadComplete(xmlHttpReq, fileList[i]), false);
 			xmlHttpReq.send(formdata);
 			/*
 			xmlHttpReq.setRequestHeader('X_FILE_NAME', fileList[i].name);
@@ -385,7 +392,7 @@ breezy.service('$files', function($rootScope,$http){
 	//	$rootScope.$broadcast('uploadProgress', currentProgress);
 	}
 	this.uploadComplete = function(req, file){
-		//console.log(req);
+		console.log(req);
 		$rootScope.$broadcast('uploadComplete',file);
 	}
 	this.uploadFailed = function(){

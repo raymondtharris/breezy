@@ -37,10 +37,10 @@
 	<div class="brEditorMediaContainer" ng-model="userContent">
 		<div ng-if="hasRecently">Recently Added</div>
 		<div ng-repeat="items in recentlyAdded">
-			<img ng-src=""/>
+			<img ng-src="{{items.FileWithPath}}"/>
 		</div>
 		<div>Media</div>
-		<div ng-repeat="mediaitem in mediaList">
+		<div ng-repeat="mediaitem in MediaList">
 			<img ng-src="{{mediaitem.FileWithPath}}"/>
 		</div>
 	</div>
