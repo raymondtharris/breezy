@@ -18,8 +18,8 @@
 		</ul>
 	</div>
 	<div class="brDashboardRecentActivityContainer"> <h3>Media</h3>
-		<div ng-repeat="item in MediaList">
-			<img ng-src="{{item.FileWithPath}}"/>	
+		<div ng-repeat="item in MediaList" class="brMediaGalleryThumbnail">
+			<img ng-src="{{item.FileWithPath}}" id="thumbnail" ng-class="{imagelayout : compareDimensions(this)}"/>	
 			<input type="BUTTON" value="Delete" ng-click="removeMedia()">
 		<div>
 	</div>

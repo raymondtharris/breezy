@@ -108,6 +108,10 @@ breezy.controller("BreezyMediaLibraryController", function($scope, $http, $windo
 	$scope.getIndex = function(){
 		console.log(this.$index)
 	}
+	$scope.compareDimensions = function(el){
+		console.log($element[0]);
+		console.log(angular.element(document.querySelector('#thumbnail')))	
+	}
 })
 
 breezy.controller("BreezySetupController",function($scope, $http, $window){

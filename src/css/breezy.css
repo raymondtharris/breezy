@@ -116,3 +116,11 @@ label{
 	border-radius:3pt;
 	font-size:16pt;
 }
+
+/* Media */
+.brMediaGalleryThumbnail{
+	width: 160pt;
+	height: 160pt;
+	background: #ccc;
+
+}

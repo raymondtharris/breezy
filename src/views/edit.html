@@ -35,13 +35,13 @@
 <div class="brEditorAddFilesContainer">
 	<div>Media</div>
 	<div class="brEditorMediaContainer" ng-model="userContent">
+		<div class="brEditorRecentlyAdded">
 		<div ng-if="hasRecently">Recently Added</div>
-		<div ng-repeat="items in recentlyAdded">
-			<img ng-src="{{items.FileWithPath}}"/>
-		</div>
-		<div>Media</div>
-		<div ng-repeat="mediaitem in MediaList">
-			<img ng-src="{{mediaitem.FileWithPath}}"/>
+			<img ng-repeat="items in recentlyAdded" class="brEditorMediaThumbnail" ng-src="{{items.FileWithPath}}" />
+		</div>	
+		<div class="brEditorMedia">
+		<div class="brEditorMediaTitle">Media</div>
+				<div ng-repeat="mediaitem in MediaList" class="brEditorMediaThumbnail"><img   ng-src="{{mediaitem.FileWithPath}}"/></div>
 		</div>
 	</div>
 	<div class="brEditorDropZone" droppable>

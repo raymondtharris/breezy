@@ -3,6 +3,7 @@ body{
 	background:#f2f2f2;
 }
 
+
 .brEditorContainer{
 	width:780pt;
 	height:1050pt;
@@ -64,6 +65,8 @@ body{
 	min-height:244pt;
 	margin:6pt auto;
 	border:1pt solid #ccc;
+	overflow-y:scroll;
+	overflow-x:hidden;
 	
 }
 .brEditorCommandContainer{
@@ -118,4 +121,31 @@ body{
 	margin:auto;
 	margin-top:4pt;
 }
+.brEditorRecentlyAdded{
+	width: 190pt;
+	border: 1pt solid #000;
+}
+.brEditorMedia{
+	width: 180pt;
+	border: 1pt solid #000;
+}
+.brEditorMediaTitle{
+	float: none;
+	width: 100%;
+	height: 10pt;
+}
+.brEditorMediaThumbnail{
+	margin: 2pt 1pt;
+	height: 45pt;
+	width: 45pt;
+	float: left;
+	display: block;
+	list-style: none;
 
+}
+
+.brEditorMediaThumbnail img{
+	height: 45pt;
+	width: 45pt;
+	display: inline-block;
+}
