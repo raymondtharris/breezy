@@ -92,7 +92,7 @@ breezy.controller("BreezyDashboardController", function($scope, $http, $window){
 	
 })
 
-breezy.controller("BreezyMediaLibraryController", function($scope, $http, $window){
+breezy.controller("BreezyMediaLibraryController", function($scope, $http, $window, $element){
 	$scope.MediaList = [];
 	$http.get("/get_all_media").success(function(data){
 		$scope.MediaList = data;
@@ -109,8 +109,15 @@ breezy.controller("BreezyMediaLibraryController", function($scope, $http, $windo
 		console.log(this.$index)
 	}
 	$scope.compareDimensions = function(el){
-		console.log($element[0]);
-		console.log(angular.element(document.querySelector('#thumbnail')))	
+		//console.log(this);
+		console.log(angular.element($element[0].querySelector('#thumbnail'+this.$index))[0].offsetHeight)	
+		var elm = angular.element($element[0].querySelector('#thumbnail'+this.$index))[0]
+		if (elm.offsetHeight > elm.offsetWidth ){
+			console.log("taller")
+		} else {
+			console.log("wider or equal")
+		}
+
 	}
 })
 
