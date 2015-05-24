@@ -17,10 +17,13 @@
 			<li ng-click="gotoPage('settings')">Settings</li>
 		</ul>
 	</div>
-	<div class="brDashboardRecentActivityContainer"> <h3>Media</h3>
+	<div class="brDashboardRecentActivityContainer"> <h2>Media</h2>
+	<div class="brTitleBreakLine"></div>
 		<div ng-repeat="item in MediaList" class="brMediaGalleryThumbnail">
-			<img ng-src="{{item.FileWithPath}}" id="thumbnail{{$index}}" ng-class="{brMediaImageTall : comparDimensions(this),brMediaImageWide: compareDimensions(this)}"/>	
-			<input type="BUTTON" value="Delete" ng-click="removeMedia()">
+			<div class="brMediaImageContainer">
+				<img ng-src="{{item.FileWithPath}}" id="thumbnail{{$index}}" ng-class="{brMediaImageTall : comparDimensions(this),brMediaImageWide: compareDimensions(this)}" class="brMediaGalleryImage" ng-click="displayMedia()"/>
+			</div>	
+			<input type="BUTTON" value="Delete" ng-click="removeMedia()" class="brMediaGalleryDeleteButton">
 		<div>
 	</div>
 </body>

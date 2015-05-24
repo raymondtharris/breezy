@@ -6,6 +6,10 @@ input{
 	
 }
 
+h2{
+	font-size: 30pt;
+	margin-bottom: 0pt;
+}
 .brLogContainer{
 	background:#eee;
 	padding:10pt 10pt;
@@ -18,7 +22,12 @@ input{
 	background:#ccc;
 	margin: 6pt -10pt;
 }
-
+.brTitleBreakLine{
+	width:800pt;
+	height:3pt;
+	background:#ccc;
+	margin: 6pt -10pt;
+}
 body{
 	margin:0;
 	padding:0;
@@ -120,9 +129,17 @@ label{
 /* Media */
 .brMediaGalleryThumbnail{
 	width: 160pt;
-	height: 160pt;
+	height: 191pt;
 	background: #ccc;
-
+	border: 1pt solid #ccc;
+	float: left;
+	margin: 10pt 10pt;
+}
+.brMediaImageContainer{
+	width: 160pt;
+	height: 160pt;
+	background: #fff;
+	margin-bottom: 1pt;
 }
 .brMediaImageTall {
 	height: 160pt;
@@ -131,4 +148,17 @@ label{
 .brMediaImageWide {
 	width: 160pt;
 	height: auto;
+}
+.brMediaGalleryImage{
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	display: block;
+	margin: auto;
+}
+.brMediaGalleryDeleteButton{
+	width: 160pt;
+	height: 30pt;
+	border: 0pt none #ccc;
 }

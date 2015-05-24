@@ -110,17 +110,24 @@ breezy.controller("BreezyMediaLibraryController", function($scope, $http, $windo
 	}
 	$scope.compareDimensions = function(el){
 		//console.log(this);
-		console.log(angular.element($element[0].querySelector('#thumbnail'+this.$index))[0].offsetHeight)	
+		//console.log(angular.element($element[0].querySelector('#thumbnail'+this.$index))[0].offsetHeight)	
 		var elm = angular.element($element[0].querySelector('#thumbnail'+this.$index))[0]
+		if ((elm.offsetHeight && elm.offsetWidth ) < 160){
+			console.log("small")
+			return false
+		}
 		if (elm.offsetHeight > elm.offsetWidth ){
-			console.log("taller")
+			//console.log("taller")
 			return true
 		} else {
-			console.log("wider or equal")
+			//console.log("wider or equal")
 			return true
 		}
 		return false
 
+	}
+	$scope.displayMedia =  function(){
+		console.log(this.item.ID)
 	}
 })
 
