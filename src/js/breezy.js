@@ -114,9 +114,12 @@ breezy.controller("BreezyMediaLibraryController", function($scope, $http, $windo
 		var elm = angular.element($element[0].querySelector('#thumbnail'+this.$index))[0]
 		if (elm.offsetHeight > elm.offsetWidth ){
 			console.log("taller")
+			return true
 		} else {
 			console.log("wider or equal")
+			return true
 		}
+		return false
 
 	}
 })

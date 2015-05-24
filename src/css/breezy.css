@@ -124,3 +124,11 @@ label{
 	background: #ccc;
 
 }
+.brMediaImageTall {
+	height: 160pt;
+	width: auto;
+}
+.brMediaImageWide {
+	width: 160pt;
+	height: auto;
+}
