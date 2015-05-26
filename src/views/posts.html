@@ -17,8 +17,13 @@
 			<li ng-click="gotoPage('settings')">Settings</li>	
 		</ul>
 	</div>
-	<div class="brDashboardRecentActivityContainer"> <h3>Posts</h3>
-		<div ng-repeat="post in postlist"><span>{{post.Title}}</span><input type="BUTTON" value="Delete" ng-click="deletePost()"/></div>	
+	<div class="brDashboardRecentActivityContainer"> <h2>Posts</h2>
+		<div class="brTitleBreakLine"></div>
+		<div ng-repeat="post in postlist" class="brPostlistPost">
+			<span class="brPostlistTitle">{{post.Title}} - {{formatDate(post.Created)}}</span>
+			<input type="BUTTON" value="Edit" ng-click="" class="brPostlistButton"/>
+			<input type="BUTTON" value="Delete" ng-click="deletePost()" class="brPostlistButton"/>
+		</div>	
 	</div>
 </body>
 </html>

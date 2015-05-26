@@ -113,7 +113,7 @@ breezy.controller("BreezyMediaLibraryController", function($scope, $http, $windo
 		//console.log(angular.element($element[0].querySelector('#thumbnail'+this.$index))[0].offsetHeight)	
 		var elm = angular.element($element[0].querySelector('#thumbnail'+this.$index))[0]
 		if ((elm.offsetHeight && elm.offsetWidth ) < 160){
-			console.log("small")
+			//console.log("small")
 			return false
 		}
 		if (elm.offsetHeight > elm.offsetWidth ){
@@ -168,7 +168,7 @@ breezy.controller("BreezyLoginController", function($scope, $http, $window){
 	}
 })
 
-breezy.controller("BreezyPostsController", function($scope, $http){
+breezy.controller("BreezyPostsController", function($scope, $http, $dateformat){
 	$scope.postlist =[]
 	$http.get("/get_all_posts").success(function(data){
 		console.log(data)
@@ -180,6 +180,9 @@ breezy.controller("BreezyPostsController", function($scope, $http){
 		$http.get("/deletepost/"+this.post.ID).success(function(data){
 			$scope.postlist.splice(postDelete, 1)
 		})
+	}
+	$scope.formatDate = function(dateString){
+		return $dateformat.formatDate(dateString);
 	}
 })
 
@@ -354,6 +357,15 @@ breezy.directive('draggable', function(){
 				
 			});
 		}
+	}
+});
+
+breezy.service('$dateformat', function($rootScope){
+	this.formatDate = function(dateString){
+		var dateHalf = dateString.split("T")
+		var dateParts = dateHalf[0].split("-")
+		console.log(dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0])
+		return dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0]
 	}
 });
 

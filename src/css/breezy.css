@@ -125,6 +125,29 @@ label{
 	border-radius:3pt;
 	font-size:16pt;
 }
+/* Posts */
+
+.brPostlistPost{
+	height: 20pt;
+	width: 700pt;
+	margin: 4pt 0pt;
+	padding: 10pt 6pt;
+	background: #fff;
+	border: 1pt solid #ccc;
+}
+.brPostlistTitle{
+	width: 568pt;
+	display: block;
+	float: left;
+}
+.brPostlistButton{
+	height: 42pt;
+	background: none;
+	padding: 10pt 20pt;
+	position: relative;
+	top: -11pt;
+	border: 1pt solid #ccc;
+}
 
 /* Media */
 .brMediaGalleryThumbnail{
