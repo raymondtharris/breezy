@@ -5,6 +5,17 @@ p{
 h1{
 	font-size: 26pt;
 }
+.brBlogHeaderContainer{
+	width: 100%;
+	height:  65pt;
+	background: #C7ECFF;
+	border-bottom: 2pt solid #ccc;
+}
+.brBlogHeader{
+	width: 900pt;
+	height:  65pt;
+	margin: auto;
+}
 .brBlogContainer{
 	width: 900pt;
 	margin: auto;
@@ -12,12 +23,18 @@ h1{
 .brBlogTitle{
 	font-size:38pt;
 	display: block;
-	margin: auto;
-	text-align: center;
+	margin:0pt  0pt;
 	padding:16pt 0pt;
+	float: left;
 }
 .brLineBreak{
 	width:100%;
 	height:2pt;
 	background:#ccc;
+}
+.brBlogSearchInput{
+	float: right;
+	margin-top: 32pt;
+	width: 180pt;
+	height: 22pt;
 }

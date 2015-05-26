@@ -42,6 +42,7 @@ breezy.controller("BreezyController", function($scope,$http){
 	$scope.Title = ""
 	$scope.DisplayPostCreator = false
 	$scope.postlist =[]
+	$scope.searchEnabled= true
 	$http.get("/get_blog_display").success(function(data){
 		$scope.Title = data.Title
 		if (data.UserCount > 1 ){
@@ -364,7 +365,7 @@ breezy.service('$dateformat', function($rootScope){
 	this.formatDate = function(dateString){
 		var dateHalf = dateString.split("T")
 		var dateParts = dateHalf[0].split("-")
-		console.log(dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0])
+		//console.log(dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0])
 		return dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0]
 	}
 });
