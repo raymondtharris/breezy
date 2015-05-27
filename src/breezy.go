@@ -887,10 +887,24 @@ func mediaDirectoryCheck(currentTime time.Time) string {
 
 }
 
+type SearchInput struct {
+	Searchtext string
+}
+
 func breezySearchHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.RequestURI)
-	temp := strings.Split(r.RequestURI, "/")
-	fmt.Println(temp[2])
+	//fmt.Println(r.RequestURI)
+	//temp := strings.Split(r.RequestURI, "/")
+	//fmt.Println(temp[2])
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var searchData SearchInput
+	err = json.Unmarshal([]byte(string(body[:])), &searchData)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(searchData.Searchtext)
 }
 
 func main() {

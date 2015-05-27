@@ -66,6 +66,9 @@ breezy.controller("BreezyController", function($scope,$http){
 		//console.log(data)
 		$scope.searchInput = data.searchInput
 		console.log($scope.searchInput)
+		$http.post("/getsearch/", {searchtext: $scope.searchInput}).success(function(data){
+			
+		})
 	}
 })
 
