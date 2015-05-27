@@ -774,6 +774,7 @@ func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
 
 type blogSettings struct {
 	Name string // Name of the blog
+	//SearchEnabled bool   //Stores if search is available to users
 }
 
 func breezyBlogInfoHandler(w http.ResponseWriter, r *http.Request) {
@@ -886,6 +887,12 @@ func mediaDirectoryCheck(currentTime time.Time) string {
 
 }
 
+func breezySearchHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.RequestURI)
+	temp := strings.Split(r.RequestURI, "/")
+	fmt.Println(temp[2])
+}
+
 func main() {
 	var sErr error
 	mdbSession, sErr = mgo.Dial(DB_URL)
@@ -926,6 +933,7 @@ func main() {
 	http.HandleFunc("/setup", breezySetupHandler)
 	http.HandleFunc("/setup_config", breezySetupConfigHandler)
 	http.HandleFunc("/", webBlogHandler)
+	http.HandleFunc("/getsearch/", breezySearchHandler)
 	http.HandleFunc("/get_blog_display", breezyBlogDisplayInfoHandler)
 	http.ListenAndServe("localhost:4000", nil)
 }

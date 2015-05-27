@@ -13,7 +13,9 @@
 	<div class="brBlogHeaderContainer">
 		<div class="brBlogHeader">
 			<span class="brBlogTitle">{{Title}}</span>
-			<input type="TEXT" placeholder="Search" class="brBlogSearchInput" ng-if="searchEnabled"/>
+			<form ng-submit="submitSearch(this)" ng-if="searchEnabled">
+				<input type="TEXT" placeholder="Search" class="brBlogSearchInput"  ng-model="searchInput"/>
+			</form>
 		</div>
 	</div>
 	<div class="brBlogContainer"> 

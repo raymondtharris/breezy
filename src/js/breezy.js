@@ -43,6 +43,7 @@ breezy.controller("BreezyController", function($scope,$http){
 	$scope.DisplayPostCreator = false
 	$scope.postlist =[]
 	$scope.searchEnabled= true
+	$scope.searchInput = ""
 	$http.get("/get_blog_display").success(function(data){
 		$scope.Title = data.Title
 		if (data.UserCount > 1 ){
@@ -60,6 +61,12 @@ breezy.controller("BreezyController", function($scope,$http){
 		return dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0]
 	}
 	
+	// Add in search functionality of the blog.
+	$scope.submitSearch = function(data){
+		//console.log(data)
+		$scope.searchInput = data.searchInput
+		console.log($scope.searchInput)
+	}
 })
 
 breezy.controller("BreezyNavigationController", function($scope, $http, $window){
