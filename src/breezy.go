@@ -1,6 +1,7 @@
 package main
 
 import (
+	"breezy/src/breezynlp"
 	"encoding/json"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
@@ -915,6 +916,10 @@ func main() {
 		//fmt.Println("Cannot connect to DB")
 	}
 	defer mdbSession.Close()
+
+	//var tempNode breezynlp.BreezyNode
+	tempNode := breezynlp.BreezyNode{1, "What", nil}
+	fmt.Println(tempNode.Payload)
 
 	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
