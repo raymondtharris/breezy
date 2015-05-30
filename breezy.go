@@ -306,9 +306,9 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Create log file
-	if _, err2 := os.Stat("../app/user/setup_log.json"); err2 != nil {
+	if _, err2 := os.Stat("app/user/setup_log.json"); err2 != nil {
 		fmt.Println("Creating Log File.")
-		logFile, err := os.Create("../app/user/setup_log.json")
+		logFile, err := os.Create("app/user/setup_log.json")
 		_ = err
 		_ = logFile
 		//write stuff to log like creation date
@@ -326,25 +326,25 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 
 func breezyAppDirectories() {
 	//Checks if App directories exists and if not creates them.
-	_, err := os.Stat("../app/")
+	_, err := os.Stat("app/")
 	if err != nil {
-		os.Mkdir("../app/", 0777)
+		os.Mkdir("app/", 0777)
 	}
-	_, err = os.Stat("../app/user")
+	_, err = os.Stat("app/user")
 	if err != nil {
-		os.Mkdir("../app/user", 0777)
+		os.Mkdir("app/user", 0777)
 	}
-	_, err = os.Stat("../app/user/backup")
+	_, err = os.Stat("app/user/backup")
 	if err != nil {
-		os.Mkdir("../app/user/backup", 0777)
+		os.Mkdir("app/user/backup", 0777)
 	}
-	_, err = os.Stat("../app/user/logs")
+	_, err = os.Stat("app/user/logs")
 	if err != nil {
-		os.Mkdir("../app/user/logs", 0777)
+		os.Mkdir("app/user/logs", 0777)
 	}
-	_, err = os.Stat("../app/user/media")
+	_, err = os.Stat("app/user/media")
 	if err != nil {
-		os.Mkdir("../app/user/media", 0777)
+		os.Mkdir("app/user/media", 0777)
 	}
 
 }
@@ -359,7 +359,7 @@ func writeToLog(dataToWrite string, logNum int) {
 	fmt.Println("Writing Log File")
 	if logNum == 0 {
 		//write to setup_log
-		f, err := os.OpenFile("../app/user/setup_log.json", os.O_APPEND|os.O_WRONLY, 0666)
+		f, err := os.OpenFile("app/user/setup_log.json", os.O_APPEND|os.O_WRONLY, 0666)
 		_ = err
 		_ = f
 		defer f.Close()
@@ -369,22 +369,22 @@ func writeToLog(dataToWrite string, logNum int) {
 		//write to weekly log
 		currentTime := time.Now()
 		//check for year directory
-		_, err := os.Stat("../app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/")
+		_, err := os.Stat("app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/")
 		if err != nil {
-			os.Mkdir("../app/user/logs/"+strconv.Itoa(currentTime.Year())+"/", 0777)
+			os.Mkdir("app/user/logs/"+strconv.Itoa(currentTime.Year())+"/", 0777)
 		}
 		//check for month directory
-		m, err := os.Stat("../app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/")
+		m, err := os.Stat("app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/")
 		_ = m
 		if err != nil {
-			os.Mkdir("../app/user/logs/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/", 0777)
+			os.Mkdir("app/user/logs/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/", 0777)
 		}
 		//check for log file
-		_, err2 := os.Stat("../app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "_log.json")
+		_, err2 := os.Stat("app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "_log.json")
 		if err2 != nil {
-			os.Create("../app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "_log.json")
+			os.Create("app/user/logs/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "_log.json")
 		}
-		f, err := os.OpenFile("../app/user/logs/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/"+strconv.Itoa(currentTime.Day())+"_log.json", os.O_APPEND|os.O_WRONLY, 0666)
+		f, err := os.OpenFile("app/user/logs/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/"+strconv.Itoa(currentTime.Day())+"_log.json", os.O_APPEND|os.O_WRONLY, 0666)
 		defer f.Close()
 		t, err := f.WriteString(dataToWrite)
 		_ = t
@@ -425,22 +425,22 @@ func breezyBackupScheduleHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func BackupBlog(scheduleOption string) {
-	dir, err := os.Stat("../app/user/backup/")
+	dir, err := os.Stat("app/user/backup/")
 	if err != nil {
 		//backup directory does not exist
-		os.Mkdir("../app/user/backup/", 0777)
+		os.Mkdir("app/user/backup/", 0777)
 	}
 	_ = dir
 	currentTime := time.Now()
-	y, err := os.Stat("../app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/")
+	y, err := os.Stat("app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/")
 	_ = y
 	if err != nil {
-		os.Mkdir("../app/user/backup/"+strconv.Itoa(currentTime.Year())+"/", 0777)
+		os.Mkdir("app/user/backup/"+strconv.Itoa(currentTime.Year())+"/", 0777)
 	}
-	m, err := os.Stat("../app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/")
+	m, err := os.Stat("app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/")
 	_ = m
 	if err != nil {
-		os.Mkdir("../app/user/backup/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/", 0777)
+		os.Mkdir("app/user/backup/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/", 0777)
 	}
 	if scheduleOption == "Monthly" {
 		//write to month log
@@ -448,10 +448,10 @@ func BackupBlog(scheduleOption string) {
 		if scheduleOption == "Weekly" {
 			//look for the weeks directory remaining within the month
 		} else {
-			d, err := os.Stat("../app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "/")
+			d, err := os.Stat("app/user/backup/" + strconv.Itoa(currentTime.Year()) + "/" + currentTime.Month().String() + "/" + strconv.Itoa(currentTime.Day()) + "/")
 			_ = d
 			if err != nil {
-				os.Mkdir("../app/user/backup/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/"+strconv.Itoa(currentTime.Day())+"/", 0777)
+				os.Mkdir("app/user/backup/"+strconv.Itoa(currentTime.Year())+"/"+currentTime.Month().String()+"/"+strconv.Itoa(currentTime.Day())+"/", 0777)
 			}
 			// Write Daily Backup
 
@@ -748,13 +748,13 @@ func breezyMediaDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	coMedia := mdbSession.DB("test").C("Media")
 
 	// Find media file to remove on DB
-	var mediTotFind breezyMediaObject
-	dbErr := coMedia.Find(bson.M{"_id": bson.ObjectIdHex(temp[2])}).One(&mediTotFind)
+	var mediaTotFind breezyMediaObject
+	dbErr := coMedia.Find(bson.M{"_id": bson.ObjectIdHex(temp[2])}).One(&mediaTotFind)
 	if dbErr != nil {
 		panic(dbErr)
 	}
 	// Remove file on Server
-	fiErr := os.Remove(".." + mediTotFind.FileWithPath)
+	fiErr := os.Remove(  mediaTotFind.FileWithPath[1, len(mediaTotFind.FileWithPath)])
 	if fiErr != nil {
 		panic(fiErr)
 	}
@@ -861,14 +861,14 @@ func breezyFileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	coMedia := mdbSession.DB("test").C("Media")
 	objectTypes := strings.Split(fileType, "/")
 	// Might need to change the saved path of the directory to the file.
-	newMediaObject := breezyMediaObject{bson.NewObjectId(), handler.Filename, path[2:len(path)] + handler.Filename, objectTypes[0], objectTypes[1], currentTime}
+	newMediaObject := breezyMediaObject{bson.NewObjectId(), handler.Filename, "/" + path + handler.Filename, objectTypes[0], objectTypes[1], currentTime}
 	dbErr := coMedia.Insert(&newMediaObject)
 	_ = dbErr
 }
 
 func mediaDirectoryCheck(currentTime time.Time) string {
 	// Check if directories needed to write media exists and if not makes them.
-	path := "../app/user/media/"
+	path := "app/user/media/"
 	_, err := os.Stat(path + strconv.Itoa(currentTime.Year()) + "/")
 	if err != nil {
 		os.Mkdir(path+strconv.Itoa(currentTime.Year())+"/", 0777)
