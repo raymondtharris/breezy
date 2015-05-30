@@ -206,6 +206,8 @@ breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $w
 	$scope.recentlyAdded = [];
 	$scope.MediaList = [];
 	$scope.hasRecently = true;
+	$scope.preview=true;
+	$scope.showPreview = false;
 	$http.get("/get_all_media").success( function(data){
 		$scope.MediaList = data
 	})
@@ -219,7 +221,9 @@ breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $w
 			var contentToConvert = {"markdownContent": temp, "markupContent":"", "postData": $scope.postData}
 			console.log(contentToConvert)
 			$http.post("/mdowntomup", contentToConvert).success(function(data){
+				$scope.showPreview = true;
 				console.log(data)
+				console.log($scope.MarkupContent)
 				$scope.postData.title = data.PostData.Title
 				$scope.mediaData = data.MediaData
 				$scope.markupContent =  data.MarkupContent
@@ -227,6 +231,10 @@ breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $w
 			});
 			
 		}
+	}
+	$scope.toggleEditor = function(){
+		$scope.preview = true;
+		$scope.showPreview = false;
 	}
 	$scope.savePost = function(){
 		console.log($scope)

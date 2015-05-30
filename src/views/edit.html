@@ -22,11 +22,11 @@
 		</div>
 	<div class="brEditorContainer">
 		<div class="brEditorModesContainer">
-			<input class="brEditorModeButton" ng-click="togglePreview(false)" type="button" value="Markdown" />
+			<input class="brEditorModeButton" ng-click="toggleEditor()" type="button" value="Markdown" />
 			<input class="brEditorModeButton" ng-click="togglePreview(true)" type="button" value="Preview"/>
 		</div>
-		<div  contenteditable ng-model="markdownContent" strip-br="true" class="brEditorContent"></div>
-		<div  class="brEditorContent" >{{markupContent}}</div>
+		<div  contenteditable ng-model="markdownContent" strip-br="true" class="brEditorContent" ng-if="preview"></div>
+		<div  class="brEditorContent"  ng-if="showPreview">{{markupContent}}</div>
 	</div>
 <div class="brEditorCommandContainer">
 	<input class="brEditorCommandButton" type="button" value="Cancel"/> 
