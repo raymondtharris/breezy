@@ -14,7 +14,7 @@ func (brNode BreezyNode) String() string {
 	return fmt.Sprintf("%v %v %v\n", brNode.Index, brNode.Payload, brNode.Children)
 }
 
-func (brNode BreezyNode) AddChild(newChild BreezyNeighborObject) bool {
+func (brNode *BreezyNode) AddChild(newChild BreezyNeighborObject) bool {
 	// Add child inserts a BreezyNeighberObject in to the Children array
 	// If successful returns true else it returns false
 
@@ -53,6 +53,29 @@ func (brGraph *BreezyGraph) AddVertex(newVertex BreezyNode) {
 	brGraph.NumberOfVerticies++
 }
 
-func (brGraph BreezyGraph) AddEdge(betweenVertex BreezyNode, andNeighbor BreezyNeighborObject) {
+func (brGraph *BreezyGraph) AddEdge(betweenVertex BreezyNode, andNeighbor BreezyNeighborObject) {
+	//AddEdge inserts a link between two nodes that is not directed.
+	isInGraph, neighborInGraph := false, false
+	//Add link for initial direction
+	for i := 0; i < len(brGraph.BreezyADJList); i++ {
+		if brGraph.BreezyADJList[i].Index == betweenVertex.Index && brGraph.BreezyADJList[i].Payload == betweenVertex.Payload {
+			isInGraph = true
+			brGraph.BreezyADJList[i].AddChild(andNeighbor)
 
+		}
+		if brGraph.BreezyADJList[i].Index == andNeighbor.Vertex.Index && brGraph.BreezyADJList[i].Payload == andNeighbor.Vertex.Payload {
+			neighborInGraph = true
+			brGraph.BreezyADJList[i].AddChild(BreezyNeighborObject{betweenVertex, andNeighbor.Cost})
+		}
+
+	}
+	if !isInGraph {
+		brGraph.AddVertex(betweenVertex)
+		brGraph.BreezyADJList[len(brGraph.BreezyADJList)].AddChild(andNeighbor)
+	}
+	if !neighborInGraph {
+		brGraph.AddVertex(andNeighbor.Vertex)
+		brGraph.BreezyADJList[len(brGraph.BreezyADJList)].AddChild(BreezyNeighborObject{betweenVertex, andNeighbor.Cost})
+	}
+	brGraph.NumberOfEdges++
 }
