@@ -21,6 +21,9 @@ func (brNode *BreezyNode) AddChild(newChild BreezyNeighborObject) bool {
 	for i := 0; i < len(brNode.Children); i++ {
 		if brNode.Children[i].Cost == newChild.Cost && brNode.Children[i].Vertex.Payload == newChild.Vertex.Payload {
 			return false
+		} else if brNode.Children[i].Cost > newChild.Cost && brNode.Children[i].Vertex.Payload == newChild.Vertex.Payload {
+			brNode.Children[i].Cost = newChild.Cost
+			return true
 		}
 	}
 	brNode.Children = append(brNode.Children, newChild)
