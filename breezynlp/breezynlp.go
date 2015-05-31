@@ -10,9 +10,14 @@ type BreezyNode struct {
 	Children []BreezyNeighborObject
 }
 
+func (brNode BreezyNode) String() string {
+	return fmt.Sprintf("%v %v %v\n", brNode.Index, brNode.Payload, brNode.Children)
+}
+
 func (brNode BreezyNode) AddChild(newChild BreezyNeighborObject) bool {
 	// Add child inserts a BreezyNeighberObject in to the Children array
 	// If successful returns true else it returns false
+
 	for i := 0; i < len(brNode.Children); i++ {
 		if brNode.Children[i].Cost == newChild.Cost && brNode.Children[i].Vertex.Payload == newChild.Vertex.Payload {
 			return false
@@ -37,8 +42,17 @@ type BreezyGraph struct {
 	NumberOfEdges     int
 }
 
-func (brGraph BreezyGraph) AddVertex(newVertex BreezyNode) {
+func (brGraph BreezyGraph) String() string {
+	return fmt.Sprintf("%v %v \n%v", brGraph.NumberOfVerticies, brGraph.NumberOfEdges, brGraph.BreezyADJList)
+}
+
+func (brGraph *BreezyGraph) AddVertex(newVertex BreezyNode) {
 	// AddVertex inserts a new BreezyNode in to the BreezyADJList array
+	//fmt.Println(newVertex)
 	brGraph.BreezyADJList = append(brGraph.BreezyADJList, newVertex)
 	brGraph.NumberOfVerticies++
+}
+
+func (brGraph BreezyGraph) AddEdge(betweenVertex BreezyNode, andNeighbor BreezyNeighborObject) {
+
 }

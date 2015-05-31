@@ -754,7 +754,7 @@ func breezyMediaDeleteHandler(w http.ResponseWriter, r *http.Request) {
 		panic(dbErr)
 	}
 	// Remove file on Server
-	fiErr := os.Remove(  mediaTotFind.FileWithPath[1, len(mediaTotFind.FileWithPath)])
+	fiErr := os.Remove(mediaTotFind.FileWithPath[1:len(mediaTotFind.FileWithPath)])
 	if fiErr != nil {
 		panic(fiErr)
 	}
@@ -905,7 +905,16 @@ func breezySearchHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(searchData.Searchtext)
+	splitText := strings.Split(searchData.Searchtext, " ")
+	searchGraph := breezynlp.BreezyGraph{[]breezynlp.BreezyNode{}, 0, 0}
+	for i := 0; i < len(splitText); i++ {
+		//fmt.Println(splitText[i])
+		nodeToken := breezynlp.BreezyNode{i, splitText[i], []breezynlp.BreezyNeighborObject{}}
+		searchGraph.AddVertex(nodeToken)
+
+	}
+
+	fmt.Println(searchGraph)
 }
 
 func main() {
@@ -916,10 +925,6 @@ func main() {
 		//fmt.Println("Cannot connect to DB")
 	}
 	defer mdbSession.Close()
-
-	//var tempNode breezynlp.BreezyNode
-	tempNode := breezynlp.BreezyNode{1, "What", nil}
-	fmt.Println(tempNode.Payload)
 
 	HandleDirs()
 	http.HandleFunc("/admin", breezyLoginHandler)
