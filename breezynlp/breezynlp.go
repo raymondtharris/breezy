@@ -5,9 +5,9 @@ import (
 )
 
 type BreezyNode struct {
-	Index    int
-	Payload  string
-	Children []BreezyNeighborObject
+	Index    int                    //Index for node
+	Payload  string                 // The string to be stored in node
+	Children []BreezyNeighborObject // Array of nodes connected to current node with costs to node
 }
 
 func (brNode BreezyNode) String() string {
@@ -31,8 +31,8 @@ func (brNode *BreezyNode) AddChild(newChild BreezyNeighborObject) bool {
 }
 
 type BreezyNeighborObject struct {
-	Vertex BreezyNode
-	Cost   int
+	Vertex BreezyNode // Connecting neighbor node
+	Cost   int        // Cost to go to new vertex from original
 }
 
 func (brNeighbor BreezyNeighborObject) String() string {
@@ -40,9 +40,9 @@ func (brNeighbor BreezyNeighborObject) String() string {
 }
 
 type BreezyGraph struct {
-	BreezyADJList     []BreezyNode
-	NumberOfVerticies int
-	NumberOfEdges     int
+	BreezyADJList     []BreezyNode // Array of vertices within the graph
+	NumberOfVerticies int          // number of vertices in the graph
+	NumberOfEdges     int          // number of edges in the graph
 }
 
 func (brGraph BreezyGraph) String() string {
@@ -81,4 +81,50 @@ func (brGraph *BreezyGraph) AddEdge(betweenVertex BreezyNode, andNeighbor Breezy
 		brGraph.BreezyADJList[len(brGraph.BreezyADJList)].AddChild(BreezyNeighborObject{betweenVertex, andNeighbor.Cost})
 	}
 	brGraph.NumberOfEdges++
+}
+
+func (brGraph *BreezyGraph) RemoveVertex(vertexToRemove BreezyNode) bool {
+	// Make a queue to place other vertices connected to this vertex
+	neighborQueue := BreezyQueue{nil, nil, 0}
+	for i := 0; i < len(brGraph.BreezyADJList); i++ {
+		if brGraph.BreezyADJList[i].Index == vertexToRemove.Index && brGraph.BreezyADJList[i].Payload == vertexToRemove.Payload {
+			for j := 0; j < len(brGraph.BreezyADJList[i].Children); j++ {
+				neighborQueue.enqueue(BreezyNode{brGraph.BreezyADJList[i].Children[j].Vertex.Index, brGraph.BreezyADJList[i].Children[j].Vertex.Payload, nil})
+			}
+			// Remove children in queue
+			return true
+		}
+	}
+	return false
+}
+
+type BreezyQueueNode struct {
+	Index   int
+	Payload string
+	Next    *BreezyQueueNode
+}
+type BreezyQueue struct {
+	First  *BreezyQueueNode
+	Last   *BreezyQueueNode
+	Length int
+}
+
+func (brQueue *BreezyQueue) enqueue(newNode BreezyQueueNode) {
+	if brQueue.First == nil {
+		brQueue.First = newNode
+		brQueue.Last = brQueue.First
+	} else {
+		brQueue.Last.Next = newNode
+		brQueue.Last = newNode
+	}
+	brQueue.Length++
+}
+
+func (brQueue *BreezyQueue) dequeue() BreezyQueueNode {
+	if brQueue.First != nil {
+		returnNode := brQueue.First
+		brQueue.First = brQueue.First.Next
+		return returnNode
+	}
+	return nil
 }
