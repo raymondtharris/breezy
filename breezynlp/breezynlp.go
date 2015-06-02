@@ -31,17 +31,17 @@ func (brNode *BreezyNode) AddChild(newChild BreezyNeighborObject) bool {
 }
 
 func (brNode *BreezyNode) removeChild(childToRemove BreezyNode) {
-	// Need to fix infinite loop
 	foundIndex := 0
 	var tempArr []BreezyNeighborObject
 	for i := 0; i < len(brNode.Children); i++ {
 		if brNode.Children[i].Vertex.Index == childToRemove.Index && brNode.Children[i].Vertex.Payload == childToRemove.Payload {
-			tempArr := brNode.Children[i+1 : len(brNode.Children)]
-			brNode.Children = brNode.Children[0 : i-1]
-			for j := 0; j < len(tempArr); j++ {
-				brNode.Children = append(brNode.Children, tempArr[j])
-			}
+			foundIndex = i
 		}
+	}
+	tempArr = brNode.Children[foundIndex+1 : len(brNode.Children)]
+	brNode.Children = brNode.Children[0 : foundIndex-1]
+	for j := 0; j < len(tempArr); j++ {
+		brNode.Children = append(brNode.Children, tempArr[j])
 	}
 }
 
