@@ -30,6 +30,16 @@ func (brNode *BreezyNode) AddChild(newChild BreezyNeighborObject) bool {
 	return true
 }
 
+func (brNode *BreezyNode) removeChild(childToRemove BreezyNode) {
+	for i := 0; i < len(brNode.Children); i++ {
+		if brNode.Children[i].Vertex.Index == childToRemove.Index && brNode.Children[i].Vertex.Payload == childToRemove.Payload {
+			tempArr := brNode.Children[i+1: len(brNode.Children)]
+			brNode.Children = brNode.Children[0,i-1]
+			append(brNode.Children, tempArr)
+		}
+	}
+}
+
 type BreezyNeighborObject struct {
 	Vertex BreezyNode // Connecting neighbor node
 	Cost   int        // Cost to go to new vertex from original
@@ -89,13 +99,26 @@ func (brGraph *BreezyGraph) RemoveVertex(vertexToRemove BreezyNode) bool {
 	for i := 0; i < len(brGraph.BreezyADJList); i++ {
 		if brGraph.BreezyADJList[i].Index == vertexToRemove.Index && brGraph.BreezyADJList[i].Payload == vertexToRemove.Payload {
 			for j := 0; j < len(brGraph.BreezyADJList[i].Children); j++ {
-				neighborQueue.enqueue(BreezyNode{brGraph.BreezyADJList[i].Children[j].Vertex.Index, brGraph.BreezyADJList[i].Children[j].Vertex.Payload, nil})
+				neighborQueue.enqueue(BreezyQueueNode{brGraph.BreezyADJList[i].Children[j].Vertex.Index, brGraph.BreezyADJList[i].Children[j].Vertex.Payload, nil})
 			}
 			// Remove children in queue
 			return true
 		}
 	}
 	return false
+}
+
+func (brGraph *BreezyGraph) RemoveEdge(fromVertex BreezyNode, andVertex BreezyNode) {
+	for i := 0; i < len(brGraph.BreezyADJList); i++ {
+		if brGraph.BreezyADJList[i].Index == fromVertex.Index && brGraph.BreezyADJList[i].Payload == fromVertex.Payload {
+			// remove child from fromVertex
+			fromVertex.removeChild(andVertex)
+		}
+		if brGraph.BreezyADJList[i].Index == andVertex.Index && brGraph.BreezyADJList[i].Payload == andVertex.Payload {
+			// remove child from andvVrtex
+			andVertex.removeChild(fromVertex)
+		}
+	}
 }
 
 type BreezyQueueNode struct {
