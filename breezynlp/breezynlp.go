@@ -31,11 +31,16 @@ func (brNode *BreezyNode) AddChild(newChild BreezyNeighborObject) bool {
 }
 
 func (brNode *BreezyNode) removeChild(childToRemove BreezyNode) {
+	// Need to fix infinite loop
+	foundIndex := 0
+	var tempArr []BreezyNeighborObject
 	for i := 0; i < len(brNode.Children); i++ {
 		if brNode.Children[i].Vertex.Index == childToRemove.Index && brNode.Children[i].Vertex.Payload == childToRemove.Payload {
-			tempArr := brNode.Children[i+1: len(brNode.Children)]
-			brNode.Children = brNode.Children[0,i-1]
-			append(brNode.Children, tempArr)
+			tempArr := brNode.Children[i+1 : len(brNode.Children)]
+			brNode.Children = brNode.Children[0 : i-1]
+			for j := 0; j < len(tempArr); j++ {
+				brNode.Children = append(brNode.Children, tempArr[j])
+			}
 		}
 	}
 }
@@ -102,6 +107,14 @@ func (brGraph *BreezyGraph) RemoveVertex(vertexToRemove BreezyNode) bool {
 				neighborQueue.enqueue(BreezyQueueNode{brGraph.BreezyADJList[i].Children[j].Vertex.Index, brGraph.BreezyADJList[i].Children[j].Vertex.Payload, nil})
 			}
 			// Remove children in queue
+			for neighborQueue.Length > 0 {
+				tempNode := neighborQueue.dequeue()
+				for k := 0; k < len(brGraph.BreezyADJList); k++ {
+					if tempNode.Index == brGraph.BreezyADJList[k].Index && tempNode.Payload == brGraph.BreezyADJList[k].Payload {
+						brGraph.RemoveEdge(brGraph.BreezyADJList[i], brGraph.BreezyADJList[k])
+					}
+				}
+			}
 			return true
 		}
 	}
@@ -134,11 +147,11 @@ type BreezyQueue struct {
 
 func (brQueue *BreezyQueue) enqueue(newNode BreezyQueueNode) {
 	if brQueue.First == nil {
-		brQueue.First = newNode
+		brQueue.First = &newNode
 		brQueue.Last = brQueue.First
 	} else {
-		brQueue.Last.Next = newNode
-		brQueue.Last = newNode
+		brQueue.Last.Next = &newNode
+		brQueue.Last = &newNode
 	}
 	brQueue.Length++
 }
@@ -147,7 +160,7 @@ func (brQueue *BreezyQueue) dequeue() BreezyQueueNode {
 	if brQueue.First != nil {
 		returnNode := brQueue.First
 		brQueue.First = brQueue.First.Next
-		return returnNode
+		return *returnNode
 	}
-	return nil
+	return BreezyQueueNode{-1, "", nil}
 }
