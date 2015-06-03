@@ -100,9 +100,13 @@ func (brGraph *BreezyGraph) AddEdge(betweenVertex BreezyNode, andNeighbor Breezy
 
 func (brGraph *BreezyGraph) RemoveVertex(vertexToRemove BreezyNode) bool {
 	// Make a queue to place other vertices connected to this vertex
+
+	// Need to fix
+	foundIndex := -1
 	neighborQueue := BreezyQueue{nil, nil, 0}
 	for i := 0; i < len(brGraph.BreezyADJList); i++ {
 		if brGraph.BreezyADJList[i].Index == vertexToRemove.Index && brGraph.BreezyADJList[i].Payload == vertexToRemove.Payload {
+			foundIndex = i
 			for j := 0; j < len(brGraph.BreezyADJList[i].Children); j++ {
 				neighborQueue.enqueue(BreezyQueueNode{brGraph.BreezyADJList[i].Children[j].Vertex.Index, brGraph.BreezyADJList[i].Children[j].Vertex.Payload, nil})
 			}
@@ -115,10 +119,18 @@ func (brGraph *BreezyGraph) RemoveVertex(vertexToRemove BreezyNode) bool {
 					}
 				}
 			}
-			return true
 		}
 	}
-	return false
+	if foundIndex > -1 {
+		tempArr := brGraph.BreezyADJList[i+1 : len(brGraph.BreezyADJList)]
+		brGraph.BreezyADJList = brGraph.BreezyADJList[0 : i-1]
+		for i := 0; i < len(tempArr); i++ {
+			brGraph.BreezyADJList = append(brGraph.BreezyADJList, tempArr[i])
+		}
+		return true
+	} else {
+		return false
+	}
 }
 
 func (brGraph *BreezyGraph) RemoveEdge(fromVertex BreezyNode, andVertex BreezyNode) {
