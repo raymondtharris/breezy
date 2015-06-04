@@ -34,34 +34,6 @@ var mdbSession *mgo.Session
 
 var editingPost brPostContent
 
-type breezyMedia struct {
-	name, filename string
-	filesSize      float32
-	brType         int
-}
-
-func (m breezyMedia) String() string {
-	var typeDescription = ""
-	switch m.brType {
-	case brImage:
-		typeDescription = "Image"
-	case brAudio:
-		typeDescription = "Audio"
-	case brVideo:
-		typeDescription = "Video"
-
-	}
-	return fmt.Sprintf("%v, %v", m.name, typeDescription)
-}
-
-type breezyActivity struct {
-	name           string
-	activityBody   string
-	mediaStructure [5]breezyMedia
-	brType         int
-	//dateCreated, dateModified Time
-}
-
 type brPostData struct {
 	// brPostData stores data about a post eccept for the post content
 	Title        string //Title of the post
@@ -249,12 +221,13 @@ type breezyUser struct {
 }
 type breezyBlog struct {
 	//breezyBlog stores the relevant blog data to the database
-	ID      bson.ObjectId `bson: "_id,omitempty"` //ID variable for MongoDB
-	Name    string        //Name of the blog store on DB
-	Creator string        //Name of the creator of the blog stored on DB
-	Users   []string      //An Array of usernames that have access to the admin section of the blog stored on DB
-	Created time.Time     //The timestamp of when the blog was created stored on DB
-	Posts   int           //The number of posts stored on the DB
+	ID            bson.ObjectId `bson: "_id,omitempty"` //ID variable for MongoDB
+	Name          string        //Name of the blog store on DB
+	Creator       string        //Name of the creator of the blog stored on DB
+	Users         []string      //An Array of usernames that have access to the admin section of the blog stored on DB
+	Created       time.Time     //The timestamp of when the blog was created stored on DB
+	Posts         int           //The number of posts stored on the DB
+	SearchEnabled bool          // Bool to see if user wants search enabled on blog
 }
 
 func (br breezySetupConfig) String() string {
@@ -288,7 +261,7 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	//Creating and saving Blog data to Database
 	conBlog := mdbSession.DB("test").C("Blog")
 	userList := []string{userConfig.Username}
-	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name, userList, time.Now(), 0}
+	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name, userList, time.Now(), 0, true}
 	errB := conBlog.Insert(&blogInfo)
 	_ = errB
 
@@ -774,8 +747,8 @@ func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type blogSettings struct {
-	Name string // Name of the blog
-	//SearchEnabled bool   //Stores if search is available to users
+	Name          string // Name of the blog
+	SearchEnabled bool   //Stores if search is available to users
 }
 
 func breezyBlogInfoHandler(w http.ResponseWriter, r *http.Request) {
@@ -783,7 +756,7 @@ func breezyBlogInfoHandler(w http.ResponseWriter, r *http.Request) {
 	var blog breezyBlog
 	dbErr := coBlog.Find(nil).One(&blog)
 	_ = dbErr
-	blogData := blogSettings{blog.Name}
+	blogData := blogSettings{blog.Name, blog.SearchEnabled}
 	jsRes, err := json.Marshal(blogData)
 	if err != nil {
 		panic(err)
@@ -803,7 +776,16 @@ func breezyBlogInfoUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	coBlog := mdbSession.DB("test").C("Blog")
-	dbErr := coBlog.Update(nil, bson.M{"name": blogUpdateData.Name})
+	var blog breezyBlog
+	bErr := coBlog.Find(nil).One(&blog)
+	_ = bErr
+	var dbErr error
+	if blog.Name != blogUpdateData.Name {
+		dbErr = coBlog.Update(nil, bson.M{"name": blogUpdateData.Name})
+	}
+	if blog.SearchEnabled != blogUpdateData.SearchEnabled {
+		dbErr = coBlog.Update(nil, bson.M{"searchenable": blogUpdateData.SearchEnabled})
+	}
 	if dbErr != nil {
 		panic(dbErr)
 	}

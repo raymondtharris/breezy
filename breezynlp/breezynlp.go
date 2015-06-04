@@ -129,8 +129,8 @@ func (brGraph *BreezyGraph) RemoveVertex(vertexToRemove BreezyNode) bool {
 		}
 	}
 	if foundIndex > -1 {
-		tempArr := brGraph.BreezyADJList[i+1 : len(brGraph.BreezyADJList)]
-		brGraph.BreezyADJList = brGraph.BreezyADJList[0 : i-1]
+		tempArr := brGraph.BreezyADJList[foundIndex+1 : len(brGraph.BreezyADJList)]
+		brGraph.BreezyADJList = brGraph.BreezyADJList[0 : foundIndex-1]
 		for i := 0; i < len(tempArr); i++ {
 			brGraph.BreezyADJList = append(brGraph.BreezyADJList, tempArr[i])
 		}
