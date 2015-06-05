@@ -4,6 +4,7 @@ import (
 	"breezy/breezynlp"
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/sessions"
 	"github.com/kidstuff/mongostore"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2"
@@ -23,6 +24,7 @@ import (
 const brImage, brAudio, brVideo = 0, 1, 2
 const brPost = 0
 const DB_URL = "45.55.192.173" //URL that points to MongoDB
+const SESSION_SECRET = "53KR37535510NK3Y"
 
 type mgoSession struct {
 	DB_Session *mgo.Session
@@ -30,7 +32,12 @@ type mgoSession struct {
 }
 
 var mdbSession *mgo.Session
-var cookieSession *mongostore.MongoStore
+var cookieStore *mongostore.MongoStore
+var cookieSession *sessions.Session
+
+func CheckForSession(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/admin", http.StatusFound)
+}
 
 //var dbSession mgoSession
 
@@ -116,6 +123,20 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 	}
 	//if res.Username == userCred.Username && res.Password == string(hashedPassword){
 	if passMatch {
+		var sessErr error
+		cookieStore = mongostore.NewMongoStore(mdbSession.DB("test").C("session"), 3600, true, []byte(SESSION_SECRET))
+
+		cookieSession, sessErr = cookieStore.Get(r, "session-key")
+		if sessErr != nil {
+			panic(sessErr)
+		}
+		cookieSession.Values["user_id"] = res[0].ID
+		cookieSession.Values["username"] = res[0].Username
+
+		sessErr = cookieSession.Save(r, w)
+		if sessErr != nil {
+			panic(sessErr)
+		}
 		w.Write([]byte("true"))
 	} else {
 		w.Write([]byte("false"))
