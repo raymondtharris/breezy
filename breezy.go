@@ -4,6 +4,7 @@ import (
 	"breezy/breezynlp"
 	"encoding/json"
 	"fmt"
+	"github.com/kidstuff/mongostore"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -29,6 +30,7 @@ type mgoSession struct {
 }
 
 var mdbSession *mgo.Session
+var cookieSession *mongostore.MongoStore
 
 //var dbSession mgoSession
 
