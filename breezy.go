@@ -36,12 +36,22 @@ var cookieStore *mongostore.MongoStore
 var cookieSession *sessions.Session
 
 func CheckForSession(w http.ResponseWriter, r *http.Request) {
-	var sessErr error
-	cookieSession, sessErr = cookieStore.Get(r, "session-key")
-	_ = sessErr
-	fmt.Println(cookieSession)
-	if len(cookieSession.ID) < 1 {
+	fmt.Println("Session Checking ")
+	if cookieStore == nil {
+		fmt.Println("no Store")
 		http.Redirect(w, r, "/admin", http.StatusFound)
+
+	} else {
+		//cookieStore := mongostore.NewMongoStore(mdbSession.DB("test").C("session"), 3600, true, []byte(SESSION_SECRET))
+		var sessErr error
+		_ = sessErr
+		cookieSession, sessErr = cookieStore.Get(r, "session-key")
+		fmt.Println("Test")
+		fmt.Println(cookieSession)
+		fmt.Println(cookieSession.Options.Path, " ", cookieSession.Options.Domain)
+		if len(cookieSession.ID) < 1 {
+			http.Redirect(w, r, "/admin", http.StatusFound)
+		}
 	}
 }
 
@@ -190,6 +200,7 @@ func breezyNewUserHandler(w http.ResponseWriter, r *http.Request) {
 
 func breezyEditHandler(w http.ResponseWriter, r *http.Request) {
 	//Handler function to present the Breezy Editor HTML file
+	CheckForSession(w, r)
 	http.ServeFile(w, r, "views/edit.html")
 }
 
@@ -224,6 +235,7 @@ func breezyDashboardHandler(w http.ResponseWriter, r *http.Request) {
 
 func breezySettingsHandler(w http.ResponseWriter, r *http.Request) {
 	//Handler function to present the settings HTML file
+	CheckForSession(w, r)
 	http.ServeFile(w, r, "views/settings.html")
 }
 
@@ -679,6 +691,7 @@ func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func breezyPostListHandler(w http.ResponseWriter, r *http.Request) {
+	CheckForSession(w, r)
 	http.ServeFile(w, r, "views/posts.html")
 }
 
@@ -709,6 +722,7 @@ func breezyAllPostsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func breezyMediaListHandler(w http.ResponseWriter, r *http.Request) {
+	CheckForSession(w, r)
 	http.ServeFile(w, r, "views/media.html")
 }
 
@@ -921,7 +935,7 @@ func breezySearchHandler(w http.ResponseWriter, r *http.Request) {
 	searchGraph := breezynlp.BreezyGraph{[]breezynlp.BreezyNode{}, 0, 0}
 	for i := 0; i < len(splitText); i++ {
 		//fmt.Println(splitText[i])
-		nodeToken := breezynlp.BreezyNode{i, splitText[i], []breezynlp.BreezyNeighborObject{}}
+		nodeToken := breezynlp.BreezyNode{i, splitText[i], 1, []breezynlp.BreezyNeighborObject{}}
 		searchGraph.AddVertex(nodeToken)
 
 	}

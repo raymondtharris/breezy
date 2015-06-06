@@ -5,9 +5,10 @@ import (
 )
 
 type BreezyNode struct {
-	Index    int                    //Index for node
-	Payload  string                 // The string to be stored in node
-	Children []BreezyNeighborObject // Array of nodes connected to current node with costs to node
+	Index      int                    //Index for node
+	Payload    string                 // The string to be stored in node
+	Occurrance int                    //The number of times a particular Payload is found
+	Children   []BreezyNeighborObject // Array of nodes connected to current node with costs to node
 }
 
 func (brNode BreezyNode) String() string {
@@ -74,8 +75,17 @@ func (brGraph BreezyGraph) String() string {
 func (brGraph *BreezyGraph) AddVertex(newVertex BreezyNode) {
 	// AddVertex inserts a new BreezyNode in to the BreezyADJList array
 	//fmt.Println(newVertex)
-	brGraph.BreezyADJList = append(brGraph.BreezyADJList, newVertex)
-	brGraph.NumberOfVerticies++
+	vertexExists := false
+	for i := 0; i < len(brGraph.BreezyADJList); i++ {
+		if brGraph.BreezyADJList[i].Payload == newVertex.Payload && brGraph.BreezyADJList[i].Index == newVertex.Index {
+			brGraph.BreezyADJList[i].Occurrance++
+			vertexExists = true
+		}
+	}
+	if !vertexExists {
+		brGraph.BreezyADJList = append(brGraph.BreezyADJList, newVertex)
+		brGraph.NumberOfVerticies++
+	}
 }
 
 func (brGraph *BreezyGraph) AddEdge(betweenVertex BreezyNode, andNeighbor BreezyNeighborObject) {
