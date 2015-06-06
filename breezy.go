@@ -36,7 +36,13 @@ var cookieStore *mongostore.MongoStore
 var cookieSession *sessions.Session
 
 func CheckForSession(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/admin", http.StatusFound)
+	var sessErr error
+	cookieSession, sessErr = cookieStore.Get(r, "session-key")
+	_ = sessErr
+	fmt.Println(cookieSession)
+	if len(cookieSession.ID) < 1 {
+		http.Redirect(w, r, "/admin", http.StatusFound)
+	}
 }
 
 //var dbSession mgoSession
@@ -130,7 +136,7 @@ func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
 		if sessErr != nil {
 			panic(sessErr)
 		}
-		cookieSession.Values["user_id"] = res[0].ID
+		cookieSession.Values["user_id"] = []byte(res[0].ID)
 		cookieSession.Values["username"] = res[0].Username
 
 		sessErr = cookieSession.Save(r, w)
@@ -212,6 +218,7 @@ func breezyMarkdownHandler(w http.ResponseWriter, r *http.Request) {
 
 func breezyDashboardHandler(w http.ResponseWriter, r *http.Request) {
 	//Handler function to present the Dashboard HTML file
+	CheckForSession(w, r)
 	http.ServeFile(w, r, "views/dashboard.html")
 }
 
