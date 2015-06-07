@@ -106,6 +106,55 @@ func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+/* Post List Functions */
+
+func GetPostsWithOptionsHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.RequestURI)
+	temp := strings.Split(r.RequestURI, "/")
+	fmt.Println(temp)
+	getOption := temp[2]
+	coPosts := mdbSession.DB("test").C("Posts")
+	var res []breezyPost
+	var resErr error
+	switch getOption {
+	case "created":
+		timeQuery, err := time.Parse(time.RFC3339, temp[3])
+		fmt.Println(timeQuery)
+		_ = err
+		resErr = coPosts.Find(bson.M{"created": bson.M{"$gte": timeQuery.Add(-time.Duration(timeQuery.Hour()) * time.Hour), "$lt": timeQuery.Add(time.Duration(24-timeQuery.Hour()) * time.Hour)}}).All(&res)
+		if resErr != nil {
+			panic(resErr)
+		}
+		jsRes, err2 := json.Marshal(res)
+		if err2 != nil {
+			panic(err2)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsRes)
+
+		fmt.Println(len(res))
+		break
+	case "creator":
+		creator := temp[3]
+		resErr = coPosts.Find(bson.M{"creator": creator}).One(&res)
+		if resErr != nil {
+			panic(resErr)
+		}
+		jsRes, err2 := json.Marshal(res)
+		if err2 != nil {
+			panic(err2)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsRes)
+		fmt.Println(len(res))
+		break
+	case "between":
+		_ = resErr
+		break
+	}
+	_ = resErr
+}
+
 var editingPost brPostContent
 
 type brPostData struct {
@@ -968,6 +1017,7 @@ func main() {
 	http.HandleFunc("/postlist", breezyPostListHandler)
 	http.HandleFunc("/deletepost/", breezyPostDeleteHandler)
 	http.HandleFunc("/get_all_posts", breezyAllPostsHandler)
+	http.HandleFunc("/get_posts/", GetPostsWithOptionsHandler)
 
 	http.HandleFunc("/medialist", breezyMediaListHandler)
 	http.HandleFunc("/deletemedia/", breezyMediaDeleteHandler)

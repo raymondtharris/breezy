@@ -72,10 +72,17 @@ breezy.controller("BreezyController", function($scope,$http){
 	}
 	$scope.postsByDate = function(option) {
 		console.log(option.post.Created)
+		$http.get("/get_posts/created/"+option.post.Created).success(function(data){
+			console.log(data)
+		})
 	}
 	$scope.postsByCreator = function(option) {
 		console.log(option.post.Creator)
+		$http.get("/get_posts/creator/"+option.post.Creator).success(function(data){
+			console.log(data)
+		})
 	}
+
 })
 
 breezy.controller("BreezyNavigationController", function($scope, $http, $window){
