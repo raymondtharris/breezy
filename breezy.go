@@ -57,6 +57,55 @@ func CheckForSession(w http.ResponseWriter, r *http.Request) {
 
 //var dbSession mgoSession
 
+/* Page Routing */
+func webBlogHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to present the Blog HTML file
+	http.ServeFile(w, r, "index.html")
+}
+
+func breezyLoginHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to present the Breezy admin login HTML file
+	http.ServeFile(w, r, "views/login.html")
+}
+
+func breezyEditHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to present the Breezy Editor HTML file
+	CheckForSession(w, r)
+	http.ServeFile(w, r, "views/edit.html")
+}
+
+func breezyDashboardHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to present the Dashboard HTML file
+	CheckForSession(w, r)
+	http.ServeFile(w, r, "views/dashboard.html")
+}
+
+func breezySettingsHandler(w http.ResponseWriter, r *http.Request) {
+	//Handler function to present the settings HTML file
+	CheckForSession(w, r)
+	http.ServeFile(w, r, "views/settings.html")
+}
+
+func breezyPostListHandler(w http.ResponseWriter, r *http.Request) {
+	CheckForSession(w, r)
+	http.ServeFile(w, r, "views/posts.html")
+}
+
+func breezyMediaListHandler(w http.ResponseWriter, r *http.Request) {
+	CheckForSession(w, r)
+	http.ServeFile(w, r, "views/media.html")
+}
+
+func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
+	d, err := os.Stat("app/user/setup_log.json")
+	_ = d
+	if err == nil {
+		http.Redirect(w, r, "/admin", http.StatusFound)
+	} else {
+		http.ServeFile(w, r, "views/setup.html")
+	}
+}
+
 var editingPost brPostContent
 
 type brPostData struct {
@@ -96,16 +145,6 @@ type loginCredentials struct {
 func (l loginCredentials) String() string {
 	//Formated string to print string of loginCredentials
 	return fmt.Sprintf("{username: %s, password: %s}", l.Username, l.Password)
-}
-
-func webBlogHandler(w http.ResponseWriter, r *http.Request) {
-	//Handler function to present the Blog HTML file
-	http.ServeFile(w, r, "index.html")
-}
-
-func breezyLoginHandler(w http.ResponseWriter, r *http.Request) {
-	//Handler function to present the Breezy admin login HTML file
-	http.ServeFile(w, r, "views/login.html")
 }
 
 func breezyLoginCredentrials(w http.ResponseWriter, r *http.Request) {
@@ -198,12 +237,6 @@ func breezyNewUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func breezyEditHandler(w http.ResponseWriter, r *http.Request) {
-	//Handler function to present the Breezy Editor HTML file
-	CheckForSession(w, r)
-	http.ServeFile(w, r, "views/edit.html")
-}
-
 func breezyMarkdownHandler(w http.ResponseWriter, r *http.Request) {
 	//Handler function to initiate the markdown to markup conversion of what is in the Breezy Editor
 	body, err := ioutil.ReadAll(r.Body)
@@ -225,18 +258,6 @@ func breezyMarkdownHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsRes)
-}
-
-func breezyDashboardHandler(w http.ResponseWriter, r *http.Request) {
-	//Handler function to present the Dashboard HTML file
-	CheckForSession(w, r)
-	http.ServeFile(w, r, "views/dashboard.html")
-}
-
-func breezySettingsHandler(w http.ResponseWriter, r *http.Request) {
-	//Handler function to present the settings HTML file
-	CheckForSession(w, r)
-	http.ServeFile(w, r, "views/settings.html")
 }
 
 type breezySetupConfig struct {
@@ -690,11 +711,6 @@ func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func breezyPostListHandler(w http.ResponseWriter, r *http.Request) {
-	CheckForSession(w, r)
-	http.ServeFile(w, r, "views/posts.html")
-}
-
 func breezyPostDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.RequestURI)
 	temp := strings.Split(r.RequestURI, "/")
@@ -719,11 +735,6 @@ func breezyAllPostsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsRes)
-}
-
-func breezyMediaListHandler(w http.ResponseWriter, r *http.Request) {
-	CheckForSession(w, r)
-	http.ServeFile(w, r, "views/media.html")
 }
 
 func breezyAllMediaHandler(w http.ResponseWriter, r *http.Request) {
@@ -778,16 +789,6 @@ func breezyMediaDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	// Remove file record off the database
 	err := coMedia.Remove(bson.M{"_id": bson.ObjectIdHex(temp[2])})
 	_ = err
-}
-
-func breezySetupHandler(w http.ResponseWriter, r *http.Request) {
-	d, err := os.Stat("app/user/setup_log.json")
-	_ = d
-	if err == nil {
-		http.Redirect(w, r, "/admin", http.StatusFound)
-	} else {
-		http.ServeFile(w, r, "views/setup.html")
-	}
 }
 
 type blogSettings struct {

@@ -13,7 +13,7 @@
 	<div class="brBlogHeaderContainer">
 		<div class="brBlogHeader">
 			<span class="brBlogTitle">{{Title}}</span>
-			<form ng-submit="submitSearch(this)" ng-if="searchEnabled">
+			<form ng-submit="submitSearch(this)" ng-if="searchEnabled" action="">
 				<input type="TEXT" placeholder="Search" class="brBlogSearchInput"  ng-model="searchInput"/>
 			</form>
 		</div>
@@ -22,7 +22,7 @@
 		
 		<div ng-repeat="post in postlist">
 			<div ng-bind-html="post.Content.Markup"></div>
-			<div><span ng-if="DisplayPostCreator">{{post.Creator}} - </span><span>{{formatDate(post.Created)}}</span></div>
+			<div><span ng-if="DisplayPostCreator" ng-click="postsByCreator(this)">{{post.Creator}} - </span><span ng-click="postsByDate(this)">{{formatDate(post.Created)}}</span></div>
 		</div>	
 	</div>
 </body>
