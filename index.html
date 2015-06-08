@@ -24,6 +24,7 @@
 			<div ng-bind-html="post.Content.Markup"></div>
 			<div><span ng-if="DisplayPostCreator" ng-click="postsByCreator(this)">{{post.Creator}} - </span><span ng-click="postsByDate(this)">{{formatDate(post.Created)}}</span></div>
 		</div>	
+		<div ng-click="loadMorePosts()">Load More</div>
 	</div>
 </body>
 </html>

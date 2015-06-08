@@ -149,7 +149,20 @@ func GetPostsWithOptionsHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(len(res))
 		break
 	case "between":
+		indexes := strings.Split(temp[3], "-")
+		lower, err := strconv.Atoi(indexes[0])
+		higher, err3 := strconv.Atoi(indexes[1])
+		_ = err
+		_ = err3
+		resErr = coPosts.Find(nil).Sort("-created").Limit(higher).Skip(lower).All(&res)
 		_ = resErr
+		jsRes, err2 := json.Marshal(res)
+		if err2 != nil {
+			panic(err2)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsRes)
+		fmt.Println(len(res))
 		break
 	}
 	_ = resErr

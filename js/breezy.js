@@ -44,16 +44,33 @@ breezy.controller("BreezyController", function($scope,$http){
 	$scope.postlist =[]
 	$scope.searchEnabled= true
 	$scope.searchInput = ""
+	$scope.lower = 0
+	$scope.higher = 2
 	$http.get("/get_blog_display").success(function(data){
 		$scope.Title = data.Title
 		if (data.UserCount > 1 ){
 			$scope.DisplayPostCreator = true
 		}
 	})
-	$http.get("/get_all_posts").success(function(data){
+	$http.get("/get_posts/between/"+$scope.lower+"-"+$scope.higher).success(function(data){
+		$scope.postlist = data
+	})
+	$scope.loadMorePosts = function() {
+		$scope.lower=$scope.higher
+		$scope.higher=$scope.higher+2
+		$http.get("/get_posts/between/"+$scope.lower+"-"+$scope.higher).success(function(data){
+			for (var i = 0; i < data.length; i++ ){
+				$scope.postlist.push(data[i])
+			}
+		})
+
+	}
+	/*
+ 	$http.get("/get_all_posts").success(function(data){
 		//console.log(data)
 		$scope.postlist = data
 	})
+	*/
 	$scope.formatDate = function(dateString){
 		var dateHalf = dateString.split("T")
 		var dateParts = dateHalf[0].split("-")
