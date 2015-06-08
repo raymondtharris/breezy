@@ -15,3 +15,8 @@ Breezy allows you to manually backup your posts or setup up a scheduled backup s
 #### Media Library
 Breezy also presents a library to store images, video, and audio files to present to users on the blog or other websites.
 
+#### Natural Language Search
+On the blog side of Breezy you can enable the search feature which gives users the ability to search through the blog using natural language to find posts and media.
+
+### BreezyNLP
+BreezyNLP is the natural language processing package on Breezy. It goes through each post and parses through the markdown to determine what is important data to use when being found when searching.
