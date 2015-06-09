@@ -353,6 +353,7 @@ type breezyBlog struct {
 	Created       time.Time     //The timestamp of when the blog was created stored on DB
 	Posts         int           //The number of posts stored on the DB
 	SearchEnabled bool          // Bool to see if user wants search enabled on blog
+	PostGroupSize int           // Number of posts per page or loaded for infinite scroll
 }
 
 func (br breezySetupConfig) String() string {
@@ -386,7 +387,7 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	//Creating and saving Blog data to Database
 	conBlog := mdbSession.DB("test").C("Blog")
 	userList := []string{userConfig.Username}
-	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name, userList, time.Now(), 0, true}
+	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name, userList, time.Now(), 0, true, 10}
 	errB := conBlog.Insert(&blogInfo)
 	_ = errB
 
@@ -856,6 +857,7 @@ func breezyMediaDeleteHandler(w http.ResponseWriter, r *http.Request) {
 type blogSettings struct {
 	Name          string // Name of the blog
 	SearchEnabled bool   //Stores if search is available to users
+	PostGroupSize int    // Number of posts per page or loading for infinite scroll
 }
 
 func breezyBlogInfoHandler(w http.ResponseWriter, r *http.Request) {
@@ -863,7 +865,7 @@ func breezyBlogInfoHandler(w http.ResponseWriter, r *http.Request) {
 	var blog breezyBlog
 	dbErr := coBlog.Find(nil).One(&blog)
 	_ = dbErr
-	blogData := blogSettings{blog.Name, blog.SearchEnabled}
+	blogData := blogSettings{blog.Name, blog.SearchEnabled, blog.PostGroupSize}
 	jsRes, err := json.Marshal(blogData)
 	if err != nil {
 		panic(err)
@@ -892,6 +894,9 @@ func breezyBlogInfoUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if blog.SearchEnabled != blogUpdateData.SearchEnabled {
 		dbErr = coBlog.Update(nil, bson.M{"searchenable": blogUpdateData.SearchEnabled})
+	}
+	if blog.PostGroupSize != blogUpdateData.PostGroupSize {
+		dbErr = coBlog.Update(nil, bson.M{"postgroupsize": blogUpdateData.PostGroupSize})
 	}
 	if dbErr != nil {
 		panic(dbErr)
