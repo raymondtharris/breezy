@@ -346,14 +346,15 @@ type breezyUser struct {
 }
 type breezyBlog struct {
 	//breezyBlog stores the relevant blog data to the database
-	ID            bson.ObjectId `bson: "_id,omitempty"` //ID variable for MongoDB
-	Name          string        //Name of the blog store on DB
-	Creator       string        //Name of the creator of the blog stored on DB
-	Users         []string      //An Array of usernames that have access to the admin section of the blog stored on DB
-	Created       time.Time     //The timestamp of when the blog was created stored on DB
-	Posts         int           //The number of posts stored on the DB
-	SearchEnabled bool          // Bool to see if user wants search enabled on blog
-	PostGroupSize int           // Number of posts per page or loaded for infinite scroll
+	ID             bson.ObjectId `bson: "_id,omitempty"` //ID variable for MongoDB
+	Name           string        //Name of the blog store on DB
+	Creator        string        //Name of the creator of the blog stored on DB
+	Users          []string      //An Array of usernames that have access to the admin section of the blog stored on DB
+	Created        time.Time     //The timestamp of when the blog was created stored on DB
+	Posts          int           //The number of posts stored on the DB
+	SearchEnabled  bool          // Bool to see if user wants search enabled on blog
+	PostGroupSize  int           // Number of posts per page or loaded for infinite scroll
+	InfiniteScroll bool          //Bool to see if infinite scrolling is enabled
 }
 
 func (br breezySetupConfig) String() string {
@@ -387,7 +388,7 @@ func breezySetupConfigHandler(w http.ResponseWriter, r *http.Request) {
 	//Creating and saving Blog data to Database
 	conBlog := mdbSession.DB("test").C("Blog")
 	userList := []string{userConfig.Username}
-	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name, userList, time.Now(), 0, true, 10}
+	var blogInfo = breezyBlog{bson.NewObjectId(), userConfig.Blogname, userConfig.Name, userList, time.Now(), 0, true, 10, true}
 	errB := conBlog.Insert(&blogInfo)
 	_ = errB
 

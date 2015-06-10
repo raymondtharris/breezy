@@ -297,7 +297,7 @@ breezy.controller('BreezySettingsController', function($scope, $http) {
 		$scope.blogname = data.Name;	
 	})
 	$scope.updateBlogInfo = function(){
-		var dataToUpdate = {"name": $scope.blogname}
+		var dataToUpdate = {"name": $scope.blogname, "searchEnabled": $scope.searchEnabled, "postGroupSize": $scope.PostGroupSize}
 		$http.post("/blog_info_update", dataToUpdate).success(function(data){
 
 		})	

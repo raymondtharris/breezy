@@ -22,14 +22,20 @@
 		<div class="brTitleBreakLine"></div>
 		<div class="brDashboardBackupContainer">
 			<div>Blog Info</div>
-			<form ng-submit="updateBlogInfo()">
+			<form ng-submit="updateBlogInfo()" action="">
 			<input type="TEXT"ng-model="blogname" /><label>Blog Name</label>
 			<input type="CHECKBOX" ng-model="searchEnabled"><label>Enable Search</label>
+			<select ng-model="PostGroupSize">
+				<option>5</option>
+				<option>10</option>
+				<option>15</option>
+				<option>20</option>
+			</select>
 			<input type="SUBMIT" value="Update" />
 			</form>
 			<div class="brBreakLineThin"></div>
 			<div>Backup</div>
-			<form ng-submit="updateScheduledBackup()">
+			<form ng-submit="updateScheduledBackup()" action="">
 
 			<input type="CHECKBOX" ng-model="enabledBackups"/><label>Enable Backups</label>
 			<select ng-disabled="!enabledBackups" ng-model="backupSelection">
@@ -47,7 +53,7 @@
 		<div class="brBreakLineThin"></div>
 		<div class="brNewUserContainer">
 			<div>Add User</div>
-			<form ng-submit="submitNewUser()">
+			<form ng-submit="submitNewUser()" action="">
 				<input type="email" placeholder="Username" ng-model="newUser.username"/>
 				<input type="password" placeholder="Password" ng-model="newUser.password"/>
 				<input type="text" placeholder="Name" ng-model="newUser.name"/>
