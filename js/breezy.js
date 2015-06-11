@@ -36,6 +36,15 @@ breezy.directive('contenteditable', ['$sce', function($sce) {
   };
 }]);
 
+breezy.directive('infiniteScroll', function() {
+	return function(scope, elemen, attr){
+		console.log(elemen)
+		var container = elemen[0]
+	  	elemen.bind("scroll", function() {
+			console.log("scrolling")
+		})	
+	}	
+})
 
 breezy.controller("BreezyController", function($scope,$http){
 	//Controller for the blog portion of Breezy
@@ -45,7 +54,7 @@ breezy.controller("BreezyController", function($scope,$http){
 	$scope.searchEnabled= true
 	$scope.searchInput = ""
 	$scope.lower = 0
-	$scope.higher = 2
+	$scope.higher = 4
 	$http.get("/get_blog_display").success(function(data){
 		$scope.Title = data.Title
 		if (data.UserCount > 1 ){

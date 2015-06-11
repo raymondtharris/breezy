@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/blog.css"/>
 
 </head>
-<body data-ng-app="breezyApp" ng-controller="BreezyController">
+<body data-ng-app="breezyApp" ng-controller="BreezyController" infinite-scroll="">
 	<div class="brBlogHeaderContainer">
 		<div class="brBlogHeader">
 			<span class="brBlogTitle">{{Title}}</span>
@@ -18,7 +18,7 @@
 			</form>
 		</div>
 	</div>
-	<div class="brBlogContainer"> 
+	<div class="brBlogContainer" > 
 		
 		<div ng-repeat="post in postlist">
 			<div ng-bind-html="post.Content.Markup"></div>
