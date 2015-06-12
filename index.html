@@ -9,7 +9,8 @@
 	<link rel="stylesheet" type="text/css" href="/css/blog.css"/>
 
 </head>
-<body data-ng-app="breezyApp" ng-controller="BreezyController" infinite-scroll="">
+<body data-ng-app="breezyApp" ng-controller="BreezyController">
+	<div class="brContainer" infinite-scroll="">
 	<div class="brBlogHeaderContainer">
 		<div class="brBlogHeader">
 			<span class="brBlogTitle">{{Title}}</span>
@@ -25,6 +26,7 @@
 			<div><span ng-if="DisplayPostCreator" ng-click="postsByCreator(this)">{{post.Creator}} - </span><span ng-click="postsByDate(this)">{{formatDate(post.Created)}}</span></div>
 		</div>	
 		<div ng-click="loadMorePosts()">Load More</div>
+	</div>
 	</div>
 </body>
 </html>

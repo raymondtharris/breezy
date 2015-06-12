@@ -37,12 +37,18 @@ breezy.directive('contenteditable', ['$sce', function($sce) {
 }]);
 
 breezy.directive('infiniteScroll', function() {
-	return function(scope, elemen, attr){
-		console.log(elemen)
-		var container = elemen[0]
-	  	elemen.bind("scroll", function() {
-			console.log("scrolling")
-		})	
+	return {
+		restrict: 'A',
+		link:function($scope, elemen, attr){
+			console.log(elemen)
+			var container = elemen[0]
+	  		elemen.bind("onScroll", function() {
+				if(container.scrollTop + container.offsetHeight > container.scrollHeight - 4){
+					$scope.loadMorePosts()
+					$scope.$apply()
+				}
+			})	
+		}
 	}	
 })
 
