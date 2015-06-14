@@ -40,14 +40,25 @@ breezy.directive('infiniteScroll', function() {
 	return {
 		restrict: 'A',
 		link:function($scope, elemen, attr){
-			console.log(elemen)
 			var container = elemen[0]
 	  		elemen.bind("onScroll", function() {
-				if(container.scrollTop + container.offsetHeight > container.scrollHeight - 4){
+				if(container.scrollTop + container.offsetHeight >= container.scrollHeight - 40){
+					console.log("add more")
 					$scope.loadMorePosts()
 					$scope.$apply()
 				}
 			})	
+		},
+		controller: function($scope, $element, $window){
+			angular.element($window).bind("scroll", function() {
+				var scrollWindow = angular.element($window)
+				if(scrollWindow.scrollTop + scrollWindow.offsetHeight >= scrollWindow.scrollHeight - 40){
+					console.log("add more")
+					$scope.loadMorePosts()
+					$scope.$apply()
+				}
+			})	
+
 		}
 	}	
 })
