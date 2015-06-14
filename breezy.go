@@ -70,29 +70,29 @@ func breezyLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 func breezyEditHandler(w http.ResponseWriter, r *http.Request) {
 	//Handler function to present the Breezy Editor HTML file
-	CheckForSession(w, r)
+	//	CheckForSession(w, r)
 	http.ServeFile(w, r, "views/edit.html")
 }
 
 func breezyDashboardHandler(w http.ResponseWriter, r *http.Request) {
 	//Handler function to present the Dashboard HTML file
-	CheckForSession(w, r)
+	//	CheckForSession(w, r)
 	http.ServeFile(w, r, "views/dashboard.html")
 }
 
 func breezySettingsHandler(w http.ResponseWriter, r *http.Request) {
 	//Handler function to present the settings HTML file
-	CheckForSession(w, r)
+	//	CheckForSession(w, r)
 	http.ServeFile(w, r, "views/settings.html")
 }
 
 func breezyPostListHandler(w http.ResponseWriter, r *http.Request) {
-	CheckForSession(w, r)
+	//	CheckForSession(w, r)
 	http.ServeFile(w, r, "views/posts.html")
 }
 
 func breezyMediaListHandler(w http.ResponseWriter, r *http.Request) {
-	CheckForSession(w, r)
+	//	CheckForSession(w, r)
 	http.ServeFile(w, r, "views/media.html")
 }
 

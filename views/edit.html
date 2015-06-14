@@ -23,10 +23,10 @@
 	<div class="brEditorContainer">
 		<div class="brEditorModesContainer">
 			<input class="brEditorModeButton" ng-click="toggleEditor()" type="button" value="Markdown" />
-			<input class="brEditorModeButton" ng-click="togglePreview(true)" type="button" value="Preview"/>
+			<input class="brEditorModeButton" ng-click="togglePreview(this)" type="button" value="Preview"/>
 		</div>
-		<div  contenteditable ng-model="markdownContent" strip-br="true" class="brEditorContent" ng-if="preview"></div>
-		<div  class="brEditorContent"  ng-if="showPreview">{{markupContent}}</div>
+		<div  contenteditable ng-model="markdownContent" strip-br="true" class="brEditorContent" ></div>
+		<div  class="brEditorContent"  >{{markupContent}}</div>
 	</div>
 <div class="brEditorCommandContainer">
 	<input class="brEditorCommandButton" type="button" value="Cancel"/> 
@@ -49,7 +49,7 @@
 	</div>
 </div>
 <div class="brEditorAddLinkContainer">
-	<form>
+	<form action="">
 		<input class="brEditorAddLinkTextInput" type="text" ng-model="newLinkText" placeholder="Add Link"/>
 		<input class="brEditorAddLinkButton" type="submit" value="Add" ng-submit="" />
 		<div class="brEditorAddLinkList">List of links</div>

@@ -252,13 +252,13 @@ breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $w
 	$scope.MediaList = [];
 	$scope.hasRecently = true;
 	$scope.preview=true;
-	$scope.showPreview = false;
+	$scope.showPreview = true;
 	$http.get("/get_all_media").success( function(data){
 		$scope.MediaList = data
 	})
 	$scope.togglePreview = function(newValue){
-		$scope.preview=newValue
-		console.log($scope.markdownContent)
+		//$scope.preview=true
+		console.log(newValue)
 		
 		if($scope.contentDirty){
 			console.log("send to server for translation to markup.")
@@ -278,8 +278,8 @@ breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $w
 		}
 	}
 	$scope.toggleEditor = function(){
-		$scope.preview = true;
-		$scope.showPreview = false;
+		//$scope.preview = true;
+		//$scope.showPreview = false;
 	}
 	$scope.savePost = function(){
 		console.log($scope)
