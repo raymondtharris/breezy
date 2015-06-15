@@ -51,11 +51,12 @@ breezy.directive('infiniteScroll', function() {
 		},
 		controller: function($scope, $element, $window){
 			var elm = $element[0]
-				console.log(elm)
+				//console.log(elm)
 			angular.element($window).bind("scroll", function() {
 				var scrollWindow = angular.element($window)
-				if(elm.scrollTop + elm.offsetHeight >= elm.scrollHeight - 1){
-					console.log("add more")
+					//console.log(elm.scrollHeight - $window.scrollY)
+				if(elm.scrollHeight - $window.scrollY < elm.clientHeight + 20){
+					//console.log("add more")
 					$scope.loadMorePosts()
 					$scope.$apply()
 				}
