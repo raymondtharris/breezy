@@ -76,9 +76,13 @@ breezy.controller("BreezyController", function($scope,$http){
 	$scope.lower = 0
 	$scope.higher = 4
 	$scope.PostMax = 0
+	$scope.infiniteScroll = false
+	$scope.searchEnabled = false
 	$http.get("/get_blog_display").success(function(data){
 		console.log(data)
 		$scope.PostMax = data.PostCount	
+		$scope.infiniteScroll = true//data.InfiniteScroll
+		$scope.searchEnabled = true //data.SearchEnabled
 		$scope.Title = data.Title
 		if (data.UserCount > 1 ){
 			$scope.DisplayPostCreator = true

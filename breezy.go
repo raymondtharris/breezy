@@ -912,9 +912,11 @@ func breezyBlogInfoUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type blogDisplayInfo struct {
-	Title     string
-	UserCount int
-	PostCount int
+	Title          string
+	UserCount      int
+	PostCount      int
+	SearchEnabled  bool
+	InfiniteScroll bool
 }
 
 func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
@@ -923,7 +925,7 @@ func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
 	dbErr := coBlog.Find(nil).One(&blog)
 	fmt.Println(blog)
 	_ = dbErr
-	displayInfo := blogDisplayInfo{blog.Name, len(blog.Users), blog.Posts}
+	displayInfo := blogDisplayInfo{blog.Name, len(blog.Users), blog.Posts, blog.SearchEnabled, blog.InfiniteScroll}
 	jsRes, err := json.Marshal(displayInfo)
 	if err != nil {
 		panic(err)
@@ -1027,7 +1029,11 @@ func main() {
 		panic(sErr)
 		//fmt.Println("Cannot connect to DB")
 	}
-
+	/*
+		coBlog := mdbSession.DB("test").C("Blog")
+		dbErr := coBlog.Update(nil, bson.M{"name": "Breezy"})
+		_ = dbErr
+	*/
 	defer mdbSession.Close()
 
 	HandleDirs()
