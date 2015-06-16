@@ -771,6 +771,12 @@ func breezySavePostHandler(w http.ResponseWriter, r *http.Request) {
 	newPost := breezyPost{bson.NewObjectId(), currentBlogContent.Title, currentTime, currentTime, "Tim", currentBlogContent.Content, currentBlogContent.Media}
 	dbErr := coPosts.Insert(&newPost)
 	_ = dbErr
+	coBlog := mdbSession.DB("test").C("Blog")
+	var blog breezyBlog
+	dbErr = coBlog.Find(nil).One(&blog)
+	_ = dbErr
+	dbErr = coBlog.Update(nil, bson.M{"posts": blog.Posts + 1})
+	_ = dbErr
 	w.Write([]byte("Post Saved"))
 
 }
@@ -908,14 +914,16 @@ func breezyBlogInfoUpdateHandler(w http.ResponseWriter, r *http.Request) {
 type blogDisplayInfo struct {
 	Title     string
 	UserCount int
+	PostCount int
 }
 
 func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
 	coBlog := mdbSession.DB("test").C("Blog")
 	var blog breezyBlog
 	dbErr := coBlog.Find(nil).One(&blog)
+	fmt.Println(blog)
 	_ = dbErr
-	displayInfo := blogDisplayInfo{blog.Name, len(blog.Users)}
+	displayInfo := blogDisplayInfo{blog.Name, len(blog.Users), blog.Posts}
 	jsRes, err := json.Marshal(displayInfo)
 	if err != nil {
 		panic(err)
@@ -1019,6 +1027,7 @@ func main() {
 		panic(sErr)
 		//fmt.Println("Cannot connect to DB")
 	}
+
 	defer mdbSession.Close()
 
 	HandleDirs()
