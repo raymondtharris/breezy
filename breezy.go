@@ -1029,11 +1029,20 @@ func main() {
 		panic(sErr)
 		//fmt.Println("Cannot connect to DB")
 	}
+	coBlog := mdbSession.DB("test").C("Blog")
+	var blog breezyBlog
+	testErr := coBlog.Find(nil).One(&blog)
+	_ = testErr
 	/*
-		coBlog := mdbSession.DB("test").C("Blog")
-		dbErr := coBlog.Update(nil, bson.M{"name": "Breezy"})
-		_ = dbErr
+		change := mgo.Change{
+			Update:    bson.M{"searchenabled": true, "name": "Breezy", "infinitescroll": true},
+			ReturnNew: true,
+		}
+		info, err := coBlog.Find(nil).Apply(change, &blog)
 	*/
+	fmt.Println(blog)
+	//_ = info
+	//_ = err
 	defer mdbSession.Close()
 
 	HandleDirs()
