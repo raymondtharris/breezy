@@ -78,12 +78,14 @@ breezy.controller("BreezyController", function($scope,$http){
 	$scope.PostMax = 0
 	$scope.infiniteScroll = false
 	$scope.searchEnabled = false
+	$scope.postGroupSize = 0
 	$http.get("/get_blog_display").success(function(data){
 		console.log(data)
 		$scope.PostMax = data.PostCount	
 		$scope.infiniteScroll = data.InfiniteScroll
 		$scope.searchEnabled = data.SearchEnabled
 		$scope.Title = data.Title
+		$scope.postGroupSize = data.PostGroupSize
 		if (data.UserCount > 1 ){
 			$scope.DisplayPostCreator = true
 		}
@@ -93,12 +95,19 @@ breezy.controller("BreezyController", function($scope,$http){
 	})
 	$scope.loadMorePosts = function() {
 		$scope.lower=$scope.higher
+		if($scope.higher + 2 > $scope.PostMax){
+			$scope.higher = $scope.PostMax
+		}
+		else {
 		$scope.higher=$scope.higher+2
-		$http.get("/get_posts/between/"+$scope.lower+"-"+$scope.higher).success(function(data){
-			for (var i = 0; i < data.length; i++ ){
-				$scope.postlist.push(data[i])
-			}
-		})
+		}
+		if($scope.lower != $scope.PostMax){
+			$http.get("/get_posts/between/"+$scope.lower+"-"+$scope.higher).success(function(data){
+				for (var i = 0; i < data.length; i++ ){
+					$scope.postlist.push(data[i])
+				}
+			})
+		}
 
 	}
 	/*

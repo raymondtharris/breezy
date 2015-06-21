@@ -917,6 +917,7 @@ type blogDisplayInfo struct {
 	PostCount      int
 	SearchEnabled  bool
 	InfiniteScroll bool
+	PostGroupSize  int
 }
 
 func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
@@ -925,7 +926,7 @@ func breezyBlogDisplayInfoHandler(w http.ResponseWriter, r *http.Request) {
 	dbErr := coBlog.Find(nil).One(&blog)
 	fmt.Println(blog)
 	_ = dbErr
-	displayInfo := blogDisplayInfo{blog.Name, len(blog.Users), blog.Posts, blog.SearchEnabled, blog.InfiniteScroll}
+	displayInfo := blogDisplayInfo{blog.Name, len(blog.Users), blog.Posts, blog.SearchEnabled, blog.InfiniteScroll, blog.PostGroupSize}
 	jsRes, err := json.Marshal(displayInfo)
 	if err != nil {
 		panic(err)
@@ -1029,20 +1030,28 @@ func main() {
 		panic(sErr)
 		//fmt.Println("Cannot connect to DB")
 	}
-	coBlog := mdbSession.DB("test").C("Blog")
-	var blog breezyBlog
-	testErr := coBlog.Find(nil).One(&blog)
-	_ = testErr
 	/*
-		change := mgo.Change{
-			Update:    bson.M{"searchenabled": true, "name": "Breezy", "infinitescroll": true},
-			ReturnNew: true,
-		}
-		info, err := coBlog.Find(nil).Apply(change, &blog)
+		coBlog := mdbSession.DB("test").C("Blog")
+		var blog breezyBlog
+		testErr := coBlog.Find(nil).One(&blog)
+		_ = testErr
+		fmt.Println(blog)
+
+		remErr := coBlog.Remove(nil)
+		_ = remErr
+
+		var newBlog breezyBlog
+		newBlog = breezyBlog{bson.NewObjectId(), "Breezy", "Tim", []string{"bobo89@gamil.com"}, time.Now(), 7, true, 10, true}
+		insErr := coBlog.Insert(newBlog)
+		_ = insErr
+
+		var res breezyBlog
+
+		testErr = coBlog.Find(nil).One(&res)
+		_ = testErr
+		fmt.Println(res)
 	*/
-	fmt.Println(blog)
-	//_ = info
-	//_ = err
+
 	defer mdbSession.Close()
 
 	HandleDirs()
