@@ -29,7 +29,7 @@ breezy.directive('contenteditable', ['$sce', function($sce) {
         if ( attrs.stripBr && html == '<br>' ) {
           html = '';
         }
-		
+
         ngModel.$setViewValue(html);
       }
     }
@@ -47,7 +47,7 @@ breezy.directive('infiniteScroll', function() {
 					$scope.loadMorePosts()
 					$scope.$apply()
 				}
-			})	
+			})
 		},
 		controller: function($scope, $element, $window){
 			var elm = $element[0]
@@ -60,10 +60,10 @@ breezy.directive('infiniteScroll', function() {
 					$scope.loadMorePosts()
 					$scope.$apply()
 				}
-			})	
+			})
 
 		}
-	}	
+	}
 })
 
 breezy.controller("BreezyController", function($scope,$http){
@@ -74,32 +74,36 @@ breezy.controller("BreezyController", function($scope,$http){
 	$scope.searchEnabled= true
 	$scope.searchInput = ""
 	$scope.lower = 0
-	$scope.higher = 4
+	$scope.higher = 0
 	$scope.PostMax = 0
 	$scope.infiniteScroll = false
 	$scope.searchEnabled = false
 	$scope.postGroupSize = 0
+
 	$http.get("/get_blog_display").success(function(data){
 		console.log(data)
-		$scope.PostMax = data.PostCount	
+		$scope.PostMax = data.PostCount
 		$scope.infiniteScroll = data.InfiniteScroll
 		$scope.searchEnabled = data.SearchEnabled
 		$scope.Title = data.Title
 		$scope.postGroupSize = data.PostGroupSize
+    $scope.loadMorePosts()
 		if (data.UserCount > 1 ){
 			$scope.DisplayPostCreator = true
 		}
 	})
-	$http.get("/get_posts/between/"+$scope.lower+"-"+$scope.higher).success(function(data){
+  /*
+	$http.get("/get_posts/between/"+$scope.lower+"-"+$scope.postGroupSize).success(function(data){
 		$scope.postlist = data
 	})
+  */
 	$scope.loadMorePosts = function() {
 		$scope.lower=$scope.higher
-		if($scope.higher + 2 > $scope.PostMax){
+		if($scope.higher + $scope.postGroupSize > $scope.PostMax){
 			$scope.higher = $scope.PostMax
 		}
 		else {
-		$scope.higher=$scope.higher+2
+		$scope.higher=$scope.higher+$scope.postGroupSize
 		}
 		if($scope.lower != $scope.PostMax){
 			$http.get("/get_posts/between/"+$scope.lower+"-"+$scope.higher).success(function(data){
@@ -122,14 +126,14 @@ breezy.controller("BreezyController", function($scope,$http){
 		//console.log(dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0])
 		return dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0]
 	}
-	
+
 	// Add in search functionality of the blog.
 	$scope.submitSearch = function(data){
 		//console.log(data)
 		$scope.searchInput = data.searchInput
 		console.log($scope.searchInput)
 		$http.post("/getsearch/", {searchtext: $scope.searchInput}).success(function(data){
-			
+
 		})
 	}
 	$scope.postsByDate = function(option) {
@@ -175,7 +179,7 @@ breezy.controller("BreezyNavigationController", function($scope, $http, $window)
 })
 
 breezy.controller("BreezyDashboardController", function($scope, $http, $window){
-	
+
 })
 
 breezy.controller("BreezyMediaLibraryController", function($scope, $http, $window, $element){
@@ -196,7 +200,7 @@ breezy.controller("BreezyMediaLibraryController", function($scope, $http, $windo
 	}
 	$scope.compareDimensions = function(el){
 		//console.log(this);
-		//console.log(angular.element($element[0].querySelector('#thumbnail'+this.$index))[0].offsetHeight)	
+		//console.log(angular.element($element[0].querySelector('#thumbnail'+this.$index))[0].offsetHeight)
 		var elm = angular.element($element[0].querySelector('#thumbnail'+this.$index))[0]
 		if ((elm.offsetHeight && elm.offsetWidth ) < 160){
 			//console.log("small")
@@ -232,10 +236,10 @@ breezy.controller("BreezySetupController",function($scope, $http, $window){
 breezy.controller("BreezyLoginController", function($scope, $http, $window){
 	$scope.loginCredentials = {"username":"", "password":""}
 	$scope.incorrect = false
-	var loginSent = {"username":"", "password":""}	
+	var loginSent = {"username":"", "password":""}
 	$scope.submitLoginInfo = function(){
 		//submitLoginInfo function sends loginCredentials to see if there is a match
-		//and if it works will transfer user to dashboard. 
+		//and if it works will transfer user to dashboard.
 		$scope.incorrect = false
 		$http.post("/checkcredentials", $scope.loginCredentials).success(function(data){
 			if(data == "true"){
@@ -244,10 +248,10 @@ breezy.controller("BreezyLoginController", function($scope, $http, $window){
 			}else{
 				console.log("Send Error to user about loginCredentials")
 				$scope.incorrect = true
-			}			
+			}
 			// if all good go to dashboard
 		})
-		
+
 	}
 	$scope.incorrectCredentials = function(){
 
@@ -289,7 +293,7 @@ breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $w
 	$scope.togglePreview = function(newValue){
 		//$scope.preview=true
 		console.log(newValue)
-		
+
 		if($scope.contentDirty){
 			console.log("send to server for translation to markup.")
 			var temp = String($scope.markdownContent).replace(/<[^>]+>/gm, '\n');
@@ -302,9 +306,9 @@ breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $w
 				$scope.postData.title = data.PostData.Title
 				$scope.mediaData = data.MediaData
 				$scope.markupContent =  data.MarkupContent
-				$scope.contentDirty=false	
+				$scope.contentDirty=false
 			});
-			
+
 		}
 	}
 	$scope.toggleEditor = function(){
@@ -314,7 +318,7 @@ breezy.controller("BreezyEditorController", function($scope, $http, $timeout, $w
 	$scope.savePost = function(){
 		console.log($scope)
 		//if contentDirty send markdown to change
-		//on return send data to be saved in database 			
+		//on return send data to be saved in database
 		var temp = String($scope.markdownContent).replace(/<[^>]+>/gm, '\n');
 		$scope.postData.title = String($scope.postData.title).replace(/<[^>]+>/gm, '');
 		var postToSave = {"title": $scope.postData.title,"content":{"markdown":temp, "markup":$scope.markupContent},"media": $scope.mediaData ,"contentDirty": $scope.contentDirty}
@@ -339,20 +343,20 @@ breezy.controller('BreezySettingsController', function($scope, $http) {
 	$scope.userExists = false;
 	$scope.blogname = "";
 	$http.get("/blog_info").success(function(data){
-		$scope.blogname = data.Name;	
+		$scope.blogname = data.Name;
 	})
 	$scope.updateBlogInfo = function(){
 		var dataToUpdate = {"name": $scope.blogname, "searchEnabled": $scope.searchEnabled, "postGroupSize": $scope.PostGroupSize}
 		$http.post("/blog_info_update", dataToUpdate).success(function(data){
 
-		})	
+		})
 	}
 	$scope.updateScheduledBackup = function(){
 		console.log($scope)
 	}
 	$scope.backup = function(){
 		$http.get("/backup").success(function(data){
-			
+
 		});
 	}
 	$scope.submitNewUser = function(){
@@ -392,17 +396,17 @@ breezy.directive('droppable', function(){
 		},
 		controller: function($scope, $element, $files){
 			$scope.progress = $files.currentProgress;
-			
+
 			$element.on('dragover', function(evt){
 				//DragOver State
 				evt.dataTransfer.dropEffect ="all";
 				if(evt.preventDefault) evt.preventDefault();
 			});
 			$element.on('dragenter', function(evt){
-				//DragEnter State	
+				//DragEnter State
 			});
 			$element.on('dragleave', function(evt){
-				//DragLeave State	
+				//DragLeave State
 			});
 			$element.on('drop', function(evt){
 				//Drop State
@@ -410,7 +414,7 @@ breezy.directive('droppable', function(){
 				if(evt.dataTransfer.files.length >0){
 					var filesList = evt.dataTransfer.files;
 					$files.upload(filesList);
-					
+
 				}
 				else{
 					$element.append(evt.target.getData("text/html"));
@@ -423,8 +427,8 @@ breezy.directive('droppable', function(){
 				//console.log(progress);
 			});
 			$scope.$on('uploadComplete', function(evt, file){
-				$scope.$emit('sortFile', file);	
-			});	
+				$scope.$emit('sortFile', file);
+			});
 			$scope.$on('uploadCompleted', function(){
 				$scope.$emit('addElements');
 			});
@@ -433,7 +437,7 @@ breezy.directive('droppable', function(){
 });
 
 breezy.directive('draggable', function(){
-	//draggle directive enables an element to have a draggable behavior 
+	//draggle directive enables an element to have a draggable behavior
 	return{
 		restrict:'A',
 		scope:{
@@ -442,13 +446,13 @@ breezy.directive('draggable', function(){
 		controller: function($scope, $element){
 			$scope.sourceElement = $element[0];
 			$scope.sourceElement.draggable = true;
-			
+
 			$element.on('dragstart', function(evt){
 				evt.dataTransfer.effectAllowed ="all";
 				evt.dataTransfer.setData('text/html', this.innerHTML);
 			});
 			$element.on('dragend', function(evt){
-				
+
 			});
 		}
 	}
@@ -492,7 +496,7 @@ breezy.service('$files', function($rootScope,$http){
 			*/
 	//		xmlHttpReq.setRequestHeader('Content-Type', fileList[i].type);
 		//	xmlHttpReq.setRequestHeader('Content-Type', 'multipart/form-data');
-			console.log(fileList[i].type);		
+			console.log(fileList[i].type);
 		/*	xmlHttpReq.upload.addEventListener("progress", this.uploadProgress, false);
 			xmlHttpReq.upload.addEventListener("loadstart", this.uploadStart, false);
 			//xmlHttpReq.upload.addEventListener("loadend", this.uploadEnd(xmlHttpReq.upload, fileList[i]), false);
@@ -513,9 +517,9 @@ breezy.service('$files', function($rootScope,$http){
 	//	$rootScope.$broadcast('started');
 	}
 	this.uploadProgress = function(evt){
-		
+
 		currentProgress += Math.round(evt.loaded * 100 / uploadSize);
-		
+
 	//	$rootScope.$broadcast('uploadProgress', currentProgress);
 	}
 	this.uploadComplete = function(req, file){
@@ -523,16 +527,14 @@ breezy.service('$files', function($rootScope,$http){
 		$rootScope.$broadcast('uploadComplete',file);
 	}
 	this.uploadFailed = function(){
-		
+
 	}
 	this.uploadEnd = function(req, file){
 		console.log('fi');
-		//$rootScope.$broadcast('uploadComplete', file);	 
+		//$rootScope.$broadcast('uploadComplete', file);
 	 }
 	this.allFiles = function(fileList){
 		$rootScope.$broadcast('uploadCompleted',fileList);
 	}
-	
+
 });
-
-
