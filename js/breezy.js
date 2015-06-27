@@ -151,6 +151,15 @@ breezy.controller("BreezyController", function($scope,$http){
 
 })
 
+breezy.directive("breezyNavigation", function(){
+	return{
+		restrict:'E',
+		template: function(){
+			return '<div>Navigation</div>'
+		}
+	}
+});
+
 breezy.controller("BreezyNavigationController", function($scope, $http, $window){
 	$scope.openBlog = function(){
 		//Open the users blog in a separate page/tab
