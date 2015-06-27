@@ -154,9 +154,37 @@ breezy.controller("BreezyController", function($scope,$http){
 breezy.directive("breezyNavigation", function(){
 	return{
 		restrict:'E',
-		template: function(){
-			return '<div>Navigation</div>'
-		}
+		controller: function($scope, $http, $window){
+			$scope.openBlog = function(){
+				//Open the users blog in a separate page/tab
+				$window.open("/")
+			}
+			$scope.gotoPage = function(option){
+				console.log(option)
+				switch(option){
+					case "settings":
+					$window.location.href="/settings"
+					break;
+				case "media":
+					$window.location.href="/medialist"
+					break;
+				case "posts":
+					$window.location.href="/postlist"
+					break;
+				case "new post":
+					$window.location.href="/edit"
+					break;
+				case "home":
+					$window.location.href="/dashboard"
+					break;
+				default:
+					console.log("No locaiton to go to.")
+					break;
+	
+				}
+			}
+		},
+		templateUrl : 'views/dashboardnavigation.html'		
 	}
 });
 

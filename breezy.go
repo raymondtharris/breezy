@@ -1031,46 +1031,47 @@ func main() {
 		//fmt.Println("Cannot connect to DB")
 	}
 	/*
-	coBlog := mdbSession.DB("test").C("Blog")
-	var blog breezyBlog
-	testErr := coBlog.Find(nil).One(&blog)
-	_ = testErr
-	fmt.Println(blog)
+		coBlog := mdbSession.DB("test").C("Blog")
+		var blog breezyBlog
+		testErr := coBlog.Find(nil).One(&blog)
+		_ = testErr
+		fmt.Println(blog)
 
-	remErr := coBlog.Remove(nil)
-	_ = remErr
+		remErr := coBlog.Remove(nil)
+		_ = remErr
 
-	var newBlog breezyBlog
-	newBlog = breezyBlog{bson.NewObjectId(), "Breezy", "Tim", []string{"bobo89@gamil.com"}, time.Now(), 7, true, 10, true}
-	insErr := coBlog.Insert(newBlog)
-	_ = insErr
+		var newBlog breezyBlog
+		newBlog = breezyBlog{bson.NewObjectId(), "Breezy", "Tim", []string{"bobo89@gamil.com"}, time.Now(), 7, true, 10, true}
+		insErr := coBlog.Insert(newBlog)
+		_ = insErr
 
-	var res breezyBlog
+		var res breezyBlog
 
-	testErr = coBlog.Find(nil).One(&res)
-	_ = testErr
-	fmt.Println(res)
+		testErr = coBlog.Find(nil).One(&res)
+		_ = testErr
+		fmt.Println(res)
 	*/
 	// update testing
-	coBlog := mdbSession.DB("test").C("Blog")
-	var blogs []breezyBlog
-	testErr := coBlog.Find(nil).All(&blogs)
-	if testErr != nil {
-		panic(testErr)
-	}
-	fmt.Println(blogs)
-	errT := coBlog.Update(bson.M{"_id": blogs[0].ID}, bson.M{"$set": bson.M{"postcount": 6}})
-	if errT != nil {
-		panic(errT)
-	}
-
+	/*
+		coBlog := mdbSession.DB("test").C("Blog")
+		var blogs []breezyBlog
+		testErr := coBlog.Find(nil).All(&blogs)
+		if testErr != nil {
+			panic(testErr)
+		}
+		fmt.Println(blogs)
+		errT := coBlog.Update(bson.M{"_id": blogs[0].ID}, bson.M{"$set": bson.M{"postcount": 6}})
+		if errT != nil {
+			panic(errT)
+		}
+	*/
 	/*
 		coBlog := mdbSession.DB("test").C("Blog")
 		err1 := coBlog.UpdateId(nil, bson.M{"$set": bson.M{"postcount": 6}})
 		if err1 != nil {
 			panic(err1)
 		}
-*/
+	*/
 	defer mdbSession.Close()
 
 	HandleDirs()

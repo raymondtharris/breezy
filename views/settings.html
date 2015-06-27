@@ -7,17 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
 </head>
 <body data-ng-app="breezyApp" ng-controller="BreezySettingsController">
-	<div class="brDashboardMenuContainer" ng-controller="BreezyNavigationController">
-		<div>Breezy</div>
-		<ul>
-			<li ng-click="openBlog()">View Blog</li>
-			<li ng-click="gotoPage('new post')">New Post</li>
-			<li ng-click="gotoPage('posts')">Posts</li>
-			<li ng-click="gotoPage('media')">Media</li>
-			<li ng-click="gotoPage('settings')">Settings</li>
-		</ul>
-	</div>
-
+<breezy-navigation></breezy-navigation>
 	<div class="brDashboardRecentActivityContainer"> <h2>Settings</h2>
 		<div class="brTitleBreakLine"></div>
 		<div class="brDashboardBackupContainer">

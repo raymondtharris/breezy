@@ -7,7 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/breezy.css"/>
 </head>
 <body data-ng-app="breezyApp" ng-controller="BreezyDashboardController">
-	<div class="brDashboardMenuContainer" ng-controller="BreezyNavigationController">
+<!--	<div class="brDashboardMenuContainer" ng-controller="BreezyNavigationController">
 		<div>Breezy</div>
 		<ul>
 			<li ng-click="openBlog()">View Blog</li>
@@ -17,10 +17,11 @@
 			<li ng-click="gotoPage('settings')">Settings</li>
 		</ul>
 	</div>
+-->
+	<breezy-navigation></breezy-navigation>
 	<div class="brDashboardRecentActivityContainer"> <h3>Recent Activity</h3>
 		<div class="brLogContainer">
-			<div>New Post
-			</div>
+			<div>New Post</div>
 			<div>Post Name</div>
 			<div>Post Stats<div>
 		</div>
