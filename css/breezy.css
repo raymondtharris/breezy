@@ -56,6 +56,15 @@ label{
 	margin-top:0pt;
 }
 
+.brDashboardNavigationMenuTitle{
+	display:block;
+	margin-left:30pt;
+	font-size:26pt;
+	padding-top:5pt;
+}
+.brDashboardMenuButton{
+	cursor:pointer;
+}
 
 
 
