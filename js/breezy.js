@@ -1,5 +1,6 @@
 var breezy = angular.module('breezyApp',['ngSanitize'])
 
+
 breezy.directive('contenteditable', ['$sce', function($sce) {
   return {
     restrict: 'A', // only activate on element attribute
@@ -501,6 +502,27 @@ breezy.service('$dateformat', function($rootScope){
 		var dateParts = dateHalf[0].split("-")
 		//console.log(dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0])
 		return dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0]
+	}
+});
+
+breezy.service('$datastorage', function($rootScope, $http){
+	//Service that interacts with the web backened to get and post data to the server
+	this.GetAllPosts = function(){//Function returns all posts stored in the database
+		$http.get("/get_all_posts").success(function(data){
+			//console.log(data)
+			return data
+		})
+
+	}
+	this.GetAllMedia = function(mediaFlag){//This function gets all media in the database and can be culled by type
+		$http.get("/getallmedia/"+mediaFlag).success(function(data){
+			return data
+		})
+	}
+	this.GetPostsBetween = function(lower,upper){
+		$http.get("/get_posts/between/"+lower+"-"+upper).success(function(data){
+			return data
+		})	
 	}
 });
 
