@@ -524,6 +524,25 @@ breezy.service('$datastorage', function($rootScope, $http){
 			return data
 		})	
 	}
+	this.GetPosts = function(option, filter){
+		switch(option){
+			case "created":
+				$http.get("/get_posts/created/"+filter).success(function(data){
+					return data
+				});
+				break
+			case "creator":
+				$http.get("/get_posts/creator/"+filter).success(function(data){
+					return data
+				});
+				break
+			case "single":
+				$http.get("/get_posts/single/"+filter).success(function(data){
+					return data
+				});
+				break
+		}
+	}
 });
 
 breezy.service('$files', function($rootScope,$http){
