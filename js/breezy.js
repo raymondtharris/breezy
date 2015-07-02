@@ -543,6 +543,26 @@ breezy.service('$datastorage', function($rootScope, $http){
 				break
 		}
 	}
+	this.GetMedia = function(option, filter){
+		switch(option){
+			case "single":
+				$http.get("/get_media/single/"+filter).success(function(data){
+					return data
+				});
+				break
+			case "multi":
+				$http.post("/get_media/multi/", filter).success(function(data){
+					return data
+				});
+				break
+			case "added":
+				$http.get("/get_media/added/"+filter).success(function(data){
+					return data
+				});
+				break
+
+		}
+	}
 });
 
 breezy.service('$files', function($rootScope,$http){
