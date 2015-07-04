@@ -1,4 +1,6 @@
-breezy.service('$dateformat', function($rootScope){
+var breezyService = angular.module('breezyService', [])
+
+breezyService.service('$dateformat', function($rootScope){
 	this.formatDate = function(dateString){
 		var dateHalf = dateString.split("T")
 		var dateParts = dateHalf[0].split("-")
@@ -7,7 +9,7 @@ breezy.service('$dateformat', function($rootScope){
 	}
 });
 
-breezy.service('$datastorage', function($rootScope, $http){
+breezyService.service('$datastorage', function($rootScope, $http){
 	//Service that interacts with the web backened to get and post data to the server
 	this.GetAllPosts = function(){//Function returns all posts stored in the database
 		$http.get("/get_all_posts").success(function(data){
@@ -67,7 +69,7 @@ breezy.service('$datastorage', function($rootScope, $http){
 	}
 });
 
-breezy.service('$files', function($rootScope,$http){
+breezyService.service('$files', function($rootScope,$http){
 	var currentProgress;
 	var uploadSize;
 	var currentFileSize;

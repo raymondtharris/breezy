@@ -1,4 +1,6 @@
-breezy.directive('breezyActivity', function(){
+var breezyDirective = angular.module('breezyDirective', ['ngSanitize'])
+
+breezyDirective.directive('breezyActivity', function(){
 	return{
 		restrict:'E',
 		controller: function($scope, $element){
@@ -10,7 +12,7 @@ breezy.directive('breezyActivity', function(){
 	}
 });
 
-breezy.directive('droppable', function(){
+breezyDirective.directive('droppable', function(){
 	//droppable directive enables an element to have the droppable behavior
 	return{
 		restrict:'A',
@@ -59,7 +61,7 @@ breezy.directive('droppable', function(){
 	}
 });
 
-breezy.directive('draggable', function(){
+breezyDirective.directive('draggable', function(){
 	//draggle directive enables an element to have a draggable behavior
 	return{
 		restrict:'A',
@@ -80,7 +82,7 @@ breezy.directive('draggable', function(){
 		}
 	}
 });
-breezy.directive("breezyNavigation", function(){
+breezyDirective.directive("breezyNavigation", function(){
 	return{
 		restrict:'E',
 		controller: function($scope, $http, $window){
@@ -116,7 +118,7 @@ breezy.directive("breezyNavigation", function(){
 		templateUrl : 'views/dashboardnavigation.html'		
 	}
 });
-breezy.directive('contenteditable', ['$sce', function($sce) {
+breezyDirective.directive('contenteditable', ['$sce', function($sce) {
   return {
     restrict: 'A', // only activate on element attribute
     require: '?ngModel', // get a hold of NgModelController
@@ -152,7 +154,7 @@ breezy.directive('contenteditable', ['$sce', function($sce) {
   };
 }]);
 
-breezy.directive('infiniteScroll', function() {
+breezyDirective.directive('infiniteScroll', function() {
 	return {
 		restrict: 'A',
 		link:function($scope, elemen, attr){
