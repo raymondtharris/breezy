@@ -1,7 +1,7 @@
 package main
 
 import (
-	"breezy/breezynlp"
+	"github.com/raymondtharris/breezy/breezynlp"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/sessions"
